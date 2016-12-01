@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "548416209889",
+    "firebase_url": "https://radiant-25a1a.firebaseio.com",
+    "project_id": "radiant-25a1a",
+    "storage_bucket": "radiant-25a1a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:548416209889:android:1024bb8059f1bf4c",
+        "android_client_info": {
+          "package_name": "app.radiant.c.lly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "548416209889-8rqkr75u6ftnfvshm3odt2dr4juc84ui.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUaSEZhlhTCOS5SN4XhUyMBqpqgy81d8c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

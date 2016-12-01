@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3f51b5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#ff735a</color>
+    <color name="colorList">#dfdfdf</color>
+    <color name="colorListItem">#ffffff</color>
+    <color name="colorStars">#e5e500</color>
+    <color name="primary_material_light_1">#d80000</color>
+    <color name="selectedItem">#808080</color>
+</resources>
+
+

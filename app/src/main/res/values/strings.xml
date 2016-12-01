@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">ChangeTogether</string>
+    <string name="title_activity_menu2">MenuActivity2</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main_app">MainAppActivity</string>
+
+    <string name="title_prompt">Was wollen Sie anbieten?</string>
+
+    <string-array name="bid_arrays">
+        <item>Bewerbungsschreiben/Lebenslauf</item>
+        <item>Freelancer</item>
+        <item>Freizeitaktivitäten</item>
+        <item>Job</item>
+        <item>Kochen</item>
+        <item>Nachhilfe</item>
+        <item>Organisatorisches</item>
+        <item>Sonstiges</item>
+        <item>Sprachkurs</item>
+        <item>Sport</item>
+        <item>Wohnungssuche</item>
+    </string-array>
+    <string name="title_activity_main2">Main2Activity</string>
+</resources>
