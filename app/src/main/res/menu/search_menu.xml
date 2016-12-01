@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="app.radiant.c.lly.Activities.MainAppActivity">
+    tools:context="com.lyl.radian.Activities.MainAppActivity">
     <item
         android:id="@+id/action_search"
         android:actionViewClass="android.support.v7.widget.SearchView"

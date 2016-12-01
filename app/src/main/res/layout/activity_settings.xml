@@ -4,7 +4,7 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@android:color/holo_blue_dark">
 
-    <app.radiant.c.lly.Widgets.CircleImageView
+    <com.lyl.radian.Widgets.CircleImageView
         android:layout_marginTop="35dp"
         android:id="@+id/changeProfilePic"
         android:layout_alignParentTop="true"

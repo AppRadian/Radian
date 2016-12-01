@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:gravity="center"
-    tools:context="app.radiant.c.lly.Activities.MainActivity"
+    tools:context="com.lyl.radian.Activities.MainActivity"
     android:background="@android:color/holo_blue_dark">
 
 

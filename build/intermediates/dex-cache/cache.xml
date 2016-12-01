@@ -34,7 +34,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.3"
-        sha1="bb7566e8a8b9cdea8bf0c83b43e87b476036fb16">
+        sha1="1ac28ee0a4e91c89ec69748dd2919dd23cf0ae40">
         <dex dex="C:\Users\Yannick\AndroidStudioProjects\Radian\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_20b351c81aa5dd44ec7de4db87a650264c14d617\classes.dex" />
     </item>
     <item
@@ -304,7 +304,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.3"
-        sha1="c2108d7f5b4303c240f08584cf713f1a6ad3531c">
+        sha1="a3f31af1e3a239897e3d54eb98e0129459bce509">
         <dex dex="C:\Users\Yannick\AndroidStudioProjects\Radian\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_e4a70be46776ed1365ac7816306303a30ffc314b\classes.dex" />
     </item>
     <item

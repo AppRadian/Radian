@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "548416209889",
-    "firebase_url": "https://radiant-25a1a.firebaseio.com",
-    "project_id": "radiant-25a1a",
-    "storage_bucket": "radiant-25a1a.appspot.com"
+    "project_number": "966137922966",
+    "firebase_url": "https://radian-eb422.firebaseio.com",
+    "project_id": "radian-eb422",
+    "storage_bucket": "radian-eb422.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:548416209889:android:1024bb8059f1bf4c",
+        "mobilesdk_app_id": "1:966137922966:android:a40f806eb9a8fc2f",
         "android_client_info": {
-          "package_name": "app.radiant.c.lly"
+          "package_name": "com.lyl.radian"
         }
       },
       "oauth_client": [
         {
-          "client_id": "548416209889-8rqkr75u6ftnfvshm3odt2dr4juc84ui.apps.googleusercontent.com",
+          "client_id": "966137922966-oq7drkdqfcqjn1m0i7ock8fvuc2b9tln.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDUaSEZhlhTCOS5SN4XhUyMBqpqgy81d8c"
+          "current_key": "AIzaSyC2SmDwu0ZSL4RDJaDHLZjL06o4kcQ9sgU"
         }
       ],
       "services": {
