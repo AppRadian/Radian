@@ -28,6 +28,7 @@ public class FirebaseActivity extends AppCompatActivity {
     private FirebaseAuth userAuth;
     private FirebaseAuth.AuthStateListener userAuthListener;
     private static final String TAG = "Firebase";
+    private FirebaseDa
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
