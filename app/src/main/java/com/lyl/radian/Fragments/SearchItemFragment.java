@@ -125,6 +125,11 @@ public class SearchItemFragment extends Fragment{
                         ArrayList<Bid> participationList = userProfile.getParticipations();
 
                         // Add participation
+                        participationList.add(account.getClickedBid());
+
+                        // Transfer update to DB
+                        DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB);
+                        //user.child()
                         
                     }
 
