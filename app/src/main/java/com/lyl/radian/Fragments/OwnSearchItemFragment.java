@@ -19,6 +19,16 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.DialogFragments.EditDialog;
 import com.lyl.radian.Activities.ShowBidFeedbackActivity;
 import com.lyl.radian.R;
@@ -70,7 +80,49 @@ public class OwnSearchItemFragment extends Fragment {
             ratings = (TextView) view.findViewById(R.id.rezensionen);
             edit = (Button) view.findViewById(R.id.editButton);
 
-            //userProfile.setImageBitmap(account.getSelf().getProfilePic());
+            DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            user.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    if(dataSnapshot.getKey().equals("profilePic")) {
+                        String profilePic = (String)dataSnapshot.getValue();
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+                        Glide.with(OwnSearchItemFragment.this)
+                                .using(new FirebaseImageLoader())
+                                .load(storageRef)
+                                .into(userProfile);
+                    }
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    if(dataSnapshot.getKey().equals("profilePic")) {
+                        String profilePic = (String)dataSnapshot.getValue();
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+                        Glide.with(OwnSearchItemFragment.this)
+                                .using(new FirebaseImageLoader())
+                                .load(storageRef)
+                                .into(userProfile);
+                    }
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
             userEmail.setText(account.getClickedBid().getEmail());
             userBid.setText(account.getClickedBid().getTag());
             timenDate.setText(account.getClickedBid().getDate() + " - " + account.getClickedBid().getTime() + " Uhr");

@@ -102,8 +102,8 @@ public class OwnProfileFragment extends Fragment {
 
     private void refresh() {
 
-        Resources r = getResources();
-        int px = r.getDisplayMetrics().heightPixels / 3;
+        final Resources r = getResources();
+        final int px = r.getDisplayMetrics().heightPixels / 3;
 
         RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
         CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
@@ -122,6 +122,8 @@ public class OwnProfileFragment extends Fragment {
                     Glide.with(OwnProfileFragment.this)
                             .using(new FirebaseImageLoader())
                             .load(storageRef)
+                            .override(r.getDisplayMetrics().widthPixels, px)
+                            .centerCrop()
                             .into(OwnProfileFragment.this.profilePic);
                 }
             }
@@ -135,6 +137,8 @@ public class OwnProfileFragment extends Fragment {
                     Glide.with(OwnProfileFragment.this)
                             .using(new FirebaseImageLoader())
                             .load(storageRef)
+                            .override(r.getDisplayMetrics().widthPixels, px)
+                            .centerCrop()
                             .into(OwnProfileFragment.this.profilePic);
                 }
             }

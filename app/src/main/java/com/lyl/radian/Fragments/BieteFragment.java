@@ -150,8 +150,6 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
             }
         }));
 
-
-
         return view;
     }
 

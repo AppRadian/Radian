@@ -22,6 +22,17 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.lyl.radian.Activities.MainAppActivity;
 import com.lyl.radian.Activities.ShowBidFeedbackActivity;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
@@ -72,7 +83,7 @@ public class SearchItemFragment extends Fragment{
         ratings = (TextView) view.findViewById(R.id.rezensionen);
         join = (Button) view.findViewById(R.id.joinButton);
 
-        //userProfile.setImageBitmap(account.getBitmapFromCache(account.getSearchedItem().getEmail()));
+       //TODO set profile pic
         userEmail.setText(account.getClickedBid().getEmail());
         userBid.setText(account.getClickedBid().getTag());
         timenDate.setText(account.getClickedBid().getDate() + " - " + account.getClickedBid().getTime() + " Uhr");

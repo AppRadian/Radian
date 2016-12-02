@@ -11,6 +11,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.lyl.radian.Fragments.OwnSearchItemFragment;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.DBObjects.Bid;
@@ -57,13 +62,13 @@ public class CustomRecyclerViewAdapterHome extends RecyclerView.Adapter<CustomRe
         holder.count.setText(data.get(position).getCount() + " Bewertungen");
         holder.maxPart.setText(data.get(position).getParticipants() + "/" + data.get(position).getMaxParticipants());
 
-        /**
-        Bitmap pic = account.getBitmapFromCache(data.get(position)[1]);
-        if(pic != null)
-            holder.profilePic.setImageBitmap(pic);
-        else
-            ;//new GetBitmap(activity, holder.profilePic, data.get(position)[1]).execute();
-         **/
+        String profilePic = data.get(position).getProfilePic();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+        Glide.with(activity)
+                .using(new FirebaseImageLoader())
+                .load(storageRef)
+                .into(holder.profilePic);
     }
 
     @Override

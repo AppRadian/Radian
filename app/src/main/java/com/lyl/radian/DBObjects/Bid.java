@@ -9,6 +9,7 @@ public class Bid {
     public String id;
     public String userId;
     String email;
+    String profilePic;
     String tag;
     String description;
     String location;
@@ -22,10 +23,11 @@ public class Bid {
     public Bid() {
     }
 
-    public Bid(String id, String userId, String email, String tag, String description, String location, double averageRating, long count, String date, String time, long participants, long maxParticipants) {
+    public Bid(String id, String userId, String email, String profilePic, String tag, String description, String location, double averageRating, long count, String date, String time, long participants, long maxParticipants) {
         this.id = id;
         this.userId = userId;
         this.email = email;
+        this.profilePic = profilePic;
         this.tag = tag;
         this.description = description;
         this.location = location;
@@ -53,6 +55,14 @@ public class Bid {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
     }
 
     public String getTag() {
