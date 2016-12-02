@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +22,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.Adapter.CustomAdapterSearch;
 import com.lyl.radian.Fragments.BieteFragment;
 //import comhelpingandchanging.facebook.httpswww.changetogether.Fragments.HelpingLocationsFragment;
@@ -60,6 +70,58 @@ public class MainAppActivity extends AppCompatActivity
         account = (Account) getApplication();
         account.fm = getSupportFragmentManager();
 
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_home);
+
+        header = navigationView.getHeaderView(0);
+        ((TextView) header.findViewById(R.id.profEmail)).setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        ((TextView) header.findViewById(R.id.profLocation)).setText("");
+
+        DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        user.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if(dataSnapshot.getKey().equals("profilePic")) {
+                    String profilePic = (String)dataSnapshot.getValue();
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+                    Glide.with(MainAppActivity.this)
+                            .using(new FirebaseImageLoader())
+                            .load(storageRef)
+                            .into(((ImageView) header.findViewById(R.id.profPic)));
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                if(dataSnapshot.getKey().equals("profilePic")) {
+                    String profilePic = (String)dataSnapshot.getValue();
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+                    Glide.with(MainAppActivity.this)
+                            .using(new FirebaseImageLoader())
+                            .load(storageRef)
+                            .into(((ImageView) header.findViewById(R.id.profPic)));
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         if (savedInstanceState != null) {
             searchFragment = (SearchFragment) account.fm.getFragment(savedInstanceState, "search");
             bieteFragment = (BieteFragment) account.fm.getFragment(savedInstanceState, "biete");
@@ -82,15 +144,6 @@ public class MainAppActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_home);
-
-        header = navigationView.getHeaderView(0);
-        //((ImageView) header.findViewById(R.id.profPic)).setImageBitmap(account.getSelf().getProfilePic());
-        ((TextView) header.findViewById(R.id.profEmail)).setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        ((TextView) header.findViewById(R.id.profLocation)).setText("");
 
         account.fm.beginTransaction().replace(R.id.content_frame, homeFragment, "home").addToBackStack("home").commit();
     }
