@@ -89,6 +89,7 @@ public class MainAppActivity extends AppCompatActivity
                     Glide.with(MainAppActivity.this)
                             .using(new FirebaseImageLoader())
                             .load(storageRef)
+                            .placeholder(R.drawable.blank_profile_pic)
                             .into(((ImageView) header.findViewById(R.id.profPic)));
                 }
             }

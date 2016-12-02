@@ -84,6 +84,7 @@ public class SettingsActivity extends Activity {
                     Glide.with(SettingsActivity.this)
                             .using(new FirebaseImageLoader())
                             .load(storageRef)
+                            .placeholder(R.drawable.blank_profile_pic)
                             .into(profilePicView);
                 }
             }
@@ -98,6 +99,7 @@ public class SettingsActivity extends Activity {
                     Glide.with(SettingsActivity.this)
                             .using(new FirebaseImageLoader())
                             .load(storageRef)
+                            .placeholder(R.drawable.blank_profile_pic)
                             .into(profilePicView);
                 }
             }
@@ -180,11 +182,7 @@ public class SettingsActivity extends Activity {
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
                 Uri uri = data.getData();
-
-                Resources r = this.getResources();
-                int height = r.getDisplayMetrics().heightPixels / 2;
-                int width = r.getDisplayMetrics().widthPixels;
-
+                
                 // Create the file metadata
                 StorageMetadata metadata = new StorageMetadata.Builder()
                         .setContentType("image/jpeg")

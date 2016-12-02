@@ -68,6 +68,7 @@ public class CustomRecyclerViewAdapterHome extends RecyclerView.Adapter<CustomRe
         Glide.with(activity)
                 .using(new FirebaseImageLoader())
                 .load(storageRef)
+                .placeholder(R.drawable.blank_profile_pic)
                 .into(holder.profilePic);
     }
 

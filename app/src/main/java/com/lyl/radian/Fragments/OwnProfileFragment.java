@@ -122,6 +122,7 @@ public class OwnProfileFragment extends Fragment {
                     Glide.with(OwnProfileFragment.this)
                             .using(new FirebaseImageLoader())
                             .load(storageRef)
+                            .placeholder(R.drawable.blank_profile_pic)
                             .override(r.getDisplayMetrics().widthPixels, px)
                             .centerCrop()
                             .into(OwnProfileFragment.this.profilePic);
