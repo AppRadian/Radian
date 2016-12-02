@@ -39,6 +39,24 @@ public class Bid {
         this.maxParticipants = maxParticipants;
     }
 
+    // Compares 2 Bid Objects with their respective id which is unique
+    // Must be implemented so List contains() method works as intended
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!Bid.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+
+        final Bid other = (Bid) obj;
+        if (id.equals(other.getId()))
+            return true;
+
+        return false;
+    }
+
     public String getId() {
         return id;
     }
