@@ -71,13 +71,12 @@ public class HomeFragment extends Fragment {
         database = FirebaseDatabase.getInstance();
         bids = database.getReference("Bids");
 
-        listItems.clear();
         bids.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 Bid bid = dataSnapshot.getValue(Bid.class);
-                if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+                if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()) && !listItems.contains(bid))
                     listItems.add(bid);
                 adapter.notifyDataSetChanged();
             }
@@ -85,6 +84,10 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
+                Bid bid = dataSnapshot.getValue(Bid.class);
+                if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()) && !listItems.contains(bid))
+                    listItems.add(bid);
+                adapter.notifyDataSetChanged();
             }
 
             @Override

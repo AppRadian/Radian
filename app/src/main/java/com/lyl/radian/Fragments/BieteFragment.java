@@ -67,21 +67,19 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
         database = FirebaseDatabase.getInstance();
         bids = database.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids");
 
-
-        bidsList.clear();
         bids.addChildEventListener(new ChildEventListener() {
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Log.e("childAdded","childAdded");
                 String bidId = dataSnapshot.getValue(String.class);
                 DatabaseReference ownBids = database.getReference("Bids").child(bidId);
                 ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Bid bid = dataSnapshot.getValue(Bid.class);
-                        bidsList.add(bid);
+                        if(!bidsList.contains(bid))
+                            bidsList.add(bid);
                         adapter.notifyDataSetChanged();
                     }
 
@@ -95,14 +93,14 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                Log.e("childChanged","childChanged");
                 String bidId = dataSnapshot.getValue(String.class);
                 DatabaseReference ownBids = database.getReference("Bids").child(bidId);
                 ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Bid bid = dataSnapshot.getValue(Bid.class);
-                        bidsList.add(bid);
+                        if(!bidsList.contains(bid))
+                            bidsList.add(bid);
                         adapter.notifyDataSetChanged();
                     }
 
@@ -183,7 +181,6 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
         p.setBehavior(null);
         content.setLayoutParams(p);
 
-        bidsList.clear();
         ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Deine Angebote");
         ((ImageView)getActivity().findViewById(R.id.ownProfilePic)).setImageBitmap(null);
