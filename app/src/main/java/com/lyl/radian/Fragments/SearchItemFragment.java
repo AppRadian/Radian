@@ -25,17 +25,15 @@ import java.util.HashMap;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.*;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.Activities.MainAppActivity;
 import com.lyl.radian.Activities.ShowBidFeedbackActivity;
+import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Constants;
 
 /**
  * Created by Yannick on 05.11.2016.
@@ -86,7 +84,31 @@ public class SearchItemFragment extends Fragment{
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // DatabaseReference bids = Fire
+                // Update the DB participants
+                DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
+                bids.child(account.getClickedBid().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get the bid object from the DB
+                        Bid bid = dataSnapshot.getValue(Bid.class);
+
+                        // Extract the needed value
+                        long participants = bid.getParticipants();
+                        participants++;
+
+                        // set new participants
+                        bid.setParticipants(participants);
+
+                        // Transfer update to DB
+                        DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
+                        bids.child(account.getClickedBid().getId()).setValue(bid);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
 

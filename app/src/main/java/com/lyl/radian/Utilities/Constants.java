@@ -15,6 +15,11 @@ import java.io.InputStream;
 
 public class Constants {
 
+    // Database References
+    public static final String BID_DB = "Bids";
+    public static final String FEEDBACK_DB = "Feedback";
+    public static final String USER_DB = "Users";
+
     // Auto Fill Location Name Google API Key String Constant
     public static final String PRIVATE_GOOGLE_API_KEY = "AIzaSyCDLrf4wg0oCpzYepocnaBMoXvoYws1cpw";
     public static final String PRIVATE_GOOGLE_FIREBASE_API_KEY = "AIzaSyCpfiikIRLYxFAoP_VIEXWElB4DiW-CLLU";

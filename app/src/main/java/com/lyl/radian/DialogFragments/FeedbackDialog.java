@@ -23,6 +23,9 @@ import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.DBObjects.Feedback;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Constants;
+
+import java.io.Console;
 
 /**
  * Created by Yannick on 18.10.2016.
@@ -62,7 +65,10 @@ public class FeedbackDialog extends DialogFragment {
                 bids.child(account.getClickedBid().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get the bid object from the DB
                         Bid bid = dataSnapshot.getValue(Bid.class);
+
+                        //Extract the needed values
                         double averageRating = bid.getAverageRating();
                         long count = bid.getCount();
                         count++;
@@ -72,8 +78,10 @@ public class FeedbackDialog extends DialogFragment {
 
                         // calculate new average rating
                         averageRating = ((averageRating * (count - 1)) + ratingBar.getRating()) / bid.getCount();
-                        bid.setAverageRating(averageRating);
-                        DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
+                        bid.setAverageRating(averageRating); // set new average rating in the object class
+
+                        // Transfer updates to DB
+                        DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
                         bids.child(account.getClickedBid().getId()).setValue(bid);
                     }
 
