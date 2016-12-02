@@ -63,6 +63,7 @@ public class CustomRecyclerViewAdapterBiete extends RecyclerView.Adapter<CustomR
         Glide.with(context)
                 .using(new FirebaseImageLoader())
                 .load(storageRef)
+                .placeholder(R.drawable.blank_profile_pic)
                 .into(holder.profilePic);
     }
 
