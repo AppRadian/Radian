@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Bid;
 
 /**
  * Created by Yannick on 10.11.2016.
@@ -23,11 +24,11 @@ public class CustomRecyclerViewAdapterHome extends RecyclerView.Adapter<CustomRe
 
     Account account;
     Activity activity;
-    ArrayList<String[]> data;
+    ArrayList<Bid> data;
     ViewGroup parent;
     ProfileInfoViewHolder holder;
 
-    public CustomRecyclerViewAdapterHome(Activity activity, ArrayList<String[]> data) {
+    public CustomRecyclerViewAdapterHome(Activity activity, ArrayList<Bid> data) {
 
         this.account = (Account)activity.getApplication();
         this.activity = activity;
@@ -48,19 +49,22 @@ public class CustomRecyclerViewAdapterHome extends RecyclerView.Adapter<CustomRe
     @Override
     public void onBindViewHolder(ProfileInfoViewHolder holder, int position) {
 
-        holder.tag.setText(data.get(position)[2]);
-        holder.location.setText(data.get(position)[4]);
-        holder.distance.setText("<=" + data.get(position)[7] + "km");
-        holder.time.setText(data.get(position)[8] + " - " + data.get(position)[9] + " Uhr");
-        holder.ratingBar.setRating(Float.parseFloat(data.get(position)[5]));
-        holder.count.setText(data.get(position)[6] + " Bewertungen");
-        holder.maxPart.setText(data.get(position)[10] + "/" + data.get(position)[11]);
+        holder.profileName.setText(data.get(position).getEmail());
+        holder.tag.setText(data.get(position).getTag());
+        holder.location.setText(data.get(position).getLocation());
+        holder.distance.setText("<=" + 0 + "km");
+        holder.time.setText(data.get(position).getDate() + " - " + data.get(position).getTime() + " Uhr");
+        holder.ratingBar.setRating((float)data.get(position).getAverageRating());
+        holder.count.setText(data.get(position).getCount() + " Bewertungen");
+        holder.maxPart.setText(data.get(position).getParticipants() + "/" + data.get(position).getMaxParticipants());
 
+        /**
         Bitmap pic = account.getBitmapFromCache(data.get(position)[1]);
         if(pic != null)
             holder.profilePic.setImageBitmap(pic);
         else
             ;//new GetBitmap(activity, holder.profilePic, data.get(position)[1]).execute();
+         **/
     }
 
     @Override
@@ -68,7 +72,7 @@ public class CustomRecyclerViewAdapterHome extends RecyclerView.Adapter<CustomRe
         return data.size();
     }
 
-    public String[] getItem(int position){ return data.get(position); }
+    public Bid getItem(int position){ return data.get(position); }
 
     public class ProfileInfoViewHolder extends RecyclerView.ViewHolder{
 

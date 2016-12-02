@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Bid;
 
 /**
  * Created by Yannick on 10.11.2016.
@@ -22,10 +23,10 @@ public class CustomRecyclerViewAdapterBiete extends RecyclerView.Adapter<CustomR
 
     Account account;
     Fragment context;
-    ArrayList<String[]> data;
+    ArrayList<Bid> data;
     ProfileInfoViewHolder infoHolder;
 
-    public CustomRecyclerViewAdapterBiete(Fragment context, ArrayList<String[]> data) {
+    public CustomRecyclerViewAdapterBiete(Fragment context, ArrayList<Bid> data) {
 
         account = (Account) context.getActivity().getApplication();
         this.context = context;
@@ -45,12 +46,12 @@ public class CustomRecyclerViewAdapterBiete extends RecyclerView.Adapter<CustomR
     @Override
     public void onBindViewHolder(ProfileInfoViewHolder holder, int position) {
 
-        holder.tag.setText(data.get(position)[2]);
-        holder.location.setText(data.get(position)[4]);
-        holder.time.setText(data.get(position)[7] + " - " + data.get(position)[8] + " Uhr");
-        holder.ratingBar.setRating(Float.parseFloat(data.get(position)[5]));
-        holder.count.setText(data.get(position)[6] + " Bewertungen");
-        holder.maxPart.setText(data.get(position)[9] + "/" + data.get(position)[10]);
+        holder.tag.setText(data.get(position).getTag());
+        holder.location.setText(data.get(position).getLocation());
+        holder.time.setText(data.get(position).getDate() + " - " + data.get(position).getTime() + " Uhr");
+        holder.ratingBar.setRating((float)data.get(position).getAverageRating());
+        holder.count.setText(data.get(position).getCount() + " Bewertungen");
+        holder.maxPart.setText(data.get(position).getParticipants() + "/" + data.get(position).getMaxParticipants());
         //holder.profilePic.setImageBitmap(account.getSelf().getProfilePic());
     }
 
@@ -59,7 +60,7 @@ public class CustomRecyclerViewAdapterBiete extends RecyclerView.Adapter<CustomR
         return data.size();
     }
 
-    public String[] getItem(int position) {
+    public Bid getItem(int position) {
 
         return data.get(position);
     }

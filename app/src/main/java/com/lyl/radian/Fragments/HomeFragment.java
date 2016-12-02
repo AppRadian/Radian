@@ -13,6 +13,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.lyl.radian.Activities.MainAppActivity;
 import com.lyl.radian.Activities.SettingsActivity;
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapterHome;
@@ -32,6 +39,7 @@ import com.lyl.radian.Adapter.RecyclerItemClickListener;
 import com.lyl.radian.DialogFragments.BidDialog;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Bid;
 import com.lyl.radian.Widgets.HidingScrollListener;
 
 /**
@@ -45,12 +53,14 @@ public class HomeFragment extends Fragment {
     Account account;
     Double[] latLong;
     public RecyclerView searches;
-    public ArrayList<String[]> listItems = new ArrayList<String[]>();
+    public ArrayList<Bid> listItems = new ArrayList<>();
     public CustomRecyclerViewAdapterHome adapter;
     View.OnClickListener setLocation;
     public Comparator<String[]> cmp;
     public SwipeRefreshLayout swipeContainer;
     FloatingActionButton fab;
+    private FirebaseDatabase database;
+    private DatabaseReference bids;
 
     @Nullable
     @Override
@@ -58,6 +68,42 @@ public class HomeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         callingActivity = getActivity();
         account = (Account) callingActivity.getApplication();
+
+        database = FirebaseDatabase.getInstance();
+        bids = database.getReference("Bids");
+
+        listItems.clear();
+        bids.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Bid bid = dataSnapshot.getValue(Bid.class);
+                listItems.add(bid);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Bid bid = dataSnapshot.getValue(Bid.class);
+                listItems.add(bid);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +164,7 @@ public class HomeFragment extends Fragment {
         searches.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
 
+                        /**
                 String id = adapter.getItem(position)[0];
                 String email = adapter.getItem(position)[1];
                 String tag = adapter.getItem(position)[2];
@@ -130,6 +177,7 @@ public class HomeFragment extends Fragment {
                 String time = adapter.getItem(position)[9];
                 String part = adapter.getItem(position)[10];
                 String maxPart = adapter.getItem(position)[11];
+                         **/
 
                 SearchItemFragment f = new SearchItemFragment();
                 account.fm.beginTransaction().replace(R.id.content_frame, f, "searchItem").addToBackStack("searchItem").commit();

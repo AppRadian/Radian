@@ -14,14 +14,14 @@ public class UserProfile {
     private String location;
     private String language;
     private Bitmap profilePic;
-    private ArrayList<String[]> participations;
-    private ArrayList<String[]> ownBids;
+    private ArrayList<UserProfile> participations;
+    private ArrayList<Bid> ownBids;
 
     public UserProfile(){
 
     }
 
-    public UserProfile(String email, String location, String language, Bitmap profilePic, ArrayList<String[]> participations, ArrayList<String[]> ownBids) {
+    public UserProfile(String email, String location, String language, Bitmap profilePic, ArrayList<UserProfile> participations, ArrayList<Bid> ownBids) {
         this.email = email;
         this.location = location;
         this.language = language;
@@ -62,19 +62,19 @@ public class UserProfile {
         this.profilePic = profilePic;
     }
 
-    public ArrayList<String[]> getParticipations() {
+    public ArrayList<UserProfile> getParticipations() {
         return participations;
     }
 
-    public void setParticipations(ArrayList<String[]> participations) {
+    public void setParticipations(ArrayList<UserProfile> participations) {
         this.participations = participations;
     }
 
-    public ArrayList<String[]> getOwnBids() {
+    public ArrayList<Bid> getOwnBids() {
         return ownBids;
     }
 
-    public void setOwnBids(ArrayList<String[]> ownBids) {
+    public void setOwnBids(ArrayList<Bid> ownBids) {
         this.ownBids = ownBids;
     }
 }

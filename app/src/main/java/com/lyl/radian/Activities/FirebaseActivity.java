@@ -16,7 +16,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Bid;
 import com.lyl.radian.Utilities.UserProfile;
+
+import java.util.ArrayList;
 
 /**
  * Created by Yannick on 01.12.2016.
@@ -39,7 +42,7 @@ public class FirebaseActivity extends AppCompatActivity {
         account = (Account) getApplication();
         userAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-        users = database.getReference("users");
+        users = database.getReference("Users");
 
         userAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -81,7 +84,7 @@ public class FirebaseActivity extends AppCompatActivity {
                             Log.e(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
                             String email = userAuth.getCurrentUser().getEmail();
                             DatabaseReference thisUser = users.child(userAuth.getCurrentUser().getUid());
-                            thisUser.setValue(new UserProfile(email, null, null, null, null, null));
+                            thisUser.setValue(new UserProfile(email, null, null, null, new ArrayList<UserProfile>(), new ArrayList<Bid>()));
                         }
                         else {
                             Log.e(TAG, "createUser:failed", task.getException());

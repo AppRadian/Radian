@@ -23,13 +23,20 @@ import android.widget.TimePicker;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.lyl.radian.Adapter.PlacesAutoCompleteAdapter;
 import com.lyl.radian.Adapter.SpinnerAdapter;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Bid;
 
 public class BidDialog extends DialogFragment {
     AutoCompleteTextView location;
@@ -182,6 +189,18 @@ public class BidDialog extends DialogFragment {
                 if (city != null && description.getText().toString().length() != 0 && location.getText().toString().length() != 0 &&
                  city.equals(location.getText().toString()) && time.getText().toString().length() != 0 && date.getText().toString().length() != 0 && participants.getText().toString().length() != 0) {
                     Double[] latLong = getLocationFromAddress(autocompleteView.getText().toString());
+
+                    DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids");
+                    String key = ownBids.push().getKey();
+                    Bid bidToInsert = new Bid(FirebaseAuth.getInstance().getCurrentUser().getEmail(), bid, description.getText().toString(),
+                            location.getText().toString(), 0, 0, date.getText().toString(), time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
+
+                    Map<String, Object> postValues = new HashMap<String, Object>();
+                    postValues.put(key, bidToInsert);
+                    ownBids.updateChildren(postValues);
+
+                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
+                    bids.updateChildren(postValues);
 
                     getDialog().dismiss();
                 }

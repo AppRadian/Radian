@@ -11,6 +11,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,17 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.lyl.radian.Activities.MainAppActivity;
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapterBiete;
 import com.lyl.radian.Adapter.RecyclerItemClickListener;
@@ -30,6 +41,7 @@ import com.lyl.radian.DialogFragments.BidDialog;
 import com.lyl.radian.DialogFragments.MyDialogCloseListener;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Bid;
 import com.lyl.radian.Utilities.Constants;
 import com.lyl.radian.Widgets.HidingScrollListener;
 
@@ -42,9 +54,13 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
     View view;
     MainAppActivity callingActivity;
     RecyclerView bieteList;
+    ArrayList<Bid> bidsList = new ArrayList<>();
     public CustomRecyclerViewAdapterBiete adapter;
     Account account;
     FloatingActionButton fab;
+    private FirebaseDatabase database;
+    private DatabaseReference bids;
+    boolean initalDataLoaded = false;
 
     @Nullable
     @Override
@@ -54,7 +70,70 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
 
         account = (Account) callingActivity.getApplication();
 
-        adapter = new CustomRecyclerViewAdapterBiete(this, new ArrayList<String[]>());
+        database = FirebaseDatabase.getInstance();
+        bids = database.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids");
+
+
+        bids.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                HashMap<String, Object> td = (HashMap<String, Object>) dataSnapshot.getValue();
+                Bid bid = new Bid();
+                for(Object o : td.values()) {
+                    HashMap<String, String> map = (HashMap<String, String>)o;
+                    //TODO fertigstellen
+                    //bid = new Bid(map.get("email"), map.get("tag"), map.get("description"), map.get("location"), map.get(""))
+                }
+                    initalDataLoaded = true;
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        bids.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if(initalDataLoaded) {
+                    Bid bid = dataSnapshot.getValue(Bid.class);
+                    bidsList.add(bid);
+                    adapter.notifyDataSetChanged();
+                }
+                else
+                    Log.e("ignored","ignored");
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                if(initalDataLoaded) {
+                    Bid bid = dataSnapshot.getValue(Bid.class);
+                    bidsList.add(bid);
+                    adapter.notifyDataSetChanged();
+                }
+                else
+                    Log.e("ignored","ignored");
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        adapter = new CustomRecyclerViewAdapterBiete(this, bidsList);
         bieteList = (RecyclerView) view.findViewById(R.id.bieteList);
         bieteList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -92,6 +171,7 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
         bieteList.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
             @Override public void onItemClick(View view, int position) {
 
+                /**
                 String id = adapter.getItem(position)[0];
                 String email = adapter.getItem(position)[1];
                 String tag = adapter.getItem(position)[2];
@@ -104,6 +184,7 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
                 String part = adapter.getItem(position)[9];
                 String maxPart = adapter.getItem(position)[10];
 
+                 **/
                 OwnSearchItemFragment f = new OwnSearchItemFragment();
                 account.fm.beginTransaction().replace(R.id.content_frame, f, "OwnsearchItem").addToBackStack("OwnsearchItem").commit();
             }
