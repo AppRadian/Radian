@@ -25,6 +25,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -78,7 +79,8 @@ public class HomeFragment extends Fragment {
 
                 added = true;
                 Bid bid = dataSnapshot.getValue(Bid.class);
-                listItems.add(bid);
+                if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+                    listItems.add(bid);
                 adapter.notifyDataSetChanged();
             }
 
@@ -87,7 +89,8 @@ public class HomeFragment extends Fragment {
 
                 if(!added) {
                     Bid bid = dataSnapshot.getValue(Bid.class);
-                    listItems.add(bid);
+                    if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
+                        listItems.add(bid);
                     adapter.notifyDataSetChanged();
                 }
             }
