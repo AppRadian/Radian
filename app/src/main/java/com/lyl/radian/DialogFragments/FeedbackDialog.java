@@ -18,6 +18,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.DBObjects.Feedback;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
@@ -57,25 +59,19 @@ public class FeedbackDialog extends DialogFragment {
                 // Update the Bid from the user und in the bid DB
                 // Get DB Reference of Bids
                 DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
-                bids.child(account.getClickedBid().getId()).addChildEventListener(new ChildEventListener() {
+                bids.child(account.getClickedBid().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Bid bid = dataSnapshot.getValue(Bid.class);
+                        double averageRating = bid.getAverageRating();
+                        long count = bid.getCount();
 
-                    }
+                        // set new count
+                        bid.setCount(count++);
 
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        // Update count
-                        
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                        // calculate new average rating
+                        averageRating = ((averageRating * (count - 1)) + ratingBar.getRating()) / bid.getCount();
+                        bid.setAverageRating(averageRating);
 
                     }
 
