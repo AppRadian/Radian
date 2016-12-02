@@ -74,6 +74,7 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
+                Log.e("childAdded","childAdded");
                 String bidId = dataSnapshot.getValue(String.class);
                 DatabaseReference ownBids = database.getReference("Bids").child(bidId);
                 ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -94,6 +95,7 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
+                Log.e("childChanged","childChanged");
                 String bidId = dataSnapshot.getValue(String.class);
                 DatabaseReference ownBids = database.getReference("Bids").child(bidId);
                 ownBids.addListenerForSingleValueEvent(new ValueEventListener() {

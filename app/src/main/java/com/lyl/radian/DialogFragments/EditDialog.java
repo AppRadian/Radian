@@ -60,7 +60,6 @@ public class EditDialog extends DialogFragment {
     String city;
     String bid;
     Spinner bidTypes;
-    String id;
     TextView description;
     TextView date;
     TextView time;
@@ -214,12 +213,12 @@ public class EditDialog extends DialogFragment {
                             long count = data.getCount();
                             long participants = data.getParticipants();
                             DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids").push();
-                            ownBids.setValue(ownBids.getKey());
+                            ownBids.setValue(account.getClickedBid().getId());
 
                             Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), account.getClickedBid().getProfilePic(), bid, description.getText().toString(),
-                                    location.getText().toString(), averageRating, count, date.getText().toString(), time.getText().toString(), 0, participants);
+                                    location.getText().toString(), averageRating, count, date.getText().toString(), time.getText().toString(), participants, Long.parseLong(EditDialog.this.participants.getText().toString()));
                             DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
-                            bids.child(ownBids.getKey()).setValue(bidToInsert);
+                            bids.child(account.getClickedBid().getId()).setValue(bidToInsert);
                             account.setClickedBid(bidToInsert);
                         }
 
