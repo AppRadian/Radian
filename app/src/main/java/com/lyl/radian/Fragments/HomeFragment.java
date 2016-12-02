@@ -73,11 +73,9 @@ public class HomeFragment extends Fragment {
 
         listItems.clear();
         bids.addChildEventListener(new ChildEventListener() {
-            boolean added = false;
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                added = true;
+                
                 Bid bid = dataSnapshot.getValue(Bid.class);
                 if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
                     listItems.add(bid);
@@ -87,12 +85,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                if(!added) {
-                    Bid bid = dataSnapshot.getValue(Bid.class);
-                    if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
-                        listItems.add(bid);
-                    adapter.notifyDataSetChanged();
-                }
             }
 
             @Override
