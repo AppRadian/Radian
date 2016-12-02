@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.bumptech.glide.Glide;
@@ -113,8 +114,25 @@ public class SearchItemFragment extends Fragment{
                     });
 
                 // Update user Object with participated events
-                DatabaseReference users = FirebaseDatabase.getInstance().getReference(Constants.USER_DB);
-                
+                DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                user.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get user object
+                        UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+
+                        // Extract the needed ArrayList<Bid> with Bid-References where the user participates
+                        ArrayList<Bid> participationList = userProfile.getParticipations();
+
+                        // Add participation
+                        
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
             }
         });

@@ -38,6 +38,7 @@ import com.lyl.radian.Adapter.PlacesAutoCompleteAdapter;
 import com.lyl.radian.DBObjects.UserProfile;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Constants;
 
 /**
  * Created by Ludwig on 29.10.2016.
@@ -71,7 +72,7 @@ public class SettingsActivity extends Activity {
         password = (EditText) findViewById(R.id.changePassword);
         passwordConfirm = (EditText) findViewById(R.id.ConfirmPassword);
         profilePicView = (ImageView) findViewById(R.id.changeProfilePic);
-        user = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         user.addChildEventListener(new ChildEventListener() {
             @Override
