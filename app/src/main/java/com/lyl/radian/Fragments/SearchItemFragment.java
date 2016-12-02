@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.bumptech.glide.Glide;
@@ -31,6 +32,7 @@ import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.Activities.MainAppActivity;
 import com.lyl.radian.Activities.ShowBidFeedbackActivity;
 import com.lyl.radian.DBObjects.Bid;
+import com.lyl.radian.DBObjects.UserProfile;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Utilities.Constants;
@@ -112,7 +114,25 @@ public class SearchItemFragment extends Fragment{
                     });
 
                 // Update user Object with participated events
-                DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB);
+                DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                user.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get user object
+                        UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+
+                        // Extract the needed ArrayList<Bid> with Bid-References where the user participates
+                        ArrayList<Bid> participationList = userProfile.getParticipations();
+
+                        // Add participation
+                        
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
             }
         });
