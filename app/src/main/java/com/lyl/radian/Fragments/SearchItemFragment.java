@@ -84,31 +84,41 @@ public class SearchItemFragment extends Fragment{
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Update the DB participants
-                DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
-                bids.child(account.getClickedBid().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Get the bid object from the DB
-                        Bid bid = dataSnapshot.getValue(Bid.class);
+                String thisUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                // Check if you are participating at your own event
+                if (thisUid.equals(account.getClickedBid().getId())) {
+                    // do nothing
+                } else {
+                    // Update the DB participants
+                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
+                    bids.child(account.getClickedBid().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // Get the bid object from the DB
+                            Bid bid = dataSnapshot.getValue(Bid.class);
 
-                        // Extract the needed value
-                        long participants = bid.getParticipants();
-                        participants++;
+                            // Extract the needed value
+                            long participants = bid.getParticipants();
+                            participants++;
 
-                        // set new participants
-                        bid.setParticipants(participants);
+                            // set new participants
+                            bid.setParticipants(participants);
 
-                        // Transfer update to DB
-                        DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
-                        bids.child(account.getClickedBid().getId()).setValue(bid);
-                    }
+                            // Transfer update to DB
+                            DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
+                            bids.child(account.getClickedBid().getId()).setValue(bid);
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+                // Update user Object with participated events
+
             }
         });
 

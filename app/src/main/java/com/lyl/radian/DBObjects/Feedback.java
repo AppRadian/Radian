@@ -6,25 +6,31 @@ package com.lyl.radian.DBObjects;
 
 public class Feedback {
     String bidId;
-    String fromUser;
+    String fromUserId;
+    String fromUserMail;
+    String toUserId;
+    String toUserMail;
     double rating;
     String text;
 
     public Feedback() {}
 
-    public Feedback(String bidId, String fromUser, double rating, String text) {
+    public Feedback(String bidId, String fromUserId, String fromUserMail, String toUserId, String toUserMail, double rating, String text) {
         this.bidId = bidId;
-        this.fromUser = fromUser;
+        this.fromUserId = fromUserId;
+        this.toUserId = toUserId;
         this.rating = rating;
         this.text = text;
+        this.fromUserMail = fromUserMail;
+        this.toUserMail = toUserMail;
     }
 
     public String getBidId() {
         return bidId;
     }
 
-    public String getFromUser() {
-        return fromUser;
+    public String getFromUserId() {
+        return fromUserId;
     }
 
     public double getRating() {
@@ -39,8 +45,8 @@ public class Feedback {
         this.bidId = bidId;
     }
 
-    public void setFromUser(String fromUser) {
-        this.fromUser = fromUser;
+    public void setFromUserId(String fromUserId) {
+        this.fromUserId = fromUserId;
     }
 
     public void setRating(double rating) {
@@ -49,5 +55,29 @@ public class Feedback {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(String toUserId) {
+        this.toUserId = toUserId;
+    }
+
+    public String getFromUserMail() {
+        return fromUserMail;
+    }
+
+    public void setFromUserMail(String fromUserMail) {
+        this.fromUserMail = fromUserMail;
+    }
+
+    public String getToUserMail() {
+        return toUserMail;
+    }
+
+    public void setToUserMail(String toUserMail) {
+        this.toUserMail = toUserMail;
     }
 }
