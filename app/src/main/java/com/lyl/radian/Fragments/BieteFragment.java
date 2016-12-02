@@ -29,6 +29,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.lyl.radian.Activities.MainAppActivity;
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapterBiete;
 import com.lyl.radian.Adapter.RecyclerItemClickListener;
@@ -74,19 +75,42 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
                 added = true;
-                Bid bid = dataSnapshot.getValue(Bid.class);
-                bidsList.add(bid);
-                adapter.notifyDataSetChanged();
+                String bidId = dataSnapshot.getValue(String.class);
+                DatabaseReference ownBids = database.getReference("Bids").child(bidId);
+                ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Bid bid = dataSnapshot.getValue(Bid.class);
+                        bidsList.add(bid);
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
                 if(!added) {
-                    Log.e("hallo2", "added2");
-                    Bid bid = dataSnapshot.getValue(Bid.class);
-                    bidsList.add(bid);
-                    adapter.notifyDataSetChanged();
+                    String bidId = dataSnapshot.getValue(String.class);
+                    DatabaseReference ownBids = database.getReference("Bids").child(bidId);
+                    ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Bid bid = dataSnapshot.getValue(Bid.class);
+                            bidsList.add(bid);
+                            adapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
 

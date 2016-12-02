@@ -9,6 +9,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +23,20 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.io.IOException;
+import java.nio.DoubleBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.lyl.radian.Adapter.SpinnerAdapter;
 import com.lyl.radian.Adapter.*;
 import com.lyl.radian.Fragments.OwnSearchItemFragment;
@@ -198,16 +205,29 @@ public class EditDialog extends DialogFragment {
                         city.equals(location.getText().toString()) && time.getText().toString().length() != 0 && date.getText().toString().length() != 0 && participants.getText().toString().length() != 0) {
                     Double[] latLong = getLocationFromAddress(autocompleteView.getText().toString());
 
-                    DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids");
-                    Bid bidToInsert = new Bid(account.getClickedBid().id,FirebaseAuth.getInstance().getCurrentUser().getUid(),FirebaseAuth.getInstance().getCurrentUser().getEmail() ,bid, description.getText().toString(),
-                            location.getText().toString(), 0, 0, date.getText().toString(), time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
+                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids").child(account.getClickedBid().getId());
+                    bids.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Bid data = dataSnapshot.getValue(Bid.class);
+                            double averageRating = data.getAverageRating();
+                            long count = data.getCount();
+                            long participants = data.getParticipants();
+                            DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids").push();
+                            ownBids.setValue(ownBids.getKey());
 
-                    ownBids.child(account.getClickedBid().id).setValue(bidToInsert);
+                            Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), account.getClickedBid().getProfilePic(), bid, description.getText().toString(),
+                                    location.getText().toString(), averageRating, count, date.getText().toString(), time.getText().toString(), 0, participants);
+                            DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
+                            bids.child(ownBids.getKey()).setValue(bidToInsert);
+                            account.setClickedBid(bidToInsert);
+                        }
 
-                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
-                    bids.child(account.getClickedBid().id).setValue(bidToInsert);
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    account.setClickedBid(bidToInsert);
+                        }
+                    });
 
                     getDialog().dismiss();
                 }
