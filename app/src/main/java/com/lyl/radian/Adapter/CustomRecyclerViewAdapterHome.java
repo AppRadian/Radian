@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import com.lyl.radian.NetworkUtilities.GetBitmap;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 
@@ -61,7 +60,7 @@ public class CustomRecyclerViewAdapterHome extends RecyclerView.Adapter<CustomRe
         if(pic != null)
             holder.profilePic.setImageBitmap(pic);
         else
-            new GetBitmap(activity, holder.profilePic, data.get(position)[1]).execute();
+            ;//new GetBitmap(activity, holder.profilePic, data.get(position)[1]).execute();
     }
 
     @Override

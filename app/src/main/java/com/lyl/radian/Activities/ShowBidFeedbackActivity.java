@@ -15,7 +15,6 @@ import java.util.HashMap;
 import com.lyl.radian.Adapter.CustomAdapter;
 import com.lyl.radian.DialogFragments.FeedbackDialog;
 import com.lyl.radian.DialogFragments.MyDialogCloseListener;
-import com.lyl.radian.NetworkUtilities.SearchFeedback;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 
@@ -44,7 +43,7 @@ public class ShowBidFeedbackActivity extends FragmentActivity implements MyDialo
         feedbackList = (ListView) findViewById(R.id.listFeedback);
         ratingBar = (RatingBar) findViewById(R.id.avergageRating);
 
-        bid.setText(account.getSearchedItem().getTag());
+
         adapter = new CustomAdapter(this, feedbacks);
         feedbackList.setAdapter(adapter);
 
@@ -53,15 +52,9 @@ public class ShowBidFeedbackActivity extends FragmentActivity implements MyDialo
             public void onClick(View v) {
                 FeedbackDialog add = new FeedbackDialog();
                 add.setArguments(new Bundle());
-                add.getArguments().putInt("id", Integer.parseInt(account.getSearchedItem().getId()));
-                add.getArguments().putString("tag", account.getSearchedItem().getTag());
                 add.show(getSupportFragmentManager(), "Feedback Dialog");
             }
         });
-        HashMap<String, String> data = account.getAuthMap();
-        data.put("id", account.getSearchedItem().getId());
-        data.put("tag", account.getSearchedItem().getTag());
-        new SearchFeedback(this, data).execute();
 
     }
 
@@ -71,10 +64,6 @@ public class ShowBidFeedbackActivity extends FragmentActivity implements MyDialo
 
     private void refresh(){
         feedbacks.clear();
-        HashMap<String, String> data = account.getAuthMap();
-        data.put("id", account.getSearchedItem().getId());
-        data.put("tag", account.getSearchedItem().getTag());
-        new SearchFeedback(this, data).execute();
     }
 
 

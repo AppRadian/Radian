@@ -29,7 +29,6 @@ import java.util.HashMap;
 
 import com.lyl.radian.Activities.SettingsActivity;
 import com.lyl.radian.Adapter.CustomAdapterSearch;
-import com.lyl.radian.NetworkUtilities.SearchBid;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 
@@ -99,17 +98,6 @@ public class SearchFragment extends Fragment {
             public void onClick(View v) {
                 listItems.clear();
                 adapter.notifyDataSetChanged();
-
-                if(account.getSelf().getLocation().equals("N/A"))
-                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Please set your location first", Snackbar.LENGTH_INDEFINITE)
-                            .setAction("Set location", setLocation)
-                            .setActionTextColor(Color.RED)
-                            .show();
-                else {
-                    HashMap<String, String> data = account.getAuthMap();
-                    data.put("tag", searchField.getText().toString());
-                    new SearchBid(SearchFragment.this, data).execute();
-                }
             }
         });
 
@@ -130,7 +118,6 @@ public class SearchFragment extends Fragment {
                 String part = adapter.getItem(position)[10];
                 String maxPart = adapter.getItem(position)[11];
 
-                account.setSearchedItem(getActivity(), id, email, tag, description, location, averageRating, count, distance, date, time, part, maxPart);
                 SearchItemFragment f = new SearchItemFragment();
                 account.fm.beginTransaction().replace(R.id.content_frame, f, "searchItem").addToBackStack("searchItem").commit();
             }

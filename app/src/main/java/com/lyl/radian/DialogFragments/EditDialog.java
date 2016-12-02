@@ -102,12 +102,7 @@ public class EditDialog extends DialogFragment {
         participants = (EditText) rootView.findViewById(R.id.participants);
         description = (TextView) rootView.findViewById(R.id.description);
 
-        id = account.getSearchedItem().getId();
-        location.setText(account.getSearchedItem().getLocation());
-        time.setText(account.getSearchedItem().getTime());
-        date.setText(account.getSearchedItem().getDate());
-        participants.setText(account.getSearchedItem().getMaxParticipators());
-        description.setText(account.getSearchedItem().getDescription());
+
 
         final AutoCompleteTextView autocompleteView = (AutoCompleteTextView) rootView.findViewById(R.id.location);
         autocompleteView.setAdapter(new PlacesAutoCompleteAdapter(getActivity(), R.layout.autocomplete_list_item)); // vorher getActivity() anstelle von this

@@ -147,7 +147,6 @@ public class MainAppActivity extends AppCompatActivity
             account.fm.beginTransaction().replace(R.id.content_frame, inboxFragment, "helping").addToBackStack("helping").commit();
         }
         else if (id == R.id.nav_logout){
-            account.logout(this);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -47,10 +47,12 @@ public class SettingsActivity extends Activity {
         passwordConfirm = (EditText) findViewById(R.id.ConfirmPassword);
         profilePic = (ImageView) findViewById(R.id.changeProfilePic);
 
+        /**
         profilePic.setImageBitmap(account.getSelf().getProfilePic());
         location.setText(account.getSelf().getLocation());
         language.setText(account.getSelf().getLanguage());
         city = account.getSelf().getLocation();
+         **/
 
         final AutoCompleteTextView autocompleteView = (AutoCompleteTextView) findViewById(R.id.changeLocation);
         autocompleteView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.autocomplete_list_item));
@@ -84,19 +86,17 @@ public class SettingsActivity extends Activity {
                     String pwConfirm = passwordConfirm.getText().toString();
 
                     if (loc.length() > 0 && city.equals(location.getText().toString())) {
-                            account.getSelf().setLocation(loc);
-                            account.editLocation(SettingsActivity.this, loc);
+
                     } else
                             location.setError("Select existing location");
 
                     if (lang.length() > 0) {
-                            account.getSelf().setLanguage(lang);
-                            account.editLanguage(SettingsActivity.this, lang);
+
                     }
 
                     if (currentPw.length() > 0 && pw.length() > 0 && pwConfirm.length() > 0) {
                         if (pw.equals(pwConfirm)) {
-                                account.editPassword(SettingsActivity.this, currentPw, pw);
+
                         } else
                                 passwordConfirm.setError("Passwords do not match");
                     }
@@ -116,16 +116,7 @@ public class SettingsActivity extends Activity {
                 int height = r.getDisplayMetrics().heightPixels / 2;
                 int width = r.getDisplayMetrics().widthPixels;
 
-                try {
-                    account.getSelf().getProfilePic().recycle();
-                    account.getSelf().setProfilePic(null);
-                    account.getSelf().setProfilePic(Constants.decodeBitmap(this, uri, width, (int)height));
-                    profilePic.setImageBitmap(account.getSelf().getProfilePic());
-                    account.uploadProfilePic(this, account.getSelf().getProfilePic());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                }
+
             }
         }
     }

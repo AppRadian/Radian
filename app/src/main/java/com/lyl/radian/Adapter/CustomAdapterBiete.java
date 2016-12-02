@@ -74,7 +74,7 @@ public class CustomAdapterBiete extends BaseAdapter {
         ratingBar.setRating(Float.parseFloat(data.get(position)[5]));
         count.setText(data.get(position)[6] + " Bewertungen");
         maxPart.setText(data.get(position)[9] + "/" + data.get(position)[10]);
-        profilePic.setImageBitmap(account.getSelf().getProfilePic());
+        //profilePic.setImageBitmap(account.getSelf().getProfilePic());
 
         return vi;
     }

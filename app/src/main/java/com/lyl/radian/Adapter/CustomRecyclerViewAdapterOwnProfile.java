@@ -67,13 +67,11 @@ public class CustomRecyclerViewAdapterOwnProfile extends RecyclerView.Adapter<Re
             holder.ratingBar.setRating(Float.parseFloat(data.get(position)[5]));
             holder.count.setText(data.get(position)[6] + " Bewertungen");
             holder.maxPart.setText(data.get(position)[9] + "/" + data.get(position)[10]);
-            holder.profilePic.setImageBitmap(account.getSelf().getProfilePic());
+            //holder.profilePic.setImageBitmap(account.getSelf().getProfilePic());
         }
         else if (viewHolder instanceof ProfileHeaderViewHolder) {
             ProfileHeaderViewHolder holder = (ProfileHeaderViewHolder) viewHolder;
 
-            holder.location.setText(account.getSelf().getLocation());
-            holder.language.setText(account.getSelf().getLanguage());
         }
     }
 

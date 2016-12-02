@@ -27,7 +27,6 @@ import com.lyl.radian.Adapter.CustomRecyclerViewAdapterBiete;
 import com.lyl.radian.Adapter.RecyclerItemClickListener;
 import com.lyl.radian.DialogFragments.BidDialog;
 import com.lyl.radian.DialogFragments.MyDialogCloseListener;
-import com.lyl.radian.NetworkUtilities.LoadOwnBids;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Utilities.Constants;
@@ -54,7 +53,7 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
 
         account = (Account) callingActivity.getApplication();
 
-        adapter = new CustomRecyclerViewAdapterBiete(this, account.getSelf().getOwnBids());
+        adapter = new CustomRecyclerViewAdapterBiete(this, null);
         bieteList = (RecyclerView) view.findViewById(R.id.bieteList);
         bieteList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -104,7 +103,6 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
                 String part = adapter.getItem(position)[9];
                 String maxPart = adapter.getItem(position)[10];
 
-                account.setSearchedItem(getActivity(), id, email, tag, description, location, averageRating, count, null, date, time, part, maxPart);
                 OwnSearchItemFragment f = new OwnSearchItemFragment();
                 account.fm.beginTransaction().replace(R.id.content_frame, f, "OwnsearchItem").addToBackStack("OwnsearchItem").commit();
             }
@@ -126,10 +124,6 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Deine Angebote");
         ((ImageView)getActivity().findViewById(R.id.ownProfilePic)).setImageBitmap(null);
 
-        HashMap<String, String> data = account.getAuthMap();
-        data.put("email", account.getSelf().getEmail());
-        data.put("lastId", Constants.lastIdOwnBids);
-        new LoadOwnBids(this, data).execute();
     }
 
     @Override

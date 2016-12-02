@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import com.lyl.radian.NetworkUtilities.GetBitmap;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 
@@ -76,14 +75,13 @@ public class CustomRecyclerViewAdapterUpcoming extends RecyclerView.Adapter<Recy
                 holder.profilePic.setImageBitmap(pic);
             }
             else {
-                new GetBitmap(activity, holder.profilePic, data.get(position)[1]).execute();
+
             }
         }
         else if (viewHolder instanceof ProfileHeaderViewHolder) {
             ProfileHeaderViewHolder holder = (ProfileHeaderViewHolder) viewHolder;
 
-            holder.location.setText(account.getSelf().getLocation());
-            holder.language.setText(account.getSelf().getLanguage());
+
         }
     }
 

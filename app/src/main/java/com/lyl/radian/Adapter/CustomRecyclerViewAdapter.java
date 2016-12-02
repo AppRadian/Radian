@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import com.lyl.radian.NetworkUtilities.GetBitmap;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 
@@ -74,17 +73,18 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             holder.count.setText(data.get(position)[6] + " Bewertungen");
             holder.maxPart.setText(data.get(position)[10] + "/" + data.get(position)[11]);
 
+            /**
             Bitmap pic = account.getBitmapFromCache(account.getSearchedItem().getEmail());
             if(pic != null)
                 holder.profilePic.setImageBitmap(pic);
             else
                 new GetBitmap(activity, holder.profilePic, data.get(position)[1]).execute();
+             **/
 
         } else if (viewHolder instanceof ProfileHeaderViewHolder) {
             ProfileHeaderViewHolder holder = (ProfileHeaderViewHolder) viewHolder;
 
-            holder.location.setText(account.getSearchedUser().getLocation());
-            holder.language.setText(account.getSearchedUser().getLanguage());
+
         }
     }
 

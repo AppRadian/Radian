@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import com.lyl.radian.NetworkUtilities.GetBitmap;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 
@@ -83,7 +82,7 @@ public class CustomAdapterSearch extends BaseAdapter {
         if(pic != null)
             profilePic.setImageBitmap(pic);
         else
-            new GetBitmap(context, profilePic, data.get(position)[1]).execute();
+            //new GetBitmap(context, profilePic, data.get(position)[1]).execute();
 
         return vi;
     }

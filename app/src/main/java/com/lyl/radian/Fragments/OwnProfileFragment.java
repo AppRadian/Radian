@@ -100,7 +100,7 @@ public class OwnProfileFragment extends Fragment {
         p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
         content.setLayoutParams(p);
 
-        profilePic.setImageBitmap(ThumbnailUtils.extractThumbnail(account.getSelf().getProfilePic(), profilePic.getWidth(), (int)px));
+        //TODO ProfilePic
         if(!isProfilePrevious())
             ((TextView) getActivity().findViewById(R.id.toolbar_title)).setText("");
         else

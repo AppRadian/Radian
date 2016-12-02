@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapterOwnProfile;
 import com.lyl.radian.Adapter.RecyclerItemClickListener;
-import com.lyl.radian.NetworkUtilities.LoadOwnBids;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Utilities.Constants;
@@ -35,7 +34,7 @@ public class OwnBidsFragment extends SuperProfileFragment {
         account = (Account) getActivity().getApplication();
 
         profilePic = (ImageView) getActivity().findViewById(R.id.ownProfilePic);
-        adapter = new CustomRecyclerViewAdapterOwnProfile(this, account.getSelf().getOwnBids());
+        adapter = new CustomRecyclerViewAdapterOwnProfile(this, null);
         bidList = (RecyclerView) view.findViewById(R.id.cardList);
         bidList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -74,7 +73,6 @@ public class OwnBidsFragment extends SuperProfileFragment {
                         String part = adapter.getItem(position)[9];
                         String maxPart = adapter.getItem(position)[10];
 
-                        account.setSearchedItem(getActivity(), id, email, tag, description, location, averageRating, count, null, date, time, part, maxPart);
                         OwnSearchItemFragment f = new OwnSearchItemFragment();
                         getChildFragmentManager().beginTransaction().replace(R.id.content_frame, f, "OwnsearchItem").addToBackStack(null).commit();
                     }
@@ -86,10 +84,6 @@ public class OwnBidsFragment extends SuperProfileFragment {
 
     private void refresh() {
 
-        HashMap<String, String> data = account.getAuthMap();
-        data.put("email", account.getSelf().getEmail());
-        data.put("lastId", Constants.lastIdOwnBids);
-        new LoadOwnBids(this, data).execute();
     }
 
     @Override

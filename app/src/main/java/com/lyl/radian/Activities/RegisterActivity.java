@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.lyl.radian.NetworkUtilities.Register;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Constants;
 
