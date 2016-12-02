@@ -48,8 +48,8 @@ public class FeedbackDialog extends DialogFragment {
                 String fromUser = FirebaseAuth.getInstance().getCurrentUser().getEmail();
                 Feedback feedbackToInsert = new Feedback(account.getClickedBid().getId(), fromUser, rating, feedbackText);
 
-                DatabaseReference feedback = FirebaseDatabase.getInstance().getReference("Feedback").child(account.getClickedBid().getUserId()).child("receivedFeedback").push();
-                feedback.setValue(feedbackToInsert);
+                DatabaseReference feedback = FirebaseDatabase.getInstance().getReference("Feedback");
+                feedback.child(account.getClickedBid().getUserId()).setValue(feedbackToInsert);
 
                 getDialog().dismiss();
             }
