@@ -26,11 +26,19 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.Adapter.PlacesAutoCompleteAdapter;
 import com.lyl.radian.Adapter.SpinnerAdapter;
+import com.lyl.radian.Fragments.OwnSearchItemFragment;
 import com.lyl.radian.R;
 import com.lyl.radian.DBObjects.Bid;
 
@@ -186,14 +194,53 @@ public class BidDialog extends DialogFragment {
                  city.equals(location.getText().toString()) && time.getText().toString().length() != 0 && date.getText().toString().length() != 0 && participants.getText().toString().length() != 0) {
                     Double[] latLong = getLocationFromAddress(autocompleteView.getText().toString());
 
-                    DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids").push();
-                    Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), bid, description.getText().toString(),
-                            location.getText().toString(), 0, 0, date.getText().toString(), time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
+                    DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    user.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            if(dataSnapshot.getKey().equals("profilePic")) {
+                                String profilePic = (String)dataSnapshot.getValue();
+                                DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids").push();
+                                Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), profilePic, bid, description.getText().toString(),
+                                        location.getText().toString(), 0, 0, date.getText().toString(), time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
 
-                    ownBids.setValue(bidToInsert);
+                                ownBids.setValue(bidToInsert);
 
-                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
-                    bids.child(ownBids.getKey()).setValue(bidToInsert);
+                                DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
+                                bids.child(ownBids.getKey()).setValue(bidToInsert);
+                            }
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                            if(dataSnapshot.getKey().equals("profilePic")) {
+                                String profilePic = (String)dataSnapshot.getValue();
+                                DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids").push();
+                                Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), profilePic, bid, description.getText().toString(),
+                                        location.getText().toString(), 0, 0, date.getText().toString(), time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
+
+                                ownBids.setValue(bidToInsert);
+
+                                DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
+                                bids.child(ownBids.getKey()).setValue(bidToInsert);
+                            }
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
                     getDialog().dismiss();
                 }
