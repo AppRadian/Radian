@@ -116,7 +116,7 @@ public class SettingsActivity extends Activity {
                 int height = r.getDisplayMetrics().heightPixels / 2;
                 int width = r.getDisplayMetrics().widthPixels;
 
-
+                
             }
         }
     }

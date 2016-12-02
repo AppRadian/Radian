@@ -74,8 +74,11 @@ public class HomeFragment extends Fragment {
 
         listItems.clear();
         bids.addChildEventListener(new ChildEventListener() {
+            boolean added = false;
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                added = true;
                 Bid bid = dataSnapshot.getValue(Bid.class);
                 listItems.add(bid);
                 adapter.notifyDataSetChanged();
@@ -83,9 +86,12 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Bid bid = dataSnapshot.getValue(Bid.class);
-                listItems.add(bid);
-                adapter.notifyDataSetChanged();
+
+                if(!added) {
+                    Bid bid = dataSnapshot.getValue(Bid.class);
+                    listItems.add(bid);
+                    adapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -162,23 +168,8 @@ public class HomeFragment extends Fragment {
         };
 
         searches.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-
-                        /**
-                String id = adapter.getItem(position)[0];
-                String email = adapter.getItem(position)[1];
-                String tag = adapter.getItem(position)[2];
-                String description = adapter.getItem(position)[3];
-                String location = adapter.getItem(position)[4];
-                String averageRating = adapter.getItem(position)[5];
-                String count = adapter.getItem(position)[6];
-                String distance = adapter.getItem(position)[7];
-                String date = adapter.getItem(position)[8];
-                String time = adapter.getItem(position)[9];
-                String part = adapter.getItem(position)[10];
-                String maxPart = adapter.getItem(position)[11];
-                         **/
-
+            @Override public void onItemClick(View view, int position) {
+                account.setClickedBid(adapter.getItem(position));
                 SearchItemFragment f = new SearchItemFragment();
                 account.fm.beginTransaction().replace(R.id.content_frame, f, "searchItem").addToBackStack("searchItem").commit();
             }

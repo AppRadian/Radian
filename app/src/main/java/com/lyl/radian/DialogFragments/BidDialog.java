@@ -190,17 +190,14 @@ public class BidDialog extends DialogFragment {
                  city.equals(location.getText().toString()) && time.getText().toString().length() != 0 && date.getText().toString().length() != 0 && participants.getText().toString().length() != 0) {
                     Double[] latLong = getLocationFromAddress(autocompleteView.getText().toString());
 
-                    DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids");
-                    String key = ownBids.push().getKey();
-                    Bid bidToInsert = new Bid(FirebaseAuth.getInstance().getCurrentUser().getEmail(), bid, description.getText().toString(),
+                    DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids").push();
+                    Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), bid, description.getText().toString(),
                             location.getText().toString(), 0, 0, date.getText().toString(), time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
 
-                    Map<String, Object> postValues = new HashMap<String, Object>();
-                    postValues.put(key, bidToInsert);
-                    ownBids.updateChildren(postValues);
+                    ownBids.setValue(bidToInsert);
 
-                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
-                    bids.updateChildren(postValues);
+                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids").push();
+                    bids.setValue(bidToInsert);
 
                     getDialog().dismiss();
                 }

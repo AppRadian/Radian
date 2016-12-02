@@ -60,7 +60,6 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
     FloatingActionButton fab;
     private FirebaseDatabase database;
     private DatabaseReference bids;
-    boolean initalDataLoaded = false;
 
     @Nullable
     @Override
@@ -74,47 +73,27 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
         bids = database.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids");
 
 
-        bids.addListenerForSingleValueEvent(new ValueEventListener() {
+        bidsList.clear();
+        bids.addChildEventListener(new ChildEventListener() {
+            boolean added = false;
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                HashMap<String, Object> td = (HashMap<String, Object>) dataSnapshot.getValue();
-                Bid bid = new Bid();
-                for(Object o : td.values()) {
-                    HashMap<String, String> map = (HashMap<String, String>)o;
-                    //TODO fertigstellen
-                    //bid = new Bid(map.get("email"), map.get("tag"), map.get("description"), map.get("location"), map.get(""))
-                }
-                    initalDataLoaded = true;
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                added = true;
+                Bid bid = dataSnapshot.getValue(Bid.class);
+                bidsList.add(bid);
                 adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        bids.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(initalDataLoaded) {
-                    Bid bid = dataSnapshot.getValue(Bid.class);
-                    bidsList.add(bid);
-                    adapter.notifyDataSetChanged();
-                }
-                else
-                    Log.e("ignored","ignored");
-            }
-
-            @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                if(initalDataLoaded) {
+
+                if(!added) {
+                    Log.e("hallo2", "added2");
                     Bid bid = dataSnapshot.getValue(Bid.class);
                     bidsList.add(bid);
                     adapter.notifyDataSetChanged();
                 }
-                else
-                    Log.e("ignored","ignored");
             }
 
             @Override
@@ -171,20 +150,7 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
         bieteList.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
             @Override public void onItemClick(View view, int position) {
 
-                /**
-                String id = adapter.getItem(position)[0];
-                String email = adapter.getItem(position)[1];
-                String tag = adapter.getItem(position)[2];
-                String description = adapter.getItem(position)[3];
-                String location = adapter.getItem(position)[4];
-                String averageRating = adapter.getItem(position)[5];
-                String count = adapter.getItem(position)[6];
-                String date = adapter.getItem(position)[7];
-                String time = adapter.getItem(position)[8];
-                String part = adapter.getItem(position)[9];
-                String maxPart = adapter.getItem(position)[10];
-
-                 **/
+                account.setClickedBid(adapter.getItem(position));
                 OwnSearchItemFragment f = new OwnSearchItemFragment();
                 account.fm.beginTransaction().replace(R.id.content_frame, f, "OwnsearchItem").addToBackStack("OwnsearchItem").commit();
             }
@@ -202,6 +168,7 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
         p.setBehavior(null);
         content.setLayoutParams(p);
 
+        bidsList.clear();
         ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Deine Angebote");
         ((ImageView)getActivity().findViewById(R.id.ownProfilePic)).setImageBitmap(null);

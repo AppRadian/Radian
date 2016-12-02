@@ -6,6 +6,7 @@ package com.lyl.radian.Utilities;
 
 public class Bid {
 
+    public String id;
     String email;
     String tag;
     String description;
@@ -20,7 +21,8 @@ public class Bid {
     public Bid() {
     }
 
-    public Bid(String email, String tag, String description, String location, double averageRating, long count, String date, String time, long participants, long maxParticipants) {
+    public Bid(String id, String email, String tag, String description, String location, double averageRating, long count, String date, String time, long participants, long maxParticipants) {
+        this.id = id;
         this.email = email;
         this.tag = tag;
         this.description = description;
@@ -32,6 +34,12 @@ public class Bid {
         this.participants = participants;
         this.maxParticipants = maxParticipants;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id){ this.id = id; }
 
     public String getEmail() {
         return email;

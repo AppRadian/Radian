@@ -69,15 +69,15 @@ public class OwnSearchItemFragment extends Fragment {
             ratingBar = (RatingBar) view.findViewById(R.id.avergageRating);
             ratings = (TextView) view.findViewById(R.id.rezensionen);
             edit = (Button) view.findViewById(R.id.editButton);
-/*
-            userProfile.setImageBitmap(account.getSelf().getProfilePic());
-            userEmail.setText(account.getSelf().getEmail());
-            userBid.setText(account.getSearchedItem().getTag());
-            timenDate.setText(account.getSearchedItem().getDate() + " - " + account.getSearchedItem().getTime() + " Uhr");
-            userDescription.setText(account.getSearchedItem().getDescription());
-            ratingBar.setRating(account.getSearchedItem().getAverageRating());
-            ratings.setText(account.getSearchedItem().getCount() + " Rezensionen");
-*/
+
+            //userProfile.setImageBitmap(account.getSelf().getProfilePic());
+            userEmail.setText(account.getClickedBid().getEmail());
+            userBid.setText(account.getClickedBid().getTag());
+            timenDate.setText(account.getClickedBid().getDate() + " - " + account.getClickedBid().getTime() + " Uhr");
+            userDescription.setText(account.getClickedBid().getDescription());
+            ratingBar.setRating((float)account.getClickedBid().getAverageRating());
+            ratings.setText(account.getClickedBid().getCount() + " Rezensionen");
+
             ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
             //((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebot von " + account.getSearchedItem().getEmail());
             ((ImageView)getActivity().findViewById(R.id.ownProfilePic)).setImageBitmap(null);

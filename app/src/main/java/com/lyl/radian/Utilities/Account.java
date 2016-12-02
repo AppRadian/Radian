@@ -20,14 +20,9 @@ import com.lyl.radian.Fragments.SearchItemFragment;
 
 public class Account extends Application {
 
-    private UserProfile self = null;
-    private UserProfile searchedUser = new UserProfile();
-    private SearchedItem searchedItem = null;
-    private boolean searchSet = false;
-    private String sessionId;
+    public Bid clickedBid;
     public LruCache<String, Bitmap> bitmapCache;
     public FragmentManager fm;
-    private String firebaseToken;
 
     /**
      * Initializes a cache for the bitmaps
@@ -49,16 +44,6 @@ public class Account extends Application {
         };
     }
 
-    public void setFirebaseToken(String token){
-
-        firebaseToken = token;
-    }
-
-    public String getFirebaseToken(){
-
-        return firebaseToken;
-    }
-
     /**
      * Adds a bitmap to cache if not already in the cache
      * @param key - email of the user associated with this bitmap
@@ -76,5 +61,13 @@ public class Account extends Application {
      */
     public Bitmap getBitmapFromCache(String key){
         return bitmapCache.get(key);
+    }
+
+    public Bid getClickedBid() {
+        return clickedBid;
+    }
+
+    public void setClickedBid(Bid clickedBid) {
+        this.clickedBid = clickedBid;
     }
 }

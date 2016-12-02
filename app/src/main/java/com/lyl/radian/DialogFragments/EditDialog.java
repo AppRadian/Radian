@@ -27,11 +27,15 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.lyl.radian.Adapter.SpinnerAdapter;
 import com.lyl.radian.Adapter.*;
 import com.lyl.radian.Fragments.OwnSearchItemFragment;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Bid;
 
 /**
  * Created by Ludwig on 20.11.2016.
@@ -193,6 +197,17 @@ public class EditDialog extends DialogFragment {
                 if (city != null && description.getText().toString().length() != 0 && location.getText().toString().length() != 0 &&
                         city.equals(location.getText().toString()) && time.getText().toString().length() != 0 && date.getText().toString().length() != 0 && participants.getText().toString().length() != 0) {
                     Double[] latLong = getLocationFromAddress(autocompleteView.getText().toString());
+
+                    DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids");
+                    Bid bidToInsert = new Bid(null,FirebaseAuth.getInstance().getCurrentUser().getEmail(), bid, description.getText().toString(),
+                            location.getText().toString(), 0, 0, date.getText().toString(), time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
+
+                    ownBids.child(account.getClickedBid().id).setValue(bidToInsert);
+
+                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
+                    bids.child(account.getClickedBid().id).setValue(bidToInsert);
+
+                    account.setClickedBid(bidToInsert);
 
                     getDialog().dismiss();
                 }
