@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapterOwnProfile;
@@ -34,7 +35,7 @@ public class OwnBidsFragment extends SuperProfileFragment {
         account = (Account) getActivity().getApplication();
 
         profilePic = (ImageView) getActivity().findViewById(R.id.ownProfilePic);
-        adapter = new CustomRecyclerViewAdapterOwnProfile(this, null);
+        adapter = new CustomRecyclerViewAdapterOwnProfile(this, new ArrayList<String[]>());
         bidList = (RecyclerView) view.findViewById(R.id.cardList);
         bidList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());

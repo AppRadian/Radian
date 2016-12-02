@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.lyl.radian.Activities.MainAppActivity;
@@ -53,7 +54,7 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
 
         account = (Account) callingActivity.getApplication();
 
-        adapter = new CustomRecyclerViewAdapterBiete(this, null);
+        adapter = new CustomRecyclerViewAdapterBiete(this, new ArrayList<String[]>());
         bieteList = (RecyclerView) view.findViewById(R.id.bieteList);
         bieteList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
