@@ -65,14 +65,16 @@ public class FeedbackDialog extends DialogFragment {
                         Bid bid = dataSnapshot.getValue(Bid.class);
                         double averageRating = bid.getAverageRating();
                         long count = bid.getCount();
+                        count++;
 
                         // set new count
-                        bid.setCount(count++);
+                        bid.setCount(count);
 
                         // calculate new average rating
                         averageRating = ((averageRating * (count - 1)) + ratingBar.getRating()) / bid.getCount();
                         bid.setAverageRating(averageRating);
-
+                        DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
+                        bids.child(account.getClickedBid().getId()).setValue(bid);
                     }
 
                     @Override

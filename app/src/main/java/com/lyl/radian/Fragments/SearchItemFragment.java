@@ -84,6 +84,12 @@ public class SearchItemFragment extends Fragment{
         join = (Button) view.findViewById(R.id.joinButton);
 
        //TODO set profile pic
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + account.getClickedBid().getProfilePic());
+        Glide.with(SearchItemFragment.this)
+                .using(new FirebaseImageLoader())
+                .load(storageRef)
+                .into(userProfile);
         userEmail.setText(account.getClickedBid().getEmail());
         userBid.setText(account.getClickedBid().getTag());
         timenDate.setText(account.getClickedBid().getDate() + " - " + account.getClickedBid().getTime() + " Uhr");
