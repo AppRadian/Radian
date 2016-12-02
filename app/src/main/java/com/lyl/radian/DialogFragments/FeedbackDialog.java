@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.lyl.radian.DBObjects.Feedback;
@@ -50,6 +53,39 @@ public class FeedbackDialog extends DialogFragment {
 
                 DatabaseReference feedback = FirebaseDatabase.getInstance().getReference("Feedback");
                 feedback.child(account.getClickedBid().getUserId()).setValue(feedbackToInsert);
+
+                // Update the Bid from the user und in the bid DB
+                // Get DB Reference of Bids
+                DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
+                bids.child(account.getClickedBid().getId()).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        // Update count
+                        
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                // Update Ragin
+
 
                 getDialog().dismiss();
             }
