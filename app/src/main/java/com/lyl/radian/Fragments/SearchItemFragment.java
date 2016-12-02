@@ -167,7 +167,7 @@ public class SearchItemFragment extends Fragment{
                 user.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        account.setSearchedUser((UserProfile)dataSnapshot.getValue());
+                        account.setSearchedUser(dataSnapshot.getValue(UserProfile.class));
                         ProfileFragment f = new ProfileFragment();
                         account.fm.beginTransaction().replace(R.id.content_frame, f, "profile").addToBackStack("profile").commit();
                     }
