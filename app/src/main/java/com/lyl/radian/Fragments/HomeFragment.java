@@ -75,7 +75,7 @@ public class HomeFragment extends Fragment {
         bids.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                
+
                 Bid bid = dataSnapshot.getValue(Bid.class);
                 if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()))
                     listItems.add(bid);

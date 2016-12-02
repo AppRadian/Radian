@@ -70,11 +70,10 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
 
         bidsList.clear();
         bids.addChildEventListener(new ChildEventListener() {
-            boolean added = false;
+
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                added = true;
                 String bidId = dataSnapshot.getValue(String.class);
                 DatabaseReference ownBids = database.getReference("Bids").child(bidId);
                 ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -95,23 +94,21 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                if(!added) {
-                    String bidId = dataSnapshot.getValue(String.class);
-                    DatabaseReference ownBids = database.getReference("Bids").child(bidId);
-                    ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Bid bid = dataSnapshot.getValue(Bid.class);
-                            bidsList.add(bid);
-                            adapter.notifyDataSetChanged();
-                        }
+                String bidId = dataSnapshot.getValue(String.class);
+                DatabaseReference ownBids = database.getReference("Bids").child(bidId);
+                ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Bid bid = dataSnapshot.getValue(Bid.class);
+                        bidsList.add(bid);
+                        adapter.notifyDataSetChanged();
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
-                }
+                    }
+                });
             }
 
             @Override
