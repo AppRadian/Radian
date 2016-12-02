@@ -84,11 +84,6 @@ public class SearchItemFragment extends Fragment{
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String thisUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                // Check if you are participating at your own event
-                if (thisUid.equals(account.getClickedBid().getId())) {
-                    // do nothing
-                } else {
                     // Update the DB participants
                     DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
                     bids.child(account.getClickedBid().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -115,9 +110,10 @@ public class SearchItemFragment extends Fragment{
 
                         }
                     });
-                }
 
                 // Update user Object with participated events
+                DatabaseReference users = FirebaseDatabase.getInstance().getReference(Constants.USER_DB);
+                
 
             }
         });
