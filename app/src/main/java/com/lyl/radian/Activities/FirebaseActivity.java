@@ -2,6 +2,7 @@ package com.lyl.radian.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -87,7 +88,7 @@ public class FirebaseActivity extends AppCompatActivity {
                             final String email = userAuth.getCurrentUser().getEmail();
 
                             DatabaseReference thisUser = users.child(userAuth.getCurrentUser().getUid());
-                            thisUser.setValue(new UserProfile(email, null, null, "", new ArrayList<UserProfile>(), new ArrayList<Bid>()));
+                            thisUser.setValue(new UserProfile(email, null, null, "images/" + email + System.currentTimeMillis(), new ArrayList<UserProfile>(), new ArrayList<Bid>()));
                         }
                         else {
                             Log.e(TAG, "createUser:failed", task.getException());

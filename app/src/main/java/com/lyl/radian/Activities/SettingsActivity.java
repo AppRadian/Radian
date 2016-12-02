@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -13,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import com.bumptech.glide.Glide;
@@ -22,6 +22,12 @@ import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.OnProgressListener;
@@ -29,9 +35,9 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.lyl.radian.Adapter.PlacesAutoCompleteAdapter;
+import com.lyl.radian.DBObjects.UserProfile;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Constants;
 
 /**
  * Created by Ludwig on 29.10.2016.
@@ -46,9 +52,12 @@ public class SettingsActivity extends Activity {
     EditText currentPassword;
     EditText password;
     EditText passwordConfirm;
-    ImageView profilePic;
+    ImageView profilePicView;
     FirebaseStorage storage;
     StorageReference storageRef;
+    String profilePic;
+    DatabaseReference user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +70,55 @@ public class SettingsActivity extends Activity {
         currentPassword = (EditText)findViewById(R.id.password);
         password = (EditText) findViewById(R.id.changePassword);
         passwordConfirm = (EditText) findViewById(R.id.ConfirmPassword);
-        profilePic = (ImageView) findViewById(R.id.changeProfilePic);
+        profilePicView = (ImageView) findViewById(R.id.changeProfilePic);
+        user = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com").child("images/"+ FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        user.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if(dataSnapshot.getKey().equals("profilePic")) {
+                    profilePic = (String)dataSnapshot.getValue();
+                    Log.e("a", profilePic);
+                    storage = FirebaseStorage.getInstance();
+                    storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+                    Glide.with(SettingsActivity.this)
+                            .using(new FirebaseImageLoader())
+                            .load(storageRef)
+                            .into(profilePicView);
+                }
+            }
 
-        Glide.with(SettingsActivity.this)
-                .using(new FirebaseImageLoader())
-                .load(storageRef)
-                .into(profilePic);
-        //profilePic.setImageBitmap(account.getSelf().getProfilePic());
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                if(dataSnapshot.getKey().equals("profilePic")) {
+                    profilePic = (String)dataSnapshot.getValue();
+                    Log.e("a", profilePic);
+                    storage = FirebaseStorage.getInstance();
+                    storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+                    Glide.with(SettingsActivity.this)
+                            .using(new FirebaseImageLoader())
+                            .load(storageRef)
+                            .into(profilePicView);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //profilePicView.setImageBitmap(account.getSelf().getProfilePic());
         //location.setText(account.get.getLocation());
         //language.setText(account.getSelf().getLanguage());
         city = "";
@@ -85,7 +133,7 @@ public class SettingsActivity extends Activity {
             }
         });
 
-        profilePic.setOnClickListener(new View.OnClickListener() {
+        profilePicView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -142,6 +190,9 @@ public class SettingsActivity extends Activity {
                         .setContentType("image/jpeg")
                         .build();
 
+                profilePic = "images/" + FirebaseAuth.getInstance().getCurrentUser().getEmail() + System.currentTimeMillis();
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
                 // Upload file and metadata to the path 'images/mountains.jpg'
                 UploadTask uploadTask = storageRef.putFile(uri, metadata);
 
@@ -166,11 +217,8 @@ public class SettingsActivity extends Activity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // Handle successful uploads on complete
-                        Glide.with(SettingsActivity.this)
-                                .using(new FirebaseImageLoader())
-                                .load(taskSnapshot.getStorage())
-                                .signature(new StringSignature(UUID.randomUUID().toString()))
-                                .into(profilePic);
+                        SettingsActivity.this.storageRef.delete();
+                        user.child("profilePic").setValue(profilePic);
                     }
                 });
             }
