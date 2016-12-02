@@ -183,7 +183,7 @@ public class SettingsActivity extends Activity {
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
                 Uri uri = data.getData();
-                
+
                 // Create the file metadata
                 StorageMetadata metadata = new StorageMetadata.Builder()
                         .setContentType("image/jpeg")

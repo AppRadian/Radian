@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.util.LruCache;
 
 import com.lyl.radian.DBObjects.Bid;
+import com.lyl.radian.DBObjects.UserProfile;
 
 /**
  * Created by Yannick on 26.10.2016.
@@ -13,6 +14,7 @@ import com.lyl.radian.DBObjects.Bid;
 
 public class Account extends Application {
 
+    public UserProfile searchedUser;
     public Bid clickedBid;
     public LruCache<String, Bitmap> bitmapCache;
     public FragmentManager fm;
@@ -67,5 +69,18 @@ public class Account extends Application {
 
     public void setClickedBid(Bid clickedBid) {
         this.clickedBid = clickedBid;
+    }
+
+    /**
+     * Look at return statement
+     *
+     * @return the Bid that is selected
+     */
+    public UserProfile getSearchedUser() {
+        return searchedUser;
+    }
+
+    public void setSearchedUser(UserProfile searchedUser) {
+        this.searchedUser = searchedUser;
     }
 }

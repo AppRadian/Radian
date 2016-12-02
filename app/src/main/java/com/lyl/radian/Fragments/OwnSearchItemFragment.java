@@ -91,6 +91,7 @@ public class OwnSearchItemFragment extends Fragment {
                         Glide.with(OwnSearchItemFragment.this)
                                 .using(new FirebaseImageLoader())
                                 .load(storageRef)
+                                .placeholder(R.drawable.blank_profile_pic)
                                 .into(userProfile);
                     }
                 }
