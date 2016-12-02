@@ -31,6 +31,7 @@ import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.Activities.MainAppActivity;
 import com.lyl.radian.Activities.ShowBidFeedbackActivity;
 import com.lyl.radian.DBObjects.Bid;
+import com.lyl.radian.DBObjects.UserProfile;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Utilities.Constants;
@@ -118,12 +119,12 @@ public class SearchItemFragment extends Fragment{
             }
         });
 
-       //TODO set profile pic
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + account.getClickedBid().getProfilePic());
         Glide.with(SearchItemFragment.this)
                 .using(new FirebaseImageLoader())
                 .load(storageRef)
+                .placeholder(R.drawable.blank_profile_pic)
                 .into(userProfile);
         userEmail.setText(account.getClickedBid().getEmail());
         userBid.setText(account.getClickedBid().getTag());
@@ -138,13 +139,7 @@ public class SearchItemFragment extends Fragment{
 /*
         if(listContainsId(account.getSearchedItem().getId()))
             join.setText("Nicht mehr teilnehmen");
-
-        join.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                account.participate(SearchItemFragment.this, account.getSearchedItem().getId(), account.getSearchedItem().getEmail());
-            }
-        });*/
+*/
 
         ratingBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -165,14 +160,26 @@ public class SearchItemFragment extends Fragment{
             }
         });
 
-        /*userProfile.setOnClickListener(new View.OnClickListener() {
+        userProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HashMap<String,String> data = account.getAuthMap();
-                data.put("email", account.getSearchedItem().getEmail());
-                new SearchUser(SearchItemFragment.this, data).execute();
+                DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users").child(account.getClickedBid().getUserId());
+                user.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        account.setSearchedUser((UserProfile)dataSnapshot.getValue());
+                        ProfileFragment f = new ProfileFragment();
+                        account.fm.beginTransaction().replace(R.id.content_frame, f, "profile").addToBackStack("profile").commit();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
             }
-        });*/
+        });
 
         return view;
     }
