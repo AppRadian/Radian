@@ -12,6 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.lyl.radian.DBObjects.Feedback;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 
@@ -39,9 +43,15 @@ public class FeedbackDialog extends DialogFragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                float rating = ratingBar.getRating();
+                double rating = ratingBar.getRating();
                 String feedbackText = feedback.getText().toString();
-                //account.addFeedback(FeedbackDialog.this, Integer.parseInt(account.getSearchedItem().getId()), account.getSearchedItem().getTag(), feedbackText, rating);
+                String fromUser = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                Feedback feedbackToInsert = new Feedback(account.getClickedBid().getId(), fromUser, rating, feedbackText);
+
+                DatabaseReference feedback = FirebaseDatabase.getInstance().getReference("Feedback").child(account.getClickedBid().getUserId()).child("receivedFeedback").push();
+                feedback.setValue(feedbackToInsert);
+
+                getDialog().dismiss();
             }
         });
 

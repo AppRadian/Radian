@@ -56,6 +56,11 @@ public class Account extends Application {
         return bitmapCache.get(key);
     }
 
+    /**
+     * Look at return statement
+     *
+     * @return the Bid that is selected
+     */
     public Bid getClickedBid() {
         return clickedBid;
     }
