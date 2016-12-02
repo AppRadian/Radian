@@ -112,8 +112,7 @@ public class SearchItemFragment extends Fragment{
                     });
 
                 // Update user Object with participated events
-                DatabaseReference users = FirebaseDatabase.getInstance().getReference(Constants.USER_DB);
-                
+                DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB);
 
             }
         });
