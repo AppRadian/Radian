@@ -1,5 +1,6 @@
 package com.lyl.radian.Activities;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -147,6 +148,10 @@ public class MainAppActivity extends AppCompatActivity
             account.fm.beginTransaction().replace(R.id.content_frame, inboxFragment, "helping").addToBackStack("helping").commit();
         }
         else if (id == R.id.nav_logout){
+            FirebaseAuth.getInstance().signOut();
+            Intent i = new Intent(this, MainActivity.class);
+            finishAffinity();
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

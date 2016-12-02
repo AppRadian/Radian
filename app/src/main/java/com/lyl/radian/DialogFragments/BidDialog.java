@@ -196,8 +196,8 @@ public class BidDialog extends DialogFragment {
 
                     ownBids.setValue(bidToInsert);
 
-                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids").push();
-                    bids.setValue(bidToInsert);
+                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
+                    bids.child(ownBids.getKey()).setValue(bidToInsert);
 
                     getDialog().dismiss();
                 }

@@ -199,7 +199,7 @@ public class EditDialog extends DialogFragment {
                     Double[] latLong = getLocationFromAddress(autocompleteView.getText().toString());
 
                     DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids");
-                    Bid bidToInsert = new Bid(null,FirebaseAuth.getInstance().getCurrentUser().getEmail(), bid, description.getText().toString(),
+                    Bid bidToInsert = new Bid(account.getClickedBid().id,FirebaseAuth.getInstance().getCurrentUser().getEmail(), bid, description.getText().toString(),
                             location.getText().toString(), 0, 0, date.getText().toString(), time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
 
                     ownBids.child(account.getClickedBid().id).setValue(bidToInsert);
