@@ -1,4 +1,4 @@
-package com.lyl.radian.Utilities;
+package com.lyl.radian.DBObjects;
 
 /**
  * Created by Yannick on 02.12.2016.

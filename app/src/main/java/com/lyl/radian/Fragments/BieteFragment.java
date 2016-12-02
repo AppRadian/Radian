@@ -22,10 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -33,7 +29,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.lyl.radian.Activities.MainAppActivity;
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapterBiete;
 import com.lyl.radian.Adapter.RecyclerItemClickListener;
@@ -41,8 +36,7 @@ import com.lyl.radian.DialogFragments.BidDialog;
 import com.lyl.radian.DialogFragments.MyDialogCloseListener;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Bid;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.Widgets.HidingScrollListener;
 
 /**

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Bid;
+import com.lyl.radian.DBObjects.Bid;
 
 /**
  * Created by Yannick on 10.11.2016.

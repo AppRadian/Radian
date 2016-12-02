@@ -1,4 +1,4 @@
-package com.lyl.radian.Utilities;
+package com.lyl.radian.DBObjects;
 
 import android.graphics.Bitmap;
 
@@ -13,7 +13,7 @@ public class UserProfile {
     private String email;
     private String location;
     private String language;
-    private Bitmap profilePic;
+    private String profilePic;
     private ArrayList<UserProfile> participations;
     private ArrayList<Bid> ownBids;
 
@@ -21,7 +21,7 @@ public class UserProfile {
 
     }
 
-    public UserProfile(String email, String location, String language, Bitmap profilePic, ArrayList<UserProfile> participations, ArrayList<Bid> ownBids) {
+    public UserProfile(String email, String location, String language, String profilePic, ArrayList<UserProfile> participations, ArrayList<Bid> ownBids) {
         this.email = email;
         this.location = location;
         this.language = language;
@@ -54,11 +54,11 @@ public class UserProfile {
         this.language = language;
     }
 
-    public Bitmap getProfilePic() {
+    public String getProfilePic() {
         return profilePic;
     }
 
-    public void setProfilePic(Bitmap profilePic) {
+    public void setProfilePic(String profilePic) {
         this.profilePic = profilePic;
     }
 

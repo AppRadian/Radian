@@ -23,11 +23,8 @@ import android.widget.TimePicker;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -35,8 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.lyl.radian.Adapter.PlacesAutoCompleteAdapter;
 import com.lyl.radian.Adapter.SpinnerAdapter;
 import com.lyl.radian.R;
-import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Bid;
+import com.lyl.radian.DBObjects.Bid;
 
 public class BidDialog extends DialogFragment {
     AutoCompleteTextView location;

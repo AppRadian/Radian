@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -13,7 +14,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.io.IOException;
+import java.util.UUID;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.StringSignature;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnPausedListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.lyl.radian.Adapter.PlacesAutoCompleteAdapter;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
@@ -33,6 +47,8 @@ public class SettingsActivity extends Activity {
     EditText password;
     EditText passwordConfirm;
     ImageView profilePic;
+    FirebaseStorage storage;
+    StorageReference storageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +63,17 @@ public class SettingsActivity extends Activity {
         passwordConfirm = (EditText) findViewById(R.id.ConfirmPassword);
         profilePic = (ImageView) findViewById(R.id.changeProfilePic);
 
-        /**
-        profilePic.setImageBitmap(account.getSelf().getProfilePic());
-        location.setText(account.getSelf().getLocation());
-        language.setText(account.getSelf().getLanguage());
-        city = account.getSelf().getLocation();
-         **/
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com").child("images/"+ FirebaseAuth.getInstance().getCurrentUser().getEmail());
+
+        Glide.with(SettingsActivity.this)
+                .using(new FirebaseImageLoader())
+                .load(storageRef)
+                .into(profilePic);
+        //profilePic.setImageBitmap(account.getSelf().getProfilePic());
+        //location.setText(account.get.getLocation());
+        //language.setText(account.getSelf().getLanguage());
+        city = "";
 
         final AutoCompleteTextView autocompleteView = (AutoCompleteTextView) findViewById(R.id.changeLocation);
         autocompleteView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.autocomplete_list_item));
@@ -116,7 +137,42 @@ public class SettingsActivity extends Activity {
                 int height = r.getDisplayMetrics().heightPixels / 2;
                 int width = r.getDisplayMetrics().widthPixels;
 
-                
+                // Create the file metadata
+                StorageMetadata metadata = new StorageMetadata.Builder()
+                        .setContentType("image/jpeg")
+                        .build();
+
+                // Upload file and metadata to the path 'images/mountains.jpg'
+                UploadTask uploadTask = storageRef.putFile(uri, metadata);
+
+                // Listen for state changes, errors, and completion of the upload.
+                uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        System.out.println("Upload is " + progress + "% done");
+                    }
+                }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                        System.out.println("Upload is paused");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Handle successful uploads on complete
+                        Glide.with(SettingsActivity.this)
+                                .using(new FirebaseImageLoader())
+                                .load(taskSnapshot.getStorage())
+                                .signature(new StringSignature(UUID.randomUUID().toString()))
+                                .into(profilePic);
+                    }
+                });
             }
         }
     }

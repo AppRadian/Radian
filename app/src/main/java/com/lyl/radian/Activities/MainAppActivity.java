@@ -147,6 +147,10 @@ public class MainAppActivity extends AppCompatActivity
         } else if (id == R.id.nav_inbox) {
             account.fm.beginTransaction().replace(R.id.content_frame, inboxFragment, "helping").addToBackStack("helping").commit();
         }
+        else if(id == R.id.nav_settings){
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivity(i);
+        }
         else if (id == R.id.nav_logout){
             FirebaseAuth.getInstance().signOut();
             Intent i = new Intent(this, MainActivity.class);

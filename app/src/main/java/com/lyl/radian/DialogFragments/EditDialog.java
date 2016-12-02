@@ -35,7 +35,7 @@ import com.lyl.radian.Adapter.*;
 import com.lyl.radian.Fragments.OwnSearchItemFragment;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Bid;
+import com.lyl.radian.DBObjects.Bid;
 
 /**
  * Created by Ludwig on 20.11.2016.

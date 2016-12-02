@@ -12,12 +12,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import com.google.firebase.storage.FirebaseStorage;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Bid;
-import com.lyl.radian.Utilities.UserProfile;
+import com.lyl.radian.DBObjects.Bid;
+import com.lyl.radian.DBObjects.UserProfile;
 
 import java.util.ArrayList;
 
@@ -82,9 +84,10 @@ public class FirebaseActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
                             Log.e(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-                            String email = userAuth.getCurrentUser().getEmail();
+                            final String email = userAuth.getCurrentUser().getEmail();
+
                             DatabaseReference thisUser = users.child(userAuth.getCurrentUser().getUid());
-                            thisUser.setValue(new UserProfile(email, null, null, null, new ArrayList<UserProfile>(), new ArrayList<Bid>()));
+                            thisUser.setValue(new UserProfile(email, null, null, "", new ArrayList<UserProfile>(), new ArrayList<Bid>()));
                         }
                         else {
                             Log.e(TAG, "createUser:failed", task.getException());
