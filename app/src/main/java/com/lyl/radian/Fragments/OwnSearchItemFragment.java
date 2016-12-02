@@ -69,7 +69,7 @@ public class OwnSearchItemFragment extends Fragment {
             ratingBar = (RatingBar) view.findViewById(R.id.avergageRating);
             ratings = (TextView) view.findViewById(R.id.rezensionen);
             edit = (Button) view.findViewById(R.id.editButton);
-
+/*
             userProfile.setImageBitmap(account.getSelf().getProfilePic());
             userEmail.setText(account.getSelf().getEmail());
             userBid.setText(account.getSearchedItem().getTag());
@@ -77,9 +77,9 @@ public class OwnSearchItemFragment extends Fragment {
             userDescription.setText(account.getSearchedItem().getDescription());
             ratingBar.setRating(account.getSearchedItem().getAverageRating());
             ratings.setText(account.getSearchedItem().getCount() + " Rezensionen");
-
+*/
             ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
-            ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebot von " + account.getSearchedItem().getEmail());
+            //((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebot von " + account.getSearchedItem().getEmail());
             ((ImageView)getActivity().findViewById(R.id.ownProfilePic)).setImageBitmap(null);
 
 
@@ -113,7 +113,7 @@ public class OwnSearchItemFragment extends Fragment {
             return view;
         }
 
-
+/*
         public boolean listContainsId(String id){
 
             for (String[] s : account.getSelf().getParticipations()){
@@ -121,6 +121,6 @@ public class OwnSearchItemFragment extends Fragment {
                     return true;
             }
             return false;
-        }
+        }*/
     }
 

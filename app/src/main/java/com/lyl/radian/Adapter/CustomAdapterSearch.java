@@ -82,6 +82,7 @@ public class CustomAdapterSearch extends BaseAdapter {
         if(pic != null)
             profilePic.setImageBitmap(pic);
         else
+            ;
             //new GetBitmap(context, profilePic, data.get(position)[1]).execute();
 
         return vi;

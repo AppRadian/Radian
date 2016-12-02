@@ -24,7 +24,6 @@ import java.util.HashMap;
 import com.lyl.radian.Activities.ChatActivity;
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapter;
 import com.lyl.radian.Adapter.RecyclerItemClickListener;
-import com.lyl.radian.NetworkUtilities.LoadBids;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Widgets.NestedScrollViewFling;
@@ -100,16 +99,12 @@ public class ProfileFragment extends SuperProfileFragment {
                         String part = adapter.getItem(position)[10];
                         String maxPart = adapter.getItem(position)[11];
 
-                        account.setSearchedItem(getActivity(), id, email, tag, description, location, averageRating, count, distance, date, time, part, maxPart);
+                        //account.setSearchedItem(getActivity(), id, email, tag, description, location, averageRating, count, distance, date, time, part, maxPart);
                         SearchItemFragment f = new SearchItemFragment();
                         getFragmentManager().beginTransaction().replace(R.id.content_frame, f, "searchItem").addToBackStack(null).commit();
                     }
                 })
         );
-
-        HashMap<String, String> data = account.getAuthMap();
-        data.put("email", account.getSearchedItem().getEmail());
-        new LoadBids(this, data).execute();
 
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
         tabLayout.setVisibility(TabLayout.GONE);
@@ -134,10 +129,10 @@ public class ProfileFragment extends SuperProfileFragment {
         p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
         content.setLayoutParams(p);
 
-        profilePic.setImageBitmap(ThumbnailUtils.extractThumbnail(account.getBitmapFromCache(account.getSearchedItem().getEmail()), profilePic.getWidth(), (int)px));
+       // profilePic.setImageBitmap(ThumbnailUtils.extractThumbnail(account.getBitmapFromCache(account.getSearchedItem().getEmail()), profilePic.getWidth(), (int)px));
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
         ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(true);
-        ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitle(account.getSearchedItem().getEmail() + "'s Profil");
+       // ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitle(account.getSearchedItem().getEmail() + "'s Profil");
 
         return view;
     }

@@ -89,9 +89,9 @@ public class UpcomingFragment extends SuperProfileFragment {
             }
         };
 
-        Collections.sort(account.getSelf().getParticipations(), cmp);
+        //Collections.sort(account.getSelf().getParticipations(), cmp);
 
-        adapter = new CustomRecyclerViewAdapterUpcoming(getActivity(), account.getSelf().getParticipations());
+        //adapter = new CustomRecyclerViewAdapterUpcoming(getActivity(), account.getSelf().getParticipations());
         bidList = (RecyclerView) view.findViewById(R.id.cardList);
         bidList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -131,7 +131,7 @@ public class UpcomingFragment extends SuperProfileFragment {
                         String part = adapter.getItem(position)[10];
                         String maxPart = adapter.getItem(position)[11];
 
-                        account.setSearchedItem(getActivity(), id, email, tag, description, location, averageRating, count, distance, date, time, part, maxPart);
+                        //account.setSearchedItem(getActivity(), id, email, tag, description, location, averageRating, count, distance, date, time, part, maxPart);
                         SearchItemFragment f = new SearchItemFragment();
                         getChildFragmentManager().beginTransaction().replace(R.id.content_frame, f, "searchItem").addToBackStack("searchItem").commit();
                     }

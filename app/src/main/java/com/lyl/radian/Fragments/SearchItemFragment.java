@@ -23,7 +23,6 @@ import android.widget.TextView;
 import java.util.HashMap;
 
 import com.lyl.radian.Activities.ShowBidFeedbackActivity;
-import com.lyl.radian.NetworkUtilities.SearchUser;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 
@@ -73,18 +72,18 @@ public class SearchItemFragment extends Fragment{
         ratings = (TextView) view.findViewById(R.id.rezensionen);
         join = (Button) view.findViewById(R.id.joinButton);
 
-        userProfile.setImageBitmap(account.getBitmapFromCache(account.getSearchedItem().getEmail()));
+        /*userProfile.setImageBitmap(account.getBitmapFromCache(account.getSearchedItem().getEmail()));
         userEmail.setText(account.getSearchedItem().getEmail());
         userBid.setText(account.getSearchedItem().getTag());
         timenDate.setText(account.getSearchedItem().getDate() + " - " + account.getSearchedItem().getTime() + " Uhr");
         userDescription.setText(account.getSearchedItem().getDescription());
         ratingBar.setRating(account.getSearchedItem().getAverageRating());
-        ratings.setText(account.getSearchedItem().getCount() + " Rezensionen");
+        ratings.setText(account.getSearchedItem().getCount() + " Rezensionen");*/
 
         ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
-        ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebot von " + account.getSearchedItem().getEmail());
+        //((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebot von " + account.getSearchedItem().getEmail());
         ((ImageView)getActivity().findViewById(R.id.ownProfilePic)).setImageBitmap(null);
-
+/*
         if(listContainsId(account.getSearchedItem().getId()))
             join.setText("Nicht mehr teilnehmen");
 
@@ -93,7 +92,7 @@ public class SearchItemFragment extends Fragment{
             public void onClick(View v) {
                 account.participate(SearchItemFragment.this, account.getSearchedItem().getId(), account.getSearchedItem().getEmail());
             }
-        });
+        });*/
 
         ratingBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -114,14 +113,14 @@ public class SearchItemFragment extends Fragment{
             }
         });
 
-        userProfile.setOnClickListener(new View.OnClickListener() {
+        /*userProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 HashMap<String,String> data = account.getAuthMap();
                 data.put("email", account.getSearchedItem().getEmail());
                 new SearchUser(SearchItemFragment.this, data).execute();
             }
-        });
+        });*/
 
         return view;
     }
@@ -130,12 +129,12 @@ public class SearchItemFragment extends Fragment{
         join.setText(text);
     }
 
-    public boolean listContainsId(String id){
+   /* public boolean listContainsId(String id){
 
         for (String[] s : account.getSelf().getParticipations()){
             if(s[0].equals(id))
                 return true;
         }
         return false;
-    }
+    }*/
 }
