@@ -92,6 +92,7 @@ public class OwnSearchItemFragment extends Fragment {
                                 .using(new FirebaseImageLoader())
                                 .load(storageRef)
                                 .placeholder(R.drawable.blank_profile_pic)
+                                .dontAnimate()
                                 .into(userProfile);
                     }
                 }

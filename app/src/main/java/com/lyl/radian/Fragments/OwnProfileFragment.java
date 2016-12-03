@@ -2,6 +2,8 @@ package com.lyl.radian.Fragments;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +23,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -35,6 +39,7 @@ import com.lyl.radian.Activities.SettingsActivity;
 import com.lyl.radian.Adapter.PagerAdapter;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Constants;
 
 /**
  * Created by Yannick on 03.11.2016.
@@ -46,6 +51,7 @@ public class OwnProfileFragment extends Fragment {
     Account account;
     FloatingActionButton settings;
     ImageView profilePic;
+    private SimpleTarget target;
 
     @Nullable
     @Override
@@ -64,6 +70,20 @@ public class OwnProfileFragment extends Fragment {
                 startActivity(settingsActivity);
             }
         });
+
+        target = new SimpleTarget<Bitmap>( getResources().getDisplayMetrics().widthPixels, 250 ) {
+            @Override
+            public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
+                profilePic.setImageBitmap( bitmap );
+            }
+
+            @Override
+            public void onLoadStarted(Drawable placeholder) {
+                super.onLoadStarted(placeholder);
+                Bitmap pic = Constants.decodeBitmap(getResources(), R.drawable.blank_profile_pic, getResources().getDisplayMetrics().widthPixels, 250);
+                profilePic.setImageBitmap(pic);
+            }
+        };
 
         ((FloatingActionButton) getActivity().findViewById(R.id.fab)).setVisibility(View.GONE);
 
@@ -110,7 +130,6 @@ public class OwnProfileFragment extends Fragment {
         p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
         content.setLayoutParams(p);
 
-        //TODO ProfilePic
         DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         user.addChildEventListener(new ChildEventListener() {
             @Override
@@ -122,16 +141,17 @@ public class OwnProfileFragment extends Fragment {
                     Glide.with(OwnProfileFragment.this)
                             .using(new FirebaseImageLoader())
                             .load(storageRef)
-                            .placeholder(R.drawable.blank_profile_pic)
                             .override(r.getDisplayMetrics().widthPixels, px)
-                            .centerCrop()
+                            //.placeholder(R.drawable.blank_profile_pic)
                             .into(OwnProfileFragment.this.profilePic);
+                            //.into(target);
                 }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 if(dataSnapshot.getKey().equals("profilePic")) {
+                    /**
                     String profilePic = (String)dataSnapshot.getValue();
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
@@ -141,6 +161,7 @@ public class OwnProfileFragment extends Fragment {
                             .override(r.getDisplayMetrics().widthPixels, px)
                             .centerCrop()
                             .into(OwnProfileFragment.this.profilePic);
+                     **/
                 }
             }
 

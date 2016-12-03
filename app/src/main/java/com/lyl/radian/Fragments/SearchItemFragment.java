@@ -148,6 +148,7 @@ public class SearchItemFragment extends Fragment{
                 .using(new FirebaseImageLoader())
                 .load(storageRef)
                 .placeholder(R.drawable.blank_profile_pic)
+                .dontAnimate()
                 .into(userProfile);
         userEmail.setText(account.getClickedBid().getEmail());
         userBid.setText(account.getClickedBid().getTag());
@@ -157,7 +158,7 @@ public class SearchItemFragment extends Fragment{
         ratings.setText(account.getClickedBid().getCount() + " Rezensionen");
 
         ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
-        //((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebot von " + account.getSearchedItem().getEmail());
+        ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebot von " + account.getClickedBid().getEmail());
         ((ImageView)getActivity().findViewById(R.id.ownProfilePic)).setImageBitmap(null);
 /*
         if(listContainsId(account.getSearchedItem().getId()))
