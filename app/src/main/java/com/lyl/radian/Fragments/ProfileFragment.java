@@ -106,11 +106,7 @@ public class ProfileFragment extends SuperProfileFragment {
                 })
         );
 
-        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
-        tabLayout.setVisibility(TabLayout.GONE);
-
         sendMessage = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        sendMessage.setVisibility(View.VISIBLE);
         sendMessage.setImageResource(R.drawable.ic_menu_send);
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,13 +117,7 @@ public class ProfileFragment extends SuperProfileFragment {
         });
 
 
-        Resources r = getResources();
-        int px = r.getDisplayMetrics().heightPixels / 3;
-
-        RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
-        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
-        p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
-        content.setLayoutParams(p);
+       setCollapsingToolbarEnabled(true);
 
        // profilePic.setImageBitmap(ThumbnailUtils.extractThumbnail(account.getBitmapFromCache(account.getSearchedItem().getEmail()), profilePic.getWidth(), (int)px));
        // ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitle(account.getSearchedItem().getEmail() + "'s Profil");
@@ -138,5 +128,38 @@ public class ProfileFragment extends SuperProfileFragment {
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    private void setCollapsingToolbarEnabled(boolean enabled){
+        final Resources r = getResources();
+        final int px = r.getDisplayMetrics().heightPixels / 3;
+
+        if(enabled){
+            sendMessage.setVisibility(View.VISIBLE);
+
+            RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
+            p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
+            content.setLayoutParams(p);
+
+            ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
+            ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(true);
+            profilePic.setMaxHeight(px);
+            ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(true);
+            ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitle(account.getClickedBid().getEmail());
+        }
+        else{
+            sendMessage.setVisibility(View.GONE);
+
+            RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
+            p.setBehavior(null);
+            content.setLayoutParams(p);
+
+            ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
+            profilePic.setMaxHeight(0);
+            profilePic.setImageBitmap(null);
+            ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(false);
+        }
     }
 }

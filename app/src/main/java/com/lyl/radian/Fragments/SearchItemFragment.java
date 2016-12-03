@@ -64,11 +64,6 @@ public class SearchItemFragment extends Fragment{
         AppBarLayout mToolbar = (AppBarLayout) getActivity().findViewById(R.id.app_bar_layout);
         mToolbar.setTranslationY(0);
 
-        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
-        tabLayout.setVisibility(TabLayout.GONE);
-
-        ((FloatingActionButton) getActivity().findViewById(R.id.fab)).setVisibility(View.GONE);
-
         RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
         CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
         p.setBehavior(new AppBarLayout.ScrollingViewBehavior());

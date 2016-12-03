@@ -61,8 +61,6 @@ public class OwnSearchItemFragment extends Fragment {
             AppBarLayout mToolbar = (AppBarLayout) getActivity().findViewById(R.id.app_bar_layout);
             mToolbar.setTranslationY(0);
 
-            ((FloatingActionButton) getActivity().findViewById(R.id.fab)).setVisibility(View.GONE);
-
             account = (Account) callingActivity.getApplication();
             userProfile = (ImageView) view.findViewById(R.id.userProfile);
             userEmail = (TextView) view.findViewById(R.id.userEmail);
