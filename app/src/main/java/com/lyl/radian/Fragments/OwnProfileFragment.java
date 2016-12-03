@@ -194,11 +194,6 @@ public class OwnProfileFragment extends Fragment {
         final int px = r.getDisplayMetrics().heightPixels / 3;
 
         if(enabled){
-            RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
-            p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
-            content.setLayoutParams(p);
-
             ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
             ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(true);
             profilePic.setMaxHeight(px);
@@ -206,11 +201,6 @@ public class OwnProfileFragment extends Fragment {
             ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitle("Dein Profil");
         }
         else{
-            RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
-            p.setBehavior(null);
-            content.setLayoutParams(p);
-
             TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
             tabLayout.setVisibility(TabLayout.GONE);
 

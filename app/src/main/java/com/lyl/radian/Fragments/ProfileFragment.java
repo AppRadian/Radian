@@ -137,12 +137,6 @@ public class ProfileFragment extends SuperProfileFragment {
 
         if(enabled){
             sendMessage.setVisibility(View.VISIBLE);
-
-            RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
-            p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
-            content.setLayoutParams(p);
-
             ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
             ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(true);
             profilePic.setMaxHeight(px);
@@ -151,12 +145,6 @@ public class ProfileFragment extends SuperProfileFragment {
         }
         else{
             sendMessage.setVisibility(View.GONE);
-
-            RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
-            p.setBehavior(null);
-            content.setLayoutParams(p);
-
             ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
             profilePic.setMaxHeight(0);
             profilePic.setImageBitmap(null);

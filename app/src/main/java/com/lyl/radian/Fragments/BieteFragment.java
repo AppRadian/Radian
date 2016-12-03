@@ -174,6 +174,10 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
 
     private void refresh(){
 
+        RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
+        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
+        p.setBehavior(null);
+        content.setLayoutParams(p);
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Deine Angebote");
     }
 
@@ -182,6 +186,15 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
         super.onResume();
         refresh();
         ((MainAppActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_biete);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
+        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
+        p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
+        content.setLayoutParams(p);
     }
 
     @Override

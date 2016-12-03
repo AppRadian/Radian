@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.lyl.radian.Activities.MainAppActivity"
-    tools:showIn="@layout/app_bar_main_app">
+    tools:showIn="@layout/app_bar_main_app"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <FrameLayout
         android:id="@+id/content_frame"
