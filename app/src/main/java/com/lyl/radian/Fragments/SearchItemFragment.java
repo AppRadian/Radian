@@ -63,12 +63,7 @@ public class SearchItemFragment extends Fragment{
 
         AppBarLayout mToolbar = (AppBarLayout) getActivity().findViewById(R.id.app_bar_layout);
         mToolbar.setTranslationY(0);
-
-        RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
-        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
-        p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
-        content.setLayoutParams(p);
-
+        
         account = (Account) callingActivity.getApplication();
         userProfile = (ImageView) view.findViewById(R.id.userProfile);
         userEmail = (TextView) view.findViewById(R.id.userEmail);
