@@ -128,6 +128,7 @@ public class ProfileFragment extends SuperProfileFragment {
     @Override
     public void onStop() {
         super.onStop();
+        setCollapsingToolbarEnabled(false);
     }
 
     private void setCollapsingToolbarEnabled(boolean enabled){
