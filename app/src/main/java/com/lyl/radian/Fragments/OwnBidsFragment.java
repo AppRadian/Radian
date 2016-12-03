@@ -140,8 +140,7 @@ public class OwnBidsFragment extends SuperProfileFragment {
 
                         account.setClickedBid(adapter.getItem(position));
                         OwnSearchItemFragment f = new OwnSearchItemFragment();
-                        getChildFragmentManager().beginTransaction().replace(R.id.content_frame, f, "OwnsearchItem").addToBackStack(null).commit();
-                    }
+                        account.fm.beginTransaction().replace(R.id.content_frame, f, "OwnsearchItem").addToBackStack("OwnsearchItem").commit();                    }
                 })
         );
 
