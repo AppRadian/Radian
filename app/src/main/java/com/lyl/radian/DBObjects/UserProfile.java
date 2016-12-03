@@ -12,7 +12,6 @@ public class UserProfile {
     private String email;
     private String location;
     private String language;
-    private String profilePic;
     private HashMap<String, Object> participations;
     private HashMap<String, Object> ownBids;
 
@@ -20,11 +19,10 @@ public class UserProfile {
 
     }
 
-    public UserProfile(String email, String location, String language, String profilePic, HashMap<String, Object> participations, HashMap<String, Object> ownBids) {
+    public UserProfile(String email, String location, String language, HashMap<String, Object> participations, HashMap<String, Object> ownBids) {
         this.email = email;
         this.location = location;
         this.language = language;
-        this.profilePic = profilePic;
         this.participations = participations;
         this.ownBids = ownBids;
     }
@@ -51,14 +49,6 @@ public class UserProfile {
 
     public void setLanguage(String language) {
         this.language = language;
-    }
-
-    public String getProfilePic() {
-        return profilePic;
-    }
-
-    public void setProfilePic(String profilePic) {
-        this.profilePic = profilePic;
     }
 
     public HashMap<String, Object> getParticipations() {
