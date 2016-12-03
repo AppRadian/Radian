@@ -2,30 +2,22 @@ package com.lyl.radian.Fragments;
 
 import android.app.Activity;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -41,7 +33,6 @@ import com.lyl.radian.DialogFragments.BidDialog;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.DBObjects.Bid;
-import com.lyl.radian.Widgets.HidingScrollListener;
 
 /**
  * Created by Yannick on 03.11.2016.
@@ -163,6 +154,7 @@ public class HomeFragment extends Fragment {
 
     private void refresh(){
 
+        fab.show();
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebote in der Nähe");
     }
 

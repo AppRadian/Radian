@@ -15,6 +15,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ import com.lyl.radian.Adapter.PagerAdapter;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Widgets.NestedScrollViewFling;
 
 /**
  * Created by Yannick on 03.11.2016.
@@ -154,6 +156,7 @@ public class OwnProfileFragment extends Fragment {
             ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
             toolbar.setTitleEnabled(true);
             profilePic.setMaxHeight(px);
+            ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(true, false);
             toolbar.setTitle("Dein Profil");
         }
         else{
@@ -167,6 +170,7 @@ public class OwnProfileFragment extends Fragment {
             toolbar.setTitleEnabled(false);
             profilePic.setMaxHeight(0);
             profilePic.setImageBitmap(null);
+            ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(true, false);
         }
     }
 }

@@ -1,25 +1,18 @@
 package com.lyl.radian.Fragments;
 
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -39,7 +32,6 @@ import com.lyl.radian.DialogFragments.MyDialogCloseListener;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.DBObjects.Bid;
-import com.lyl.radian.Widgets.HidingScrollListener;
 
 /**
  * Created by Yannick on 03.11.2016.
@@ -135,21 +127,6 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         bieteList.setLayoutManager(llm);
         bieteList.setAdapter(adapter);
-        bieteList.setOnScrollListener(new HidingScrollListener() {
-            AppBarLayout mToolbar = (AppBarLayout) getActivity().findViewById(R.id.app_bar_layout);
-            @Override
-            public void onHide() {
-                fab.hide();
-                mToolbar.animate().translationY(-mToolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2));
-            }
-
-            @Override
-            public void onShow() {
-                fab.show();
-                mToolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
-            }
-        });
-
 
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab2);
         fab.setOnClickListener(new View.OnClickListener() {

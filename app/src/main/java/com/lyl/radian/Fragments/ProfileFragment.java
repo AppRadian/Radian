@@ -158,6 +158,7 @@ public class ProfileFragment extends SuperProfileFragment {
             ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
             toolbar.setTitleEnabled(true);
             profilePic.setMaxHeight(px);
+            ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(true, false);
             toolbar.setTitle(account.getClickedBid().getEmail());
         }
         else{
@@ -169,6 +170,7 @@ public class ProfileFragment extends SuperProfileFragment {
             toolbar.setTitleEnabled(false);
             profilePic.setMaxHeight(0);
             profilePic.setImageBitmap(null);
+            ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(true, false);
         }
     }
 }

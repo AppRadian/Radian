@@ -12,8 +12,16 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapterOwnProfile;
 import com.lyl.radian.Adapter.RecyclerItemClickListener;
+import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Utilities.Constants;
@@ -26,6 +34,10 @@ import com.lyl.radian.Widgets.NestedScrollViewFling;
 public class OwnBidsFragment extends SuperProfileFragment {
 
     ImageView profilePic;
+    private FirebaseDatabase database;
+    private DatabaseReference bids;
+    ArrayList<Bid> bidsList = new ArrayList<>();
+
 
     @Nullable
     @Override
@@ -34,8 +46,72 @@ public class OwnBidsFragment extends SuperProfileFragment {
 
         account = (Account) getActivity().getApplication();
 
+        database = FirebaseDatabase.getInstance();
+        bids = database.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids");
+
+        bids.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                String bidId = dataSnapshot.getValue(String.class);
+                DatabaseReference ownBids = database.getReference("Bids").child(bidId);
+                ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Bid bid = dataSnapshot.getValue(Bid.class);
+                        if(!bidsList.contains(bid))
+                            bidsList.add(bid);
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                String bidId = dataSnapshot.getValue(String.class);
+                DatabaseReference ownBids = database.getReference("Bids").child(bidId);
+                ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Bid bid = dataSnapshot.getValue(Bid.class);
+                        if(!bidsList.contains(bid))
+                            bidsList.add(bid);
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         profilePic = (ImageView) getActivity().findViewById(R.id.ownProfilePic);
-        adapter = new CustomRecyclerViewAdapterOwnProfile(this, new ArrayList<String[]>());
+        adapter = new CustomRecyclerViewAdapterOwnProfile(this, bidsList);
         bidList = (RecyclerView) view.findViewById(R.id.cardList);
         bidList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -61,19 +137,7 @@ public class OwnBidsFragment extends SuperProfileFragment {
                             return;
 
                         CustomRecyclerViewAdapterOwnProfile adapter = (CustomRecyclerViewAdapterOwnProfile) OwnBidsFragment.this.adapter;
-
-                        String id = adapter.getItem(position)[0];
-                        String email = adapter.getItem(position)[1];
-                        String tag = adapter.getItem(position)[2];
-                        String description = adapter.getItem(position)[3];
-                        String location = adapter.getItem(position)[4];
-                        String averageRating = adapter.getItem(position)[5];
-                        String count = adapter.getItem(position)[6];
-                        String date = adapter.getItem(position)[7];
-                        String time = adapter.getItem(position)[8];
-                        String part = adapter.getItem(position)[9];
-                        String maxPart = adapter.getItem(position)[10];
-
+                        
                         OwnSearchItemFragment f = new OwnSearchItemFragment();
                         getChildFragmentManager().beginTransaction().replace(R.id.content_frame, f, "OwnsearchItem").addToBackStack(null).commit();
                     }
