@@ -21,6 +21,10 @@ import android.widget.TextView;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.Activities.ChatActivity;
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapter;
 import com.lyl.radian.Adapter.RecyclerItemClickListener;
@@ -117,7 +121,16 @@ public class ProfileFragment extends SuperProfileFragment {
         });
 
 
-       setCollapsingToolbarEnabled(true);
+        setCollapsingToolbarEnabled(true);
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + account.getClickedBid().getProfilePic());
+        Glide.with(ProfileFragment.this)
+                .using(new FirebaseImageLoader())
+                .load(storageRef)
+                .fitCenter()
+                .placeholder(R.drawable.blank_profile_pic)
+                .dontAnimate()
+                .into(profilePic);
 
        // profilePic.setImageBitmap(ThumbnailUtils.extractThumbnail(account.getBitmapFromCache(account.getSearchedItem().getEmail()), profilePic.getWidth(), (int)px));
        // ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitle(account.getSearchedItem().getEmail() + "'s Profil");
@@ -133,7 +146,7 @@ public class ProfileFragment extends SuperProfileFragment {
 
     private void setCollapsingToolbarEnabled(boolean enabled){
         final Resources r = getResources();
-        final int px = r.getDisplayMetrics().heightPixels / 3;
+        final int px = (int)(r.getDisplayMetrics().heightPixels / 2.5);
 
         if(enabled){
             sendMessage.setVisibility(View.VISIBLE);

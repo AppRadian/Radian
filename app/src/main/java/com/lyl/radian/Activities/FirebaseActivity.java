@@ -1,6 +1,7 @@
 package com.lyl.radian.Activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -87,6 +88,11 @@ public class FirebaseActivity extends AppCompatActivity {
                         if(task.isSuccessful()) {
                             Log.e(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
                             final String email = userAuth.getCurrentUser().getEmail();
+
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setPhotoUri(Uri.parse("images/" + email + System.currentTimeMillis()))
+                                    .build();
+                            userAuth.getCurrentUser().updateProfile(profileUpdates);
 
                             DatabaseReference thisUser = users.child(userAuth.getCurrentUser().getUid());
                             thisUser.setValue(new UserProfile(email, null, null, "images/" + email + System.currentTimeMillis(), new HashMap<String, Object>(), new HashMap<String, Object>()));
