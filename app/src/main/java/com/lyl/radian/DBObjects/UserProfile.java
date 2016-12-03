@@ -1,8 +1,7 @@
 package com.lyl.radian.DBObjects;
 
-import android.graphics.Bitmap;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Yannick on 29.10.2016.
@@ -14,14 +13,14 @@ public class UserProfile {
     private String location;
     private String language;
     private String profilePic;
-    private ArrayList<Bid> participations;
-    private ArrayList<Bid> ownBids;
+    private HashMap<String, Object> participations;
+    private HashMap<String, Object> ownBids;
 
-    public UserProfile(){
+    public UserProfile() {
 
     }
 
-    public UserProfile(String email, String location, String language, String profilePic, ArrayList<Bid> participations, ArrayList<Bid> ownBids) {
+    public UserProfile(String email, String location, String language, String profilePic, HashMap<String, Object> participations, HashMap<String, Object> ownBids) {
         this.email = email;
         this.location = location;
         this.language = language;
@@ -62,19 +61,19 @@ public class UserProfile {
         this.profilePic = profilePic;
     }
 
-    public ArrayList<Bid> getParticipations() {
+    public HashMap<String, Object> getParticipations() {
         return participations;
     }
 
-    public void setParticipations(ArrayList<Bid> participations) {
+    public void setParticipations(HashMap<String, Object> participations) {
         this.participations = participations;
     }
 
-    public ArrayList<Bid> getOwnBids() {
+    public HashMap<String, Object> getOwnBids() {
         return ownBids;
     }
 
-    public void setOwnBids(ArrayList<Bid> ownBids) {
+    public void setOwnBids(HashMap<String, Object> ownBids) {
         this.ownBids = ownBids;
     }
 }

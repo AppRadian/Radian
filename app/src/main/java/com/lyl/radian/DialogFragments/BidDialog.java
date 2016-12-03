@@ -198,13 +198,20 @@ public class BidDialog extends DialogFragment {
                     user.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            // Not needed anymore the if-case
                             if(dataSnapshot.getKey().equals("profilePic")) {
                                 String profilePic = (String)dataSnapshot.getValue();
-                                DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids").push();
+                                // push creates unique key wesshalb am Edne der Liste ein Wert angefügt werden kann
+                                // own bids contains list with strings of bid-ids
+                                DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids").push();
+                                // set unique key at the end of the list
                                 ownBids.setValue(ownBids.getKey());
 
-                                Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), profilePic, bid, description.getText().toString(),
-                                        location.getText().toString(), 0, 0, date.getText().toString(), time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
+                                Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance()
+                                        .getCurrentUser().getEmail(), profilePic, bid, description.getText().toString(),
+                                        location.getText().toString(), 0, 0, date.getText().toString(),
+                                        time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
                                 DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
                                 bids.child(ownBids.getKey()).setValue(bidToInsert);
                             }

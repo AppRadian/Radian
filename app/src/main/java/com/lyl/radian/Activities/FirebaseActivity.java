@@ -23,6 +23,7 @@ import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.DBObjects.UserProfile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Yannick on 01.12.2016.
@@ -88,7 +89,7 @@ public class FirebaseActivity extends AppCompatActivity {
                             final String email = userAuth.getCurrentUser().getEmail();
 
                             DatabaseReference thisUser = users.child(userAuth.getCurrentUser().getUid());
-                            thisUser.setValue(new UserProfile(email, null, null, "images/" + email + System.currentTimeMillis(), new ArrayList<Bid>(), new ArrayList<Bid>()));
+                            thisUser.setValue(new UserProfile(email, null, null, "images/" + email + System.currentTimeMillis(), new HashMap<String, Object>(), new HashMap<String, Object>()));
                         }
                         else {
                             Log.e(TAG, "createUser:failed", task.getException());

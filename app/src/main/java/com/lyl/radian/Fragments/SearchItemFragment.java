@@ -63,7 +63,7 @@ public class SearchItemFragment extends Fragment{
 
         AppBarLayout mToolbar = (AppBarLayout) getActivity().findViewById(R.id.app_bar_layout);
         mToolbar.setTranslationY(0);
-        
+
         account = (Account) callingActivity.getApplication();
         userProfile = (ImageView) view.findViewById(R.id.userProfile);
         userEmail = (TextView) view.findViewById(R.id.userEmail);
@@ -109,20 +109,8 @@ public class SearchItemFragment extends Fragment{
                 user.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        /*
-                        // Get user object
-                        UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                        // TODO
 
-                        // Extract the needed ArrayList<Bid> with Bid-References where the user participates
-                        ArrayList<Bid> participationList = userProfile.getParticipations();
-
-                        // Add participation
-                        participationList.add(account.getClickedBid());
-
-                        // Transfer update to DB
-                        DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB);
-                        user.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userProfile);
-                        */
                     }
 
                     @Override
@@ -185,7 +173,7 @@ public class SearchItemFragment extends Fragment{
                         String location = (String)hm.get("location");
                         String language = (String)hm.get("language");
                         HashMap<String, Object> bis = (HashMap<String, Object>)hm.get("ownBids");
-                        UserProfile u = new UserProfile(account.getClickedBid().getEmail(), location, language, account.getClickedBid().getProfilePic(), new ArrayList<Bid>(), new ArrayList<Bid>());
+                        UserProfile u = new UserProfile(account.getClickedBid().getEmail(), location, language, account.getClickedBid().getProfilePic(), new HashMap<String, Object>(), new HashMap<String, Object>());
                         ProfileFragment f = new ProfileFragment();
                         account.fm.beginTransaction().replace(R.id.content_frame, f, "profile").addToBackStack("profile").commit();
                     }
