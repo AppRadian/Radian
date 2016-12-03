@@ -9,8 +9,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/bieteList"
         android:layout_centerHorizontal="true"
-        android:paddingTop="56dp"
-        android:clipToPadding="false"
         />
 
     <android.support.design.widget.FloatingActionButton

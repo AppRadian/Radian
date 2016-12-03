@@ -147,18 +147,27 @@ public class ProfileFragment extends SuperProfileFragment {
     private void setCollapsingToolbarEnabled(boolean enabled){
         final Resources r = getResources();
         final int px = (int)(r.getDisplayMetrics().heightPixels / 2.5);
+        CollapsingToolbarLayout toolbar = (CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar);
 
         if(enabled){
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                    | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
+
             sendMessage.setVisibility(View.VISIBLE);
             ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
-            ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(true);
+            toolbar.setTitleEnabled(true);
             profilePic.setMaxHeight(px);
             ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(true);
-            ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitle(account.getClickedBid().getEmail());
+            toolbar.setTitle(account.getClickedBid().getEmail());
         }
         else{
+            AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                    | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+
             sendMessage.setVisibility(View.GONE);
-            ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
+            toolbar.setTitleEnabled(false);
             profilePic.setMaxHeight(0);
             profilePic.setImageBitmap(null);
             ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(false);

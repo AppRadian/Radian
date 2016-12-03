@@ -12,8 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:dividerHeight="10dp"
-        android:paddingTop="56dp"
-        android:clipToPadding="false"
         android:divider="@android:color/transparent"
         android:id="@+id/homeList"
         android:scrollbars="none"

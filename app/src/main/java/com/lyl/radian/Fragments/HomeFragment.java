@@ -127,20 +127,6 @@ public class HomeFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         searches.setLayoutManager(llm);
         searches.setAdapter(adapter);
-        searches.setOnScrollListener(new HidingScrollListener() {
-            AppBarLayout mToolbar = (AppBarLayout) getActivity().findViewById(R.id.app_bar_layout);
-            @Override
-            public void onHide() {
-                fab.hide();
-                mToolbar.animate().translationY(-mToolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2));
-            }
-
-            @Override
-            public void onShow() {
-                fab.show();
-                mToolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
-            }
-        });
 
         cmp = new Comparator<String[]>() {
             @Override
@@ -177,10 +163,6 @@ public class HomeFragment extends Fragment {
 
     private void refresh(){
 
-        RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
-        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
-        p.setBehavior(null);
-        content.setLayoutParams(p);
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebote in der Nähe");
     }
 
@@ -191,12 +173,4 @@ public class HomeFragment extends Fragment {
         ((MainAppActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_home);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
-        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
-        p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
-        content.setLayoutParams(p);
-    }
 }
