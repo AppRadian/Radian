@@ -129,7 +129,7 @@ public class SearchItemFragment extends Fragment{
 
                         // Transfer update to DB
                         DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB);
-                        //user.child()
+                        user.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userProfile);
                         
                     }
 

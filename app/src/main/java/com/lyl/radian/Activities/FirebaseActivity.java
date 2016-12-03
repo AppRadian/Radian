@@ -88,7 +88,7 @@ public class FirebaseActivity extends AppCompatActivity {
                             final String email = userAuth.getCurrentUser().getEmail();
 
                             DatabaseReference thisUser = users.child(userAuth.getCurrentUser().getUid());
-                            thisUser.setValue(new UserProfile(email, null, null, "images/" + email + System.currentTimeMillis(), new ArrayList<UserProfile>(), new ArrayList<Bid>()));
+                            thisUser.setValue(new UserProfile(email, null, null, "images/" + email + System.currentTimeMillis(), new ArrayList<Bid>(), new ArrayList<Bid>()));
                         }
                         else {
                             Log.e(TAG, "createUser:failed", task.getException());
