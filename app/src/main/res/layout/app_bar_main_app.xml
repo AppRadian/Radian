@@ -82,6 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:layout_gravity="bottom|end"
-        android:src="@drawable/ic_action_add" />
+        android:src="@drawable/ic_action_add"
+        app:layout_behavior="com.lyl.radian.Widgets.ScrollingFABBehavior"/>
 
 </android.support.design.widget.CoordinatorLayout>
