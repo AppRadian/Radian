@@ -144,7 +144,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void refresh(){
-        
+
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebote in der Nähe");
     }
 

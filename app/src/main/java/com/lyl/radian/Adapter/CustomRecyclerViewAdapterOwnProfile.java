@@ -80,6 +80,7 @@ public class CustomRecyclerViewAdapterOwnProfile extends RecyclerView.Adapter<Re
                     .using(new FirebaseImageLoader())
                     .load(storageRef)
                     .placeholder(R.drawable.blank_profile_pic)
+                    .dontAnimate()
                     .into(holder.profilePic);
         }
         else if (viewHolder instanceof ProfileHeaderViewHolder) {
