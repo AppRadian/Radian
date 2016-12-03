@@ -46,10 +46,13 @@ public class Bid {
         if (obj == null) {
             return false;
         }
+
+        // checks if bid is the same class (because if you compare a string with a bid dann kann mans auch gleich lassen)
         if (!Bid.class.isAssignableFrom(obj.getClass())) {
             return false;
         }
 
+        // check if id's are equal
         final Bid other = (Bid) obj;
         if (id.equals(other.getId()))
             return true;
