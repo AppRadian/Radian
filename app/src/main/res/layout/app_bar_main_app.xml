@@ -76,6 +76,7 @@
         android:clickable="true"
         app:layout_anchorGravity="bottom|right"
         app:layout_anchor="@+id/app_bar_layout"
+        android:visibility="gone"
         />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -117,6 +117,9 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
+        tabLayout.setVisibility(TabLayout.GONE);
+
         adapter = new CustomRecyclerViewAdapterHome(getActivity(), listItems);
         searches = (RecyclerView) view.findViewById(R.id.homeList);
         searches.setHasFixedSize(true);
@@ -169,24 +172,6 @@ public class HomeFragment extends Fragment {
             }
         }));
 
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
-
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-            }
-        });
-
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-
-        ((FloatingActionButton) getActivity().findViewById(R.id.fab)).setVisibility(View.GONE);
-
-
         return view;
     }
 
@@ -196,7 +181,7 @@ public class HomeFragment extends Fragment {
         CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
         p.setBehavior(null);
         content.setLayoutParams(p);
-        ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebote in deiner Nähe");
+        ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebote in der Nähe");
     }
 
     @Override
