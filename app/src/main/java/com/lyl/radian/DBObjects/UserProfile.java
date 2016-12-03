@@ -12,19 +12,19 @@ public class UserProfile {
     private String email;
     private String location;
     private String language;
-    private HashMap<String, Object> participations;
-    private HashMap<String, Object> ownBids;
+    //private HashMap<String, Object> participations;
+    //private HashMap<String, Object> ownBids;
 
     public UserProfile() {
 
     }
 
-    public UserProfile(String email, String location, String language, HashMap<String, Object> participations, HashMap<String, Object> ownBids) {
+    public UserProfile(String email, String location, String language/*, HashMap<String, Object> participations, HashMap<String, Object> ownBids*/) {
         this.email = email;
         this.location = location;
         this.language = language;
-        this.participations = participations;
-        this.ownBids = ownBids;
+        //this.participations = participations;
+        //this.ownBids = ownBids;
     }
 
     public String getEmail() {
@@ -51,6 +51,7 @@ public class UserProfile {
         this.language = language;
     }
 
+    /*
     public HashMap<String, Object> getParticipations() {
         return participations;
     }
@@ -65,6 +66,6 @@ public class UserProfile {
 
     public void setOwnBids(HashMap<String, Object> ownBids) {
         this.ownBids = ownBids;
-    }
+    }*/
 }
 

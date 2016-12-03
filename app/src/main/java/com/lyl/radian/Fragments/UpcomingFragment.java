@@ -8,14 +8,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapterUpcoming;
 import com.lyl.radian.Adapter.RecyclerItemClickListener;
+import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Constants;
 import com.lyl.radian.Widgets.NestedScrollViewFling;
 
 /**
@@ -24,13 +34,54 @@ import com.lyl.radian.Widgets.NestedScrollViewFling;
 
 public class UpcomingFragment extends SuperProfileFragment {
 
+    ArrayList<Bid> upcomingEvents;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
-
         account = (Account) getActivity().getApplication();
 
+        // [BEGIN: Update this fragment with upcoming events from the DB]
+
+        // Reference the right DB object -> in this case it's the user
+        DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        // Now reference from this user the "particpations" child
+        DatabaseReference particpationsChild = user.child("particpations");
+
+        // The parcipatonsChild DBRef points to the child in the DB of this user that holds all participations (respectively all bidIds that the user joins)
+        // Because we want retrieve every bidId that the user joins, we use the addChildEventListener and NOT the addListenerForSingleValueEvent
+        particpationsChild.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        // [END: Update this fragment with upcoming events from the DB]
+
+        // Previously added code by Yannick
         cmp = new Comparator<String[]>() {
             @Override
             public int compare(String[] o1, String[] o2) {
