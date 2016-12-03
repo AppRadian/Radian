@@ -149,7 +149,7 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
     public void onResume() {
         super.onResume();
         refresh();
-        ((MainAppActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_biete);
+        //((MainAppActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_biete);
     }
 
     @Override

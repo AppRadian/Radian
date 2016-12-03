@@ -7,10 +7,6 @@
             android:icon="@drawable/common_full_open_on_phone"
             android:title="Home" />
         <item
-            android:id="@+id/nav_biete"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Biete" />
-        <item
             android:id="@+id/nav_own_profile"
             android:icon="@drawable/ic_person"
             android:title="Profile" />

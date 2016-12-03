@@ -162,9 +162,10 @@ public class MainAppActivity extends AppCompatActivity
 
         if(id == R.id.nav_home){
             account.fm.beginTransaction().replace(R.id.content_frame, homeFragment, "home").addToBackStack("home").commit();
-        } else if (id == R.id.nav_biete) {
+        }
+        /**else if (id == R.id.nav_biete) {
             account.fm.beginTransaction().replace(R.id.content_frame, bieteFragment, "biete").addToBackStack("biete").commit();
-        } else if (id == R.id.nav_own_profile) {
+        } **/else if (id == R.id.nav_own_profile) {
             tab = new OwnProfileFragment();
             account.fm.beginTransaction().replace(R.id.content_frame, tab, "ownprofile").addToBackStack("ownprofile").commit();
         } else if (id == R.id.nav_inbox) {
