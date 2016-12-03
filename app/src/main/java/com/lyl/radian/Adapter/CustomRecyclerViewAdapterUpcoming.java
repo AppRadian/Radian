@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 
@@ -23,13 +24,13 @@ public class CustomRecyclerViewAdapterUpcoming extends RecyclerView.Adapter<Recy
 
     Account account;
     Activity activity;
-    ArrayList<String[]> data;
+    ArrayList<Bid> data;
     ProfileHeaderViewHolder headerHolder;
     ProfileInfoViewHolder infoHolder;
     private final int TYPE_HEADER = 0;
     private final int TYPE_ITEM = 1;
 
-    public CustomRecyclerViewAdapterUpcoming(Activity activity, ArrayList<String[]> data) {
+    public CustomRecyclerViewAdapterUpcoming(Activity activity, ArrayList<Bid> data) {
 
         account = (Account) activity.getApplication();
         this.activity = activity;
@@ -62,13 +63,13 @@ public class CustomRecyclerViewAdapterUpcoming extends RecyclerView.Adapter<Recy
             ProfileInfoViewHolder holder = (ProfileInfoViewHolder) viewHolder;
             int position = pos - 1;
 
-            holder.tag.setText(data.get(position)[2]);
-            holder.location.setText(data.get(position)[4]);
-            holder.distance.setText("<=" + data.get(position)[7] + "km");
-            holder.time.setText(data.get(position)[8] + " - " + data.get(position)[9] + " Uhr");
-            holder.ratingBar.setRating(Float.parseFloat(data.get(position)[5]));
-            holder.count.setText(data.get(position)[6] + " Bewertungen");
-            holder.maxPart.setText(data.get(position)[10] + "/" + data.get(position)[11]);
+            holder.tag.setText(data.get(position).getTag());
+            holder.location.setText(data.get(position).getLocation());
+            holder.distance.setText("<=" + /*data.get(position)*/ "XX" + "km");
+            holder.time.setText(data.get(position).getDate() + " - " + data.get(position).getTime()+ " Uhr");
+            holder.ratingBar.setRating((float)data.get(position).getAverageRating());
+            holder.count.setText(data.get(position).getCount() + " Bewertungen");
+            holder.maxPart.setText(data.get(position).getParticipants() + "/" + data.get(position).getMaxParticipants());
 
             Bitmap pic = account.getBitmapFromCache(data.get(position)[1]);
             if(pic != null) {
@@ -98,9 +99,9 @@ public class CustomRecyclerViewAdapterUpcoming extends RecyclerView.Adapter<Recy
         return data.size() + 1;
     }
 
-    public String[] getItem(int position){
+    public Bid getItem(int position){
 
-        return data.get(position - 1);
+        return data.get(position);
     }
 
     public class ProfileInfoViewHolder extends RecyclerView.ViewHolder{
