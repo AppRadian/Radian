@@ -106,7 +106,7 @@ public class OwnProfileFragment extends Fragment {
     private void refresh() {
 
         final Resources r = getResources();
-        final int px = r.getDisplayMetrics().heightPixels / 3;
+        final int px = (int)(r.getDisplayMetrics().heightPixels / 2.5);
 
         DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         user.addChildEventListener(new ChildEventListener() {
@@ -119,8 +119,8 @@ public class OwnProfileFragment extends Fragment {
                     Glide.with(OwnProfileFragment.this)
                             .using(new FirebaseImageLoader())
                             .load(storageRef)
-                            .override(r.getDisplayMetrics().widthPixels, px)
                             .placeholder(R.drawable.blank_profile_pic)
+                            .dontAnimate()
                             .into(OwnProfileFragment.this.profilePic);
                             //.into(target);
                 }
