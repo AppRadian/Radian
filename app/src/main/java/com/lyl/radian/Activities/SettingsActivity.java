@@ -1,10 +1,12 @@
 package com.lyl.radian.Activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
@@ -58,7 +60,8 @@ public class SettingsActivity extends Activity {
     FirebaseStorage storage;
     StorageReference storageRef;
     String profilePic;
-    DatabaseReference user;
+    ProgressDialog barProgressDialog;
+    Handler updateBarHandler;
 
 
     @Override
@@ -144,55 +147,67 @@ public class SettingsActivity extends Activity {
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
                 Uri uri = data.getData();
-
-                // Create the file metadata
-                StorageMetadata metadata = new StorageMetadata.Builder()
-                        .setContentType("image/jpeg")
-                        .build();
-
-                profilePic = "images/" + FirebaseAuth.getInstance().getCurrentUser().getEmail() + System.currentTimeMillis();
-                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                        .setPhotoUri(Uri.parse(profilePic))
-                        .build();
-                FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates);
-
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                final StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
-                // Upload file and metadata to the path 'images/mountains.jpg'
-                UploadTask uploadTask = storageRef.putFile(uri, metadata);
-
-                // Listen for state changes, errors, and completion of the upload.
-                uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                        System.out.println("Upload is " + progress + "% done");
-                    }
-                }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-                        System.out.println("Upload is paused");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Handle successful uploads on complete
-                        SettingsActivity.this.storageRef.delete();
-                        Glide.with(SettingsActivity.this)
-                                .using(new FirebaseImageLoader())
-                                .load(storageRef)
-                                .placeholder(R.drawable.blank_profile_pic)
-                                .dontAnimate()
-                                .into(profilePicView);
-                    }
-                });
+                uploadImage(uri);
             }
         }
+    }
+
+    public void uploadImage(final Uri uri) {
+        barProgressDialog = new ProgressDialog(SettingsActivity.this);
+
+        barProgressDialog.setTitle("Uploading Image ...");
+        barProgressDialog.setProgressStyle(barProgressDialog.STYLE_HORIZONTAL);
+        barProgressDialog.setProgress(0);
+        barProgressDialog.show();
+
+        // Create the file metadata
+        StorageMetadata metadata = new StorageMetadata.Builder()
+                .setContentType("image/jpeg")
+                .build();
+
+        profilePic = "images/" + FirebaseAuth.getInstance().getCurrentUser().getEmail() + System.currentTimeMillis();
+        final UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setPhotoUri(Uri.parse(profilePic))
+                .build();
+        FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        final StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+        // Upload file and metadata to the path 'images/mountains.jpg'
+        UploadTask uploadTask = storageRef.putFile(uri, metadata);
+
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                barProgressDialog.setProgress((int)progress);
+                System.out.println("Upload is " + progress + "% done");
+            }
+        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                System.out.println("Upload is paused");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // Handle successful uploads on complete
+                barProgressDialog.dismiss();
+                SettingsActivity.this.storageRef.delete();
+                Glide.with(SettingsActivity.this)
+                        .using(new FirebaseImageLoader())
+                        .load(storageRef)
+                        .placeholder(R.drawable.blank_profile_pic)
+                        .dontAnimate()
+                        .into(profilePicView);
+            }
+        });
     }
 
     @Override
