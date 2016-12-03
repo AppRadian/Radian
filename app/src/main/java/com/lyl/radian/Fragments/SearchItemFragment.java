@@ -173,7 +173,7 @@ public class SearchItemFragment extends Fragment{
                         String location = (String)hm.get("location");
                         String language = (String)hm.get("language");
                         HashMap<String, Object> bis = (HashMap<String, Object>)hm.get("ownBids");
-                        UserProfile u = new UserProfile(account.getClickedBid().getEmail(), location, language, account.getClickedBid().getProfilePic(), new HashMap<String, Object>(), new HashMap<String, Object>());
+                        //UserProfile u = new UserProfile(account.getClickedBid().getEmail(), location, language, account.getClickedBid().getProfilePic(), new HashMap<String, Object>(), new HashMap<String, Object>());
                         ProfileFragment f = new ProfileFragment();
                         account.fm.beginTransaction().replace(R.id.content_frame, f, "profile").addToBackStack("profile").commit();
                     }
