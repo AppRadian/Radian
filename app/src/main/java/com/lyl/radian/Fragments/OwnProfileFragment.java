@@ -154,7 +154,6 @@ public class OwnProfileFragment extends Fragment {
             ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
             toolbar.setTitleEnabled(true);
             profilePic.setMaxHeight(px);
-            ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(true);
             toolbar.setTitle("Dein Profil");
         }
         else{
@@ -168,7 +167,6 @@ public class OwnProfileFragment extends Fragment {
             toolbar.setTitleEnabled(false);
             profilePic.setMaxHeight(0);
             profilePic.setImageBitmap(null);
-            ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(false);
         }
     }
 }
