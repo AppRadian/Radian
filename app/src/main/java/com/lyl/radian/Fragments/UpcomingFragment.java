@@ -44,11 +44,14 @@ public class UpcomingFragment extends SuperProfileFragment {
 
         // [BEGIN: Update this fragment with upcoming events from the DB]
 
+        // Initialize ArrayList<Bid>
+        upcomingEvents = new ArrayList<>();
+
         // Reference the right DB object -> in this case it's the user
         DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        // Now reference from this user the "particpations" child
-        DatabaseReference particpationsChild = user.child("particpations");
+        // Now reference from this user the "participations" child
+        DatabaseReference particpationsChild = user.child("participations");
 
         // The parcipatonsChild DBRef points to the child in the DB of this user that holds all participations (respectively all bidIds that the user joins)
         // Because we want retrieve every bidId that the user joins, we use the addChildEventListener and NOT the addListenerForSingleValueEvent
