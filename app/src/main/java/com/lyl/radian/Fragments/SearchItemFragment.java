@@ -113,9 +113,6 @@ public class SearchItemFragment extends Fragment{
                         DatabaseReference myParticipations = FirebaseDatabase.getInstance().getReference("Users")
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("particpations").push();
                         myParticipations.setValue(myParticipations.getKey());
-
-
-
                     }
 
                     @Override
