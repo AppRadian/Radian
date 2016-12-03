@@ -99,15 +99,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab2);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BidDialog add = new BidDialog();
-                add.show(getChildFragmentManager(), "Biete Dialog");
-            }
-        });
-
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
         tabLayout.setVisibility(TabLayout.GONE);
 

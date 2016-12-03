@@ -137,7 +137,7 @@ public class OwnBidsFragment extends SuperProfileFragment {
                             return;
 
                         CustomRecyclerViewAdapterOwnProfile adapter = (CustomRecyclerViewAdapterOwnProfile) OwnBidsFragment.this.adapter;
-                        
+
                         OwnSearchItemFragment f = new OwnSearchItemFragment();
                         getChildFragmentManager().beginTransaction().replace(R.id.content_frame, f, "OwnsearchItem").addToBackStack(null).commit();
                     }

@@ -128,15 +128,6 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
         bieteList.setLayoutManager(llm);
         bieteList.setAdapter(adapter);
 
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab2);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BidDialog add = new BidDialog();
-                add.show(getChildFragmentManager(), "Biete Dialog");
-            }
-        });
-
         bieteList.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
             @Override public void onItemClick(View view, int position) {
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.Adapter.CustomAdapterSearch;
+import com.lyl.radian.DialogFragments.BidDialog;
 import com.lyl.radian.Fragments.BieteFragment;
 //import comhelpingandchanging.facebook.httpswww.changetogether.Fragments.HelpingLocationsFragment;
 import com.lyl.radian.Fragments.HomeFragment;
@@ -95,6 +97,14 @@ public class MainAppActivity extends AppCompatActivity
             tab = new OwnProfileFragment();
             inboxFragment = new InboxFragment();
         }
+
+        ((FloatingActionButton)findViewById(R.id.fab2)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BidDialog add = new BidDialog();
+                add.show(account.fm, "Biete Dialog");
+            }
+        });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

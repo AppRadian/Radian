@@ -44,7 +44,6 @@ import com.lyl.radian.DBObjects.Bid;
 
 public class BidDialog extends DialogFragment {
     AutoCompleteTextView location;
-    Fragment callingFragment;
     Button dateButton;
     Button timeButton;
     Button done;
@@ -60,8 +59,6 @@ public class BidDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.dialog_add_bid, container, false);
-
-        callingFragment = getParentFragment();
 
         bidTypes = (Spinner) rootView.findViewById(R.id.bidSpinner);
 
@@ -194,59 +191,21 @@ public class BidDialog extends DialogFragment {
                  city.equals(location.getText().toString()) && time.getText().toString().length() != 0 && date.getText().toString().length() != 0 && participants.getText().toString().length() != 0) {
                     Double[] latLong = getLocationFromAddress(autocompleteView.getText().toString());
 
-                    DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                    user.addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            // Not needed anymore the if-case
-                            if(dataSnapshot.getKey().equals("profilePic")) {
-                                String profilePic = (String)dataSnapshot.getValue();
-                                // push creates unique key wesshalb am Edne der Liste ein Wert angefügt werden kann
-                                // own bids contains list with strings of bid-ids
-                                DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users")
-                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids").push();
-                                // set unique key at the end of the list
-                                ownBids.setValue(ownBids.getKey());
+                    String profilePic = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
+                    // push creates unique key wesshalb am Edne der Liste ein Wert angefügt werden kann
+                    // own bids contains list with strings of bid-ids
+                    DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users")
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids").push();
+                    // set unique key at the end of the list
+                    ownBids.setValue(ownBids.getKey());
 
-                                Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance()
-                                        .getCurrentUser().getEmail(), profilePic, bid, description.getText().toString(),
-                                        location.getText().toString(), 0, 0, date.getText().toString(),
-                                        time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
-                                DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
-                                bids.child(ownBids.getKey()).setValue(bidToInsert);
-                            }
-                        }
-
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                            if(dataSnapshot.getKey().equals("profilePic")) {
-                                String profilePic = (String)dataSnapshot.getValue();
-                                DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids").push();
-                                ownBids.setValue(ownBids.getKey());
-
-                                Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), profilePic, bid, description.getText().toString(),
-                                        location.getText().toString(), 0, 0, date.getText().toString(), time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
-                                DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
-                                bids.child(ownBids.getKey()).setValue(bidToInsert);
-                            }
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-
+                    Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance()
+                            .getCurrentUser().getEmail(), profilePic, bid, description.getText().toString(),
+                            location.getText().toString(), 0, 0, date.getText().toString(),
+                            time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
+                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
+                    bids.child(ownBids.getKey()).setValue(bidToInsert);
+                    
                     getDialog().dismiss();
                 }
                 else
