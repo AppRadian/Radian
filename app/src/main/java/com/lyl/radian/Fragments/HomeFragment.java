@@ -108,7 +108,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab2);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
