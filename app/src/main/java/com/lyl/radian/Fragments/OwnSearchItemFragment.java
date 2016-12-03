@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -62,14 +63,6 @@ public class OwnSearchItemFragment extends Fragment {
 
             ((FloatingActionButton) getActivity().findViewById(R.id.fab)).setVisibility(View.GONE);
 
-            TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
-            tabLayout.setVisibility(TabLayout.GONE);
-
-            RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
-            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
-            p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
-            content.setLayoutParams(p);
-
             account = (Account) callingActivity.getApplication();
             userProfile = (ImageView) view.findViewById(R.id.userProfile);
             userEmail = (TextView) view.findViewById(R.id.userEmail);
@@ -92,7 +85,6 @@ public class OwnSearchItemFragment extends Fragment {
                                 .using(new FirebaseImageLoader())
                                 .load(storageRef)
                                 .placeholder(R.drawable.blank_profile_pic)
-                                .dontAnimate()
                                 .into(userProfile);
                     }
                 }
@@ -133,10 +125,7 @@ public class OwnSearchItemFragment extends Fragment {
             ratingBar.setRating((float)account.getClickedBid().getAverageRating());
             ratings.setText(account.getClickedBid().getCount() + " Rezensionen");
 
-            ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
-            //((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebot von " + account.getSearchedItem().getEmail());
-            ((ImageView)getActivity().findViewById(R.id.ownProfilePic)).setImageBitmap(null);
-
+            ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Dein Angebot");
 
             edit.setOnClickListener(new View.OnClickListener() {
                 @Override

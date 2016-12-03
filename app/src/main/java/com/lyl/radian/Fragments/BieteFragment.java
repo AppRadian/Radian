@@ -11,6 +11,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -150,8 +151,6 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
         });
 
 
-        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
-        tabLayout.setVisibility(TabLayout.GONE);
         ((FloatingActionButton) getActivity().findViewById(R.id.fab)).setVisibility(View.GONE);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -176,15 +175,7 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
 
     private void refresh(){
 
-        RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
-        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
-        p.setBehavior(null);
-        content.setLayoutParams(p);
-
-        ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Deine Angebote");
-        ((ImageView)getActivity().findViewById(R.id.ownProfilePic)).setImageBitmap(null);
-
     }
 
     @Override

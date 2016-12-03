@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,8 +67,6 @@ public class SearchFragment extends Fragment {
         searchField = (EditText) view.findViewById(R.id.editText3);
         searchField.setText(getArguments().getString("searchText"));
 
-        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
-        tabLayout.setVisibility(TabLayout.GONE);
         ((FloatingActionButton) getActivity().findViewById(R.id.fab)).setVisibility(View.GONE);
 
         searchBtn = (Button) view.findViewById(R.id.searchBtn);
@@ -135,14 +134,8 @@ public class SearchFragment extends Fragment {
 
     private void refresh(){
 
-        RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
-        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
-        p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
-        content.setLayoutParams(p);
 
-        ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
-        ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Suche Angebote");
-        ((ImageView)getActivity().findViewById(R.id.ownProfilePic)).setImageBitmap(null);
+        ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Suche nach Angeboten");
     }
 
     @Override

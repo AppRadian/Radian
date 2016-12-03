@@ -13,6 +13,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -106,7 +108,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,9 +116,6 @@ public class HomeFragment extends Fragment {
                 add.show(getChildFragmentManager(), "Biete Dialog");
             }
         });
-
-        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
-        tabLayout.setVisibility(TabLayout.GONE);
 
         adapter = new CustomRecyclerViewAdapterHome(getActivity(), listItems);
         searches = (RecyclerView) view.findViewById(R.id.homeList);
@@ -194,14 +192,7 @@ public class HomeFragment extends Fragment {
 
     private void refresh(){
 
-        RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
-        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
-        p.setBehavior(null);
-        content.setLayoutParams(p);
-
-        ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebote in deiner Nähe");
-        ((ImageView)getActivity().findViewById(R.id.ownProfilePic)).setImageBitmap(null);
     }
 
     @Override
