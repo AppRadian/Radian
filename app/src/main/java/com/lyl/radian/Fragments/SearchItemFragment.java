@@ -118,6 +118,7 @@ public class SearchItemFragment extends Fragment{
                 user.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        /*
                         // Get user object
                         UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
 
@@ -130,7 +131,7 @@ public class SearchItemFragment extends Fragment{
                         // Transfer update to DB
                         DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB);
                         user.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(userProfile);
-                        
+                        */
                     }
 
                     @Override
