@@ -185,7 +185,11 @@ public class SearchItemFragment extends Fragment{
                 user.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        account.setSearchedUser(dataSnapshot.getValue(UserProfile.class));
+                        HashMap<String, Object> hm = (HashMap<String, Object>)dataSnapshot.getValue();
+                        String location = (String)hm.get("location");
+                        String language = (String)hm.get("language");
+                        HashMap<String, Object> bis = (HashMap<String, Object>)hm.get("ownBids");
+                        UserProfile u = new UserProfile(account.getClickedBid().getEmail(), location, language, account.getClickedBid().getProfilePic(), new ArrayList<Bid>(), new ArrayList<Bid>());
                         ProfileFragment f = new ProfileFragment();
                         account.fm.beginTransaction().replace(R.id.content_frame, f, "profile").addToBackStack("profile").commit();
                     }
