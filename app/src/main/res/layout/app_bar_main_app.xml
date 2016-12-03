@@ -12,7 +12,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                android:fitsSystemWindows="false">
+                android:fitsSystemWindows="false"
+                app:expanded="false">
 
                 <android.support.design.widget.CollapsingToolbarLayout
                     android:id="@+id/collapsing_toolbar"
@@ -22,8 +23,9 @@
                     app:contentScrim="?attr/colorPrimary"
                     app:expandedTitleMarginStart="48dp"
                     app:expandedTitleMarginEnd="64dp"
-                    app:titleEnabled="false"
                     app:expandedTitleGravity="bottom|center_horizontal"
+                    app:titleEnabled="false"
+                    app:title="hallo"
                     android:fitsSystemWindows="false"
                     >
 
@@ -31,8 +33,9 @@
                         android:id="@+id/ownProfilePic"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:scaleType="centerCrop"
                         app:layout_collapseMode="parallax"
+                        android:scaleType="centerCrop"
+                        android:adjustViewBounds="true"
                         />
 
                     <android.support.v7.widget.Toolbar
@@ -41,7 +44,6 @@
                         android:id="@+id/toolbar"
                         app:layout_collapseMode="pin"
                         >
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

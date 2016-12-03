@@ -130,8 +130,6 @@ public class ProfileFragment extends SuperProfileFragment {
         content.setLayoutParams(p);
 
        // profilePic.setImageBitmap(ThumbnailUtils.extractThumbnail(account.getBitmapFromCache(account.getSearchedItem().getEmail()), profilePic.getWidth(), (int)px));
-        ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
-        ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(true);
        // ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitle(account.getSearchedItem().getEmail() + "'s Profil");
 
         return view;

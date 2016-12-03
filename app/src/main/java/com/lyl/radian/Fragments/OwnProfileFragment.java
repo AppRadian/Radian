@@ -51,7 +51,6 @@ public class OwnProfileFragment extends Fragment {
     Account account;
     FloatingActionButton settings;
     ImageView profilePic;
-    private SimpleTarget target;
 
     @Nullable
     @Override
@@ -70,20 +69,6 @@ public class OwnProfileFragment extends Fragment {
                 startActivity(settingsActivity);
             }
         });
-
-        target = new SimpleTarget<Bitmap>( getResources().getDisplayMetrics().widthPixels, 250 ) {
-            @Override
-            public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
-                profilePic.setImageBitmap( bitmap );
-            }
-
-            @Override
-            public void onLoadStarted(Drawable placeholder) {
-                super.onLoadStarted(placeholder);
-                Bitmap pic = Constants.decodeBitmap(getResources(), R.drawable.blank_profile_pic, getResources().getDisplayMetrics().widthPixels, 250);
-                profilePic.setImageBitmap(pic);
-            }
-        };
 
         ((FloatingActionButton) getActivity().findViewById(R.id.fab)).setVisibility(View.GONE);
 
@@ -125,11 +110,6 @@ public class OwnProfileFragment extends Fragment {
         final Resources r = getResources();
         final int px = r.getDisplayMetrics().heightPixels / 3;
 
-        RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
-        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
-        p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
-        content.setLayoutParams(p);
-
         DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         user.addChildEventListener(new ChildEventListener() {
             @Override
@@ -142,7 +122,7 @@ public class OwnProfileFragment extends Fragment {
                             .using(new FirebaseImageLoader())
                             .load(storageRef)
                             .override(r.getDisplayMetrics().widthPixels, px)
-                            //.placeholder(R.drawable.blank_profile_pic)
+                            .placeholder(R.drawable.blank_profile_pic)
                             .into(OwnProfileFragment.this.profilePic);
                             //.into(target);
                 }
@@ -180,12 +160,7 @@ public class OwnProfileFragment extends Fragment {
 
             }
         });
-        if(!isProfilePrevious())
-            ((TextView) getActivity().findViewById(R.id.toolbar_title)).setText("");
-        else
-            ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(true);
-        ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(true);
-        ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitle("Dein Profil");
+        setCollapsingToolbarEnabled(true);
     }
 
     @Override
@@ -193,6 +168,12 @@ public class OwnProfileFragment extends Fragment {
         super.onResume();
         refresh();
         ((MainAppActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_own_profile);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        setCollapsingToolbarEnabled(false);
     }
 
     private boolean isProfilePrevious(){
@@ -208,5 +189,37 @@ public class OwnProfileFragment extends Fragment {
             return true;
 
         return false;
+    }
+
+    private void setCollapsingToolbarEnabled(boolean enabled){
+        final Resources r = getResources();
+        final int px = r.getDisplayMetrics().heightPixels / 3;
+
+        if(enabled){
+            RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
+            p.setBehavior(new AppBarLayout.ScrollingViewBehavior());
+            content.setLayoutParams(p);
+
+            ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
+            ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(true);
+            profilePic.setMaxHeight(px);
+            ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(true);
+            ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitle("Dein Profil");
+        }
+        else{
+            RelativeLayout content = (RelativeLayout) getActivity().findViewById(R.id.content_main_app);
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) content.getLayoutParams();
+            p.setBehavior(null);
+            content.setLayoutParams(p);
+
+            TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
+            tabLayout.setVisibility(TabLayout.GONE);
+
+            ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
+            profilePic.setMaxHeight(0);
+            profilePic.setImageBitmap(null);
+            ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(false);
+        }
     }
 }

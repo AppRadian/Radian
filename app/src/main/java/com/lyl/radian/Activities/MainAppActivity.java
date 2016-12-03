@@ -54,13 +54,7 @@ public class MainAppActivity extends AppCompatActivity
     OwnProfileFragment tab;
     InboxFragment inboxFragment;
     View header;
-
-
     public NavigationView navigationView;
-
-    public ListView searches;
-    public ArrayList<String[]> listItems = new ArrayList<String[]>();
-    public CustomAdapterSearch adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +132,6 @@ public class MainAppActivity extends AppCompatActivity
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

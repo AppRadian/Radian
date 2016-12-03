@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -158,9 +159,7 @@ public class SearchItemFragment extends Fragment{
         ratingBar.setRating((float)account.getClickedBid().getAverageRating());
         ratings.setText(account.getClickedBid().getCount() + " Rezensionen");
 
-        ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitleEnabled(false);
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebot von " + account.getClickedBid().getEmail());
-        ((ImageView)getActivity().findViewById(R.id.ownProfilePic)).setImageBitmap(null);
 /*
         if(listContainsId(account.getSearchedItem().getId()))
             join.setText("Nicht mehr teilnehmen");
