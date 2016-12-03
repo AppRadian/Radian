@@ -22,6 +22,7 @@ import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -72,56 +73,16 @@ public class SettingsActivity extends Activity {
         password = (EditText) findViewById(R.id.changePassword);
         passwordConfirm = (EditText) findViewById(R.id.ConfirmPassword);
         profilePicView = (ImageView) findViewById(R.id.changeProfilePic);
-        user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        user.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.getKey().equals("profilePic")) {
-                    profilePic = (String)dataSnapshot.getValue();
-                    Log.e("a", profilePic);
-                    storage = FirebaseStorage.getInstance();
-                    storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
-                    Glide.with(SettingsActivity.this)
-                            .using(new FirebaseImageLoader())
-                            .load(storageRef)
-                            .placeholder(R.drawable.blank_profile_pic)
-                            .into(profilePicView);
-                }
-            }
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
+        Glide.with(SettingsActivity.this)
+                .using(new FirebaseImageLoader())
+                .load(storageRef)
+                .placeholder(R.drawable.blank_profile_pic)
+                .dontAnimate()
+                .into(profilePicView);
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.getKey().equals("profilePic")) {
-                    profilePic = (String)dataSnapshot.getValue();
-                    Log.e("a", profilePic);
-                    storage = FirebaseStorage.getInstance();
-                    storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
-                    Glide.with(SettingsActivity.this)
-                            .using(new FirebaseImageLoader())
-                            .load(storageRef)
-                            .placeholder(R.drawable.blank_profile_pic)
-                            .into(profilePicView);
-                }
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        //profilePicView.setImageBitmap(account.getSelf().getProfilePic());
         //location.setText(account.get.getLocation());
         //language.setText(account.getSelf().getLanguage());
         city = "";
@@ -190,8 +151,13 @@ public class SettingsActivity extends Activity {
                         .build();
 
                 profilePic = "images/" + FirebaseAuth.getInstance().getCurrentUser().getEmail() + System.currentTimeMillis();
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setPhotoUri(Uri.parse(profilePic))
+                        .build();
+                FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates);
+
                 FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+                final StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
                 // Upload file and metadata to the path 'images/mountains.jpg'
                 UploadTask uploadTask = storageRef.putFile(uri, metadata);
 
@@ -217,7 +183,12 @@ public class SettingsActivity extends Activity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // Handle successful uploads on complete
                         SettingsActivity.this.storageRef.delete();
-                        user.child("profilePic").setValue(profilePic);
+                        Glide.with(SettingsActivity.this)
+                                .using(new FirebaseImageLoader())
+                                .load(storageRef)
+                                .placeholder(R.drawable.blank_profile_pic)
+                                .dontAnimate()
+                                .into(profilePicView);
                     }
                 });
             }

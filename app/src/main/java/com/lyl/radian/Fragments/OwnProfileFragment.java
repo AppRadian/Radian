@@ -100,71 +100,23 @@ public class OwnProfileFragment extends Fragment {
             }
         });
 
-        return view;
-    }
-
-    private void refresh() {
-
-        final Resources r = getResources();
-        final int px = (int)(r.getDisplayMetrics().heightPixels / 2.5);
-
-        DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        user.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.getKey().equals("profilePic")) {
-                    String profilePic = (String)dataSnapshot.getValue();
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
-                    Glide.with(OwnProfileFragment.this)
-                            .using(new FirebaseImageLoader())
-                            .load(storageRef)
-                            .placeholder(R.drawable.blank_profile_pic)
-                            .dontAnimate()
-                            .into(OwnProfileFragment.this.profilePic);
-                            //.into(target);
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.getKey().equals("profilePic")) {
-                    /**
-                    String profilePic = (String)dataSnapshot.getValue();
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
-                    Glide.with(OwnProfileFragment.this)
-                            .using(new FirebaseImageLoader())
-                            .load(storageRef)
-                            .override(r.getDisplayMetrics().widthPixels, px)
-                            .centerCrop()
-                            .into(OwnProfileFragment.this.profilePic);
-                     **/
-                }
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
         setCollapsingToolbarEnabled(true);
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
+        Glide.with(OwnProfileFragment.this)
+                .using(new FirebaseImageLoader())
+                .load(storageRef)
+                .fitCenter()
+                .placeholder(R.drawable.blank_profile_pic)
+                .dontAnimate()
+                .into(profilePic);
+
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        refresh();
         ((MainAppActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_own_profile);
     }
 
@@ -191,7 +143,7 @@ public class OwnProfileFragment extends Fragment {
 
     private void setCollapsingToolbarEnabled(boolean enabled){
         final Resources r = getResources();
-        final int px = r.getDisplayMetrics().heightPixels / 3;
+        final int px = (int)(r.getDisplayMetrics().heightPixels / 2.5);
 
         if(enabled){
             ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");

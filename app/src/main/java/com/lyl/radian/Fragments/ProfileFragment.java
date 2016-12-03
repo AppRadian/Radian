@@ -110,15 +110,6 @@ public class ProfileFragment extends SuperProfileFragment {
                 })
         );
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + account.getClickedBid().getProfilePic());
-        Glide.with(ProfileFragment.this)
-                .using(new FirebaseImageLoader())
-                .load(storageRef)
-                .placeholder(R.drawable.blank_profile_pic)
-                .dontAnimate()
-                .into(profilePic);
-
         sendMessage = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         sendMessage.setImageResource(R.drawable.ic_menu_send);
         sendMessage.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +121,16 @@ public class ProfileFragment extends SuperProfileFragment {
         });
 
 
-       setCollapsingToolbarEnabled(true);
+        setCollapsingToolbarEnabled(true);
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + account.getClickedBid().getProfilePic());
+        Glide.with(ProfileFragment.this)
+                .using(new FirebaseImageLoader())
+                .load(storageRef)
+                .fitCenter()
+                .placeholder(R.drawable.blank_profile_pic)
+                .dontAnimate()
+                .into(profilePic);
 
        // profilePic.setImageBitmap(ThumbnailUtils.extractThumbnail(account.getBitmapFromCache(account.getSearchedItem().getEmail()), profilePic.getWidth(), (int)px));
        // ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitle(account.getSearchedItem().getEmail() + "'s Profil");

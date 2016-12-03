@@ -53,7 +53,7 @@ public class MainAppActivity extends AppCompatActivity
     OwnBidsFragment ownProfileFragment;
     OwnProfileFragment tab;
     InboxFragment inboxFragment;
-    View header;
+    public View header;
     public NavigationView navigationView;
 
     @Override
@@ -72,50 +72,14 @@ public class MainAppActivity extends AppCompatActivity
         ((TextView) header.findViewById(R.id.profEmail)).setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         ((TextView) header.findViewById(R.id.profLocation)).setText("");
 
-        DatabaseReference user = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        user.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.getKey().equals("profilePic")) {
-                    String profilePic = (String)dataSnapshot.getValue();
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
-                    Glide.with(MainAppActivity.this)
-                            .using(new FirebaseImageLoader())
-                            .load(storageRef)
-                            .placeholder(R.drawable.blank_profile_pic)
-                            .into(((ImageView) header.findViewById(R.id.profPic)));
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot.getKey().equals("profilePic")) {
-                    String profilePic = (String)dataSnapshot.getValue();
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
-                    Glide.with(MainAppActivity.this)
-                            .using(new FirebaseImageLoader())
-                            .load(storageRef)
-                            .into(((ImageView) header.findViewById(R.id.profPic)));
-                }
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
+        Glide.with(MainAppActivity.this)
+                .using(new FirebaseImageLoader())
+                .load(storageRef)
+                .placeholder(R.drawable.blank_profile_pic)
+                .dontAnimate()
+                .into(((ImageView) header.findViewById(R.id.profPic)));
 
         if (savedInstanceState != null) {
             searchFragment = (SearchFragment) account.fm.getFragment(savedInstanceState, "search");
