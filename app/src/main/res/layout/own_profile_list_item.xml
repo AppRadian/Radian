@@ -67,14 +67,14 @@
                 app:srcCompat="@drawable/blank_profile_pic"
                 android:id="@+id/profilePic"
                 android:scaleType="centerCrop"
-                android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
 
             <RatingBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/ratingBar4"
-                android:layout_alignTop="@+id/profilePic"
+                android:layout_above="@+id/count"
                 android:layout_toEndOf="@+id/profilePic"
                 android:layout_marginLeft="5dp"
                 style="@style/Widget.AppCompat.RatingBar.Small"
@@ -88,9 +88,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/count"
                 android:layout_marginLeft="5dp"
-                android:layout_below="@+id/ratingBar4"
+                android:layout_alignBottom="@+id/profilePic"
                 android:layout_toEndOf="@+id/profilePic"
-                android:textSize="10sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:text="4/20"

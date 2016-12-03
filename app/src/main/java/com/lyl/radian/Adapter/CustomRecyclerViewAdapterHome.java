@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.lyl.radian.Fragments.OwnSearchItemFragment;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.DBObjects.Bid;
@@ -69,6 +68,7 @@ public class CustomRecyclerViewAdapterHome extends RecyclerView.Adapter<CustomRe
                 .using(new FirebaseImageLoader())
                 .load(storageRef)
                 .placeholder(R.drawable.blank_profile_pic)
+                .dontAnimate()
                 .into(holder.profilePic);
     }
 
