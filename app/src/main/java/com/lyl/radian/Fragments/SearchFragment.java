@@ -67,8 +67,6 @@ public class SearchFragment extends Fragment {
         searchField = (EditText) view.findViewById(R.id.editText3);
         searchField.setText(getArguments().getString("searchText"));
 
-        ((FloatingActionButton) getActivity().findViewById(R.id.fab)).setVisibility(View.GONE);
-
         searchBtn = (Button) view.findViewById(R.id.searchBtn);
 
         cmp = new Comparator<String[]>() {

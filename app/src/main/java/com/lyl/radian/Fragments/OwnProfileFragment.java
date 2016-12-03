@@ -70,8 +70,6 @@ public class OwnProfileFragment extends Fragment {
             }
         });
 
-        ((FloatingActionButton) getActivity().findViewById(R.id.fab)).setVisibility(View.GONE);
-
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
         tabLayout.setVisibility(TabLayout.VISIBLE);
         if(tabLayout.getTabCount() != 2) {

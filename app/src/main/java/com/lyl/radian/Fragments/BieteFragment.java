@@ -151,7 +151,6 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
         });
 
 
-        ((FloatingActionButton) getActivity().findViewById(R.id.fab)).setVisibility(View.GONE);
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -60,8 +60,6 @@ public class InboxFragment extends Fragment {
         // Code
         chats = (ListView) view.findViewById(R.id.userChatList);
 
-        ((FloatingActionButton) getActivity().findViewById(R.id.fab)).setVisibility(View.GONE);
-
         // Add example content to array
         exampleContent.add("Chat 1");
         exampleContent.add("Chat 2");
