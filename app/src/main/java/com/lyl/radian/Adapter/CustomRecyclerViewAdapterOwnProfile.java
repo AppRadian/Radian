@@ -85,7 +85,7 @@ public class CustomRecyclerViewAdapterOwnProfile extends RecyclerView.Adapter<Re
         }
         else if (viewHolder instanceof ProfileHeaderViewHolder) {
             ProfileHeaderViewHolder holder = (ProfileHeaderViewHolder) viewHolder;
-
+            //TODO set location and language etc
         }
     }
 
