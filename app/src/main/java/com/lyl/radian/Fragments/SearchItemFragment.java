@@ -111,8 +111,7 @@ public class SearchItemFragment extends Fragment{
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // TODO
                         DatabaseReference myParticipations = FirebaseDatabase.getInstance().getReference("Users")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations").push();
-                        myParticipations.setValue(account.getClickedBid().getId());
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations").child(account.getClickedBid().getId());
                     }
 
                     @Override

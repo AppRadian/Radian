@@ -53,16 +53,56 @@ public class UpcomingFragment extends SuperProfileFragment {
         // Now reference from this user the "participations" child
         DatabaseReference particpationsChild = user.child("participations");
 
-        // The parcipatonsChild DBRef points to the child in the DB of this user that holds all participations (respectively all bidIds that the user joins)
+        // The participatonsChild DBRef points to the child in the DB of this user that holds all participations (respectively all bidIds that the user joins)
         // Because we want retrieve every bidId that the user joins, we use the addChildEventListener and NOT the addListenerForSingleValueEvent
         particpationsChild.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
+                // Read the String with the bidId from the participations child
+                String bidId = dataSnapshot.getValue(String.class);
+
+                // Get bid-ref by referencing to the bid in the Bid-DB wit the associated bidId
+                DatabaseReference aBid = FirebaseDatabase.getInstance().getReference("Bids").child(bidId);
+                aBid.addListenerForSingleValueEvent(new ValueEventListener() {
+                    // Handle the bid object associated wit the bid reference
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Bid bid = dataSnapshot.getValue(Bid.class);
+                        if(!upcomingEvents.contains(bid))
+                            upcomingEvents.add(bid);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                // Read the String with the bidId from the participations child
+                String bidId = dataSnapshot.getValue(String.class);
+
+                // Get bid-ref by referencing to the bid in the Bid-DB wit the associated bidId
+                DatabaseReference aBid = FirebaseDatabase.getInstance().getReference("Bids").child(bidId);
+                aBid.addListenerForSingleValueEvent(new ValueEventListener() {
+                    // Handle the bid object associated wit the bid reference
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Bid bid = dataSnapshot.getValue(Bid.class);
+                        if(!upcomingEvents.contains(bid))
+                            upcomingEvents.add(bid);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
             }
 
@@ -145,7 +185,7 @@ public class UpcomingFragment extends SuperProfileFragment {
 
         //Collections.sort(account.getSelf().getParticipations(), cmp);
 
-        //adapter = new CustomRecyclerViewAdapterUpcoming(getActivity(), account.getSelf().getParticipations());
+        adapter = new CustomRecyclerViewAdapterUpcoming(getActivity(), upcomingEvents);
         bidList = (RecyclerView) view.findViewById(R.id.cardList);
         bidList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -171,7 +211,7 @@ public class UpcomingFragment extends SuperProfileFragment {
                             return;
 
                         CustomRecyclerViewAdapterUpcoming adapter = (CustomRecyclerViewAdapterUpcoming) UpcomingFragment.this.adapter;
-
+                        /*
                         String id = adapter.getItem(position)[0];
                         String email = adapter.getItem(position)[1];
                         String tag = adapter.getItem(position)[2];
@@ -184,7 +224,7 @@ public class UpcomingFragment extends SuperProfileFragment {
                         String time = adapter.getItem(position)[9];
                         String part = adapter.getItem(position)[10];
                         String maxPart = adapter.getItem(position)[11];
-
+                        */
                         //account.setSearchedItem(getActivity(), id, email, tag, description, location, averageRating, count, distance, date, time, part, maxPart);
                         SearchItemFragment f = new SearchItemFragment();
                         getChildFragmentManager().beginTransaction().replace(R.id.content_frame, f, "searchItem").addToBackStack("searchItem").commit();
