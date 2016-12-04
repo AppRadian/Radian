@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,6 +56,8 @@ public class SearchItemFragment extends Fragment{
     TextView userDescription;
     TextView ratings;
     RatingBar ratingBar;
+    private final String TAG = "SearchItemFragment";
+    boolean full = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,20 +85,27 @@ public class SearchItemFragment extends Fragment{
                     bids.child(account.getClickedBid().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+                            Log.e(TAG, "got here add participant?");
                             // Get the bid object from the DB
                             Bid bid = dataSnapshot.getValue(Bid.class);
 
                             // Extract the needed value
                             long participants = bid.getParticipants();
-                            participants++;
 
-                            // set new participants
-                            bid.setParticipants(participants);
+                            // Hide for non Participants if participants == maxParticipants
+                            if (participants > bid.getMaxParticipants()) {
+                                full = true;
+                                hideBidAdvert();
+                            } else {
+                                participants++;
 
-                            // Transfer update to DB
-                            DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
-                            bids.child(account.getClickedBid().getId()).setValue(bid);
+                                // set new participants
+                                bid.setParticipants(participants);
 
+                                // Transfer update to DB
+                                DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
+                                bids.child(account.getClickedBid().getId()).setValue(bid);
+                            }
                         }
 
                         @Override
@@ -109,9 +119,15 @@ public class SearchItemFragment extends Fragment{
                 user.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        // TODO
-                        DatabaseReference myParticipations = FirebaseDatabase.getInstance().getReference("Users")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations").child(account.getClickedBid().getId());
+                        // TODO if case doesn't work
+                        if (!full) {
+                            Log.e(TAG, "got here?");
+                            DatabaseReference myParticipations = FirebaseDatabase.getInstance().getReference("Users")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            myParticipations.child("participations").child(account.getClickedBid().getId());
+                            // UPdate the DB
+                            myParticipations.child("participations").child(account.getClickedBid().getId()).setValue(account.getClickedBid().getId());
+                        }
                     }
 
                     @Override
@@ -203,4 +219,8 @@ public class SearchItemFragment extends Fragment{
         }
         return false;
     }*/
+
+    public void hideBidAdvert() {
+        // Can be deleted, because the logic is handled in HomeFragment
+    }
 }

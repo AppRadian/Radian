@@ -31,7 +31,6 @@ public class CustomRecyclerViewAdapterBiete extends RecyclerView.Adapter<CustomR
     ProfileInfoViewHolder infoHolder;
 
     public CustomRecyclerViewAdapterBiete(Fragment context, ArrayList<Bid> data) {
-
         account = (Account) context.getActivity().getApplication();
         this.context = context;
         this.data = data;

@@ -31,7 +31,6 @@ public class CustomRecyclerViewAdapterUpcoming extends RecyclerView.Adapter<Recy
     private final int TYPE_ITEM = 1;
 
     public CustomRecyclerViewAdapterUpcoming(Activity activity, ArrayList<Bid> data) {
-
         account = (Account) activity.getApplication();
         this.activity = activity;
         this.data = data;
@@ -71,13 +70,14 @@ public class CustomRecyclerViewAdapterUpcoming extends RecyclerView.Adapter<Recy
             holder.count.setText(data.get(position).getCount() + " Bewertungen");
             holder.maxPart.setText(data.get(position).getParticipants() + "/" + data.get(position).getMaxParticipants());
 
+            /*
             Bitmap pic = account.getBitmapFromCache(data.get(position)[1]);
             if(pic != null) {
                 holder.profilePic.setImageBitmap(pic);
             }
             else {
 
-            }
+            }*/
         }
         else if (viewHolder instanceof ProfileHeaderViewHolder) {
             ProfileHeaderViewHolder holder = (ProfileHeaderViewHolder) viewHolder;
