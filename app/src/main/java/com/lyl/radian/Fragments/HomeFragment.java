@@ -125,6 +125,7 @@ public class HomeFragment extends Fragment {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
                 Bid bid = dataSnapshot.getValue(Bid.class);
+                //TODO Distanz berrechnen
                 //latLong = Constants.getLocationFromAddress(getActivity(), bid.getLocation());
                 if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()) && !listItems.contains(bid))
                     listItems.add(bid);
