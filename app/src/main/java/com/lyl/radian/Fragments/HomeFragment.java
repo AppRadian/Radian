@@ -202,6 +202,12 @@ public class HomeFragment extends Fragment {
         ((MainAppActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_home);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(true, false);
+    }
+
     public String getStringIdFromObject(String s) {
         LinkedList<String> list = new LinkedList<>();
         StringBuilder sb = new StringBuilder();
