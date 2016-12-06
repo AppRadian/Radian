@@ -34,7 +34,9 @@ import com.lyl.radian.Widgets.NestedScrollViewFling;
 
 public class UpcomingFragment extends SuperProfileFragment {
 
-    ArrayList<Bid> upcomingEvents;
+    ArrayList<Bid> upcomingEvents = new ArrayList<>();
+    DatabaseReference user;
+    DatabaseReference particpationsChild;
 
     @Nullable
     @Override
@@ -44,14 +46,12 @@ public class UpcomingFragment extends SuperProfileFragment {
 
         // [BEGIN: Update this fragment with upcoming events from the DB]
 
-        // Initialize ArrayList<Bid>
-        upcomingEvents = new ArrayList<>();
 
         // Reference the right DB object -> in this case it's the user
-        DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         // Now reference from this user the "participations" child
-        DatabaseReference particpationsChild = user.child("participations");
+        particpationsChild = user.child("participations");
 
         // The participatonsChild DBRef points to the child in the DB of this user that holds all participations (respectively all bidIds that the user joins)
         // Because we want retrieve every bidId that the user joins, we use the addChildEventListener and NOT the addListenerForSingleValueEvent
@@ -71,6 +71,7 @@ public class UpcomingFragment extends SuperProfileFragment {
                         Bid bid = dataSnapshot.getValue(Bid.class);
                         if(!upcomingEvents.contains(bid))
                             upcomingEvents.add(bid);
+                        adapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -96,6 +97,7 @@ public class UpcomingFragment extends SuperProfileFragment {
                         Bid bid = dataSnapshot.getValue(Bid.class);
                         if(!upcomingEvents.contains(bid))
                             upcomingEvents.add(bid);
+                        adapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -211,23 +213,10 @@ public class UpcomingFragment extends SuperProfileFragment {
                             return;
 
                         CustomRecyclerViewAdapterUpcoming adapter = (CustomRecyclerViewAdapterUpcoming) UpcomingFragment.this.adapter;
-                        /*
-                        String id = adapter.getItem(position)[0];
-                        String email = adapter.getItem(position)[1];
-                        String tag = adapter.getItem(position)[2];
-                        String description = adapter.getItem(position)[3];
-                        String location = adapter.getItem(position)[4];
-                        String averageRating = adapter.getItem(position)[5];
-                        String count = adapter.getItem(position)[6];
-                        String distance = adapter.getItem(position)[7];
-                        String date = adapter.getItem(position)[8];
-                        String time = adapter.getItem(position)[9];
-                        String part = adapter.getItem(position)[10];
-                        String maxPart = adapter.getItem(position)[11];
-                        */
-                        //account.setSearchedItem(getActivity(), id, email, tag, description, location, averageRating, count, distance, date, time, part, maxPart);
+
+                        account.setClickedBid(adapter.getItem(position));
                         SearchItemFragment f = new SearchItemFragment();
-                        getChildFragmentManager().beginTransaction().replace(R.id.content_frame, f, "searchItem").addToBackStack("searchItem").commit();
+                        account.fm.beginTransaction().replace(R.id.content_frame, f, "searchItem").addToBackStack("searchItem").commit();
                     }
                 })
         );

@@ -12,6 +12,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
@@ -70,14 +74,15 @@ public class CustomRecyclerViewAdapterUpcoming extends RecyclerView.Adapter<Recy
             holder.count.setText(data.get(position).getCount() + " Bewertungen");
             holder.maxPart.setText(data.get(position).getParticipants() + "/" + data.get(position).getMaxParticipants());
 
-            /*
-            Bitmap pic = account.getBitmapFromCache(data.get(position)[1]);
-            if(pic != null) {
-                holder.profilePic.setImageBitmap(pic);
-            }
-            else {
-
-            }*/
+            String profilePic = data.get(position).getProfilePic();
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+            Glide.with(activity)
+                    .using(new FirebaseImageLoader())
+                    .load(storageRef)
+                    .placeholder(R.drawable.blank_profile_pic)
+                    .dontAnimate()
+                    .into(holder.profilePic);
         }
         else if (viewHolder instanceof ProfileHeaderViewHolder) {
             ProfileHeaderViewHolder holder = (ProfileHeaderViewHolder) viewHolder;
@@ -101,7 +106,7 @@ public class CustomRecyclerViewAdapterUpcoming extends RecyclerView.Adapter<Recy
 
     public Bid getItem(int position){
 
-        return data.get(position);
+        return data.get(position - 1);
     }
 
     public class ProfileInfoViewHolder extends RecyclerView.ViewHolder{

@@ -57,7 +57,6 @@ public class SearchItemFragment extends Fragment{
     TextView ratings;
     RatingBar ratingBar;
     private final String TAG = "SearchItemFragment";
-    boolean full = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,6 +79,8 @@ public class SearchItemFragment extends Fragment{
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(join.getText().toString().equals("Teilnehmen")) {
                     // Update the DB participants
                     DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
                     bids.child(account.getClickedBid().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -87,25 +88,39 @@ public class SearchItemFragment extends Fragment{
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Log.e(TAG, "got here add participant?");
                             // Get the bid object from the DB
-                            Bid bid = dataSnapshot.getValue(Bid.class);
+                            final Bid bid = dataSnapshot.getValue(Bid.class);
 
                             // Extract the needed value
-                            long participants = bid.getParticipants();
+                            final long participants = bid.getParticipants();
 
-                            // Hide for non Participants if participants == maxParticipants
-                            if (participants > bid.getMaxParticipants()) {
-                                full = true;
-                                hideBidAdvert();
-                            } else {
-                                participants++;
+                            // Get reference to this participations id to check if user already takes part
+                            DatabaseReference participations = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations").child(account.getClickedBid().getId());
+                            participations.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    String id = dataSnapshot.getValue(String.class);
+                                    if(id == null || participants == bid.getMaxParticipants())
+                                        return;
+                                }
 
-                                // set new participants
-                                bid.setParticipants(participants);
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
 
-                                // Transfer update to DB
-                                DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
-                                bids.child(account.getClickedBid().getId()).setValue(bid);
-                            }
+                                }
+                            });
+
+                            // set new participants
+                            bid.setParticipants(participants + 1);
+
+                            // Transfer update to DB
+                            DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
+                            bids.child(account.getClickedBid().getId()).setValue(bid);
+
+
+                            // Update user Object with participated events
+                            DatabaseReference ownParts = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations");
+                            ownParts.child(bid.getId()).setValue(bid.getId());
+                            join.setText("Nicht mehr teilnehmen");
                         }
 
                         @Override
@@ -113,29 +128,44 @@ public class SearchItemFragment extends Fragment{
 
                         }
                     });
+                }
+                // Delete Bid from participations and decrease participators in the particular bid
+                else{
+                    // Update the DB participants
+                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
+                    bids.child(account.getClickedBid().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // Get the bid object from the DB
+                            Bid bid = dataSnapshot.getValue(Bid.class);
 
-                // Update user Object with participated events
-                DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                user.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // TODO if case doesn't work
-                        if (!full) {
-                            Log.e(TAG, "got here?");
-                            DatabaseReference myParticipations = FirebaseDatabase.getInstance().getReference("Users")
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                            myParticipations.child("participations").child(account.getClickedBid().getId());
-                            // UPdate the DB
-                            myParticipations.child("participations").child(account.getClickedBid().getId()).setValue(account.getClickedBid().getId());
+                            // Extract the needed value
+                            long participants = bid.getParticipants();
+
+                            // Get reference to this participations id to check if user already takes part
+                            DatabaseReference participations = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations").child(bid.getId());
+
+                            participants--;
+
+                            // set new participants
+                            bid.setParticipants(participants);
+
+                            // Transfer update to DB
+                            DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
+                            bids.child(account.getClickedBid().getId()).setValue(bid);
+
+                            // Deletes the participation bid
+                            DatabaseReference ownParts = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations");
+                            ownParts.child(bid.getId()).removeValue();
+                            join.setText("Teilnehmen");
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
-
+                        }
+                    });
+                }
             }
         });
 
@@ -155,10 +185,22 @@ public class SearchItemFragment extends Fragment{
         ratings.setText(account.getClickedBid().getCount() + " Rezensionen");
 
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebot von " + account.getClickedBid().getEmail());
-/*
-        if(listContainsId(account.getSearchedItem().getId()))
-            join.setText("Nicht mehr teilnehmen");
-*/
+
+        // Sets button text to "Nicht mehr teilnehmen" if user already takes part
+        DatabaseReference participations = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations").child(account.getClickedBid().getId());
+        participations.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String id = dataSnapshot.getValue(String.class);
+                if(id != null)
+                    join.setText("Nicht mehr teilnehmen");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         ratingBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -219,8 +261,4 @@ public class SearchItemFragment extends Fragment{
         }
         return false;
     }*/
-
-    public void hideBidAdvert() {
-        // Can be deleted, because the logic is handled in HomeFragment
-    }
 }
