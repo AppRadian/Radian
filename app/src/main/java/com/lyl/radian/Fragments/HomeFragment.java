@@ -77,7 +77,7 @@ public class HomeFragment extends Fragment {
 
                 final Bid bid = dataSnapshot.getValue(Bid.class);
                 if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()) && !listItems.contains(bid) &&
-                        bid.getCount() <= bid.getMaxParticipants())
+                        bid.getParticipants() < bid.getMaxParticipants())
                     listItems.add(bid);
 
                 adapter.notifyDataSetChanged();
@@ -125,6 +125,7 @@ public class HomeFragment extends Fragment {
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
                 Bid bid = dataSnapshot.getValue(Bid.class);
+                //latLong = Constants.getLocationFromAddress(getActivity(), bid.getLocation());
                 if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()) && !listItems.contains(bid))
                     listItems.add(bid);
                 adapter.notifyDataSetChanged();

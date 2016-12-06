@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * Created by Yannick on 28.10.2016.
@@ -88,5 +92,26 @@ public class Constants {
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    public static Double[] getLocationFromAddress(Activity callingActivity, String strAddress){
+
+        Double[] latLong = new Double[2];
+        Geocoder coder = new Geocoder(callingActivity);
+        List<Address> address;
+
+        try {
+            address = coder.getFromLocationName(strAddress,1);
+            if (address==null) {
+                return null;
+            }
+            Address location=address.get(0);
+            latLong[0] = location.getLatitude();
+            latLong[1] = location.getLongitude();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return latLong;
     }
 }
