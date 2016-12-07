@@ -55,7 +55,7 @@ public class CustomRecyclerViewAdapterHome extends RecyclerView.Adapter<CustomRe
         holder.profileName.setText(data.get(position).getEmail());
         holder.tag.setText(data.get(position).getTag());
         holder.location.setText(data.get(position).getLocation());
-        holder.distance.setText("<=" + 0 + "km");
+        holder.distance.setText("<=" + Math.round(data.get(position).distance/1000) + "km");
         holder.time.setText(data.get(position).getDate() + " - " + data.get(position).getTime() + " Uhr");
         holder.ratingBar.setRating((float)data.get(position).getAverageRating());
         holder.count.setText(data.get(position).getCount() + " Bewertungen");

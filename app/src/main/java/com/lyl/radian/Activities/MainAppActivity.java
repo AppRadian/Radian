@@ -115,7 +115,7 @@ public class MainAppActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        account.fm.beginTransaction().replace(R.id.content_frame, homeFragment, "home").addToBackStack("home").commit();
+        account.fm.beginTransaction().replace(R.id.content_frame, homeFragment, "home").commit();
     }
 
     @Override

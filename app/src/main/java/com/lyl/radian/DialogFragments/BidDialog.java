@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -41,6 +42,7 @@ import com.lyl.radian.Adapter.SpinnerAdapter;
 import com.lyl.radian.Fragments.OwnSearchItemFragment;
 import com.lyl.radian.R;
 import com.lyl.radian.DBObjects.Bid;
+import com.lyl.radian.Utilities.Constants;
 
 public class BidDialog extends DialogFragment {
     AutoCompleteTextView location;
@@ -199,9 +201,10 @@ public class BidDialog extends DialogFragment {
                     // set unique key at the end of the list
                     ownBids.setValue(ownBids.getKey());
 
+                    Location bidLocation = Constants.getLocationFromAddress(getActivity(), location.getText().toString());
                     Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance()
                             .getCurrentUser().getEmail(), profilePic, bid, description.getText().toString(),
-                            location.getText().toString(), 0, 0, date.getText().toString(),
+                            location.getText().toString(), bidLocation.getLatitude(), bidLocation.getLongitude(), 0, 0, date.getText().toString(),
                             time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
                     DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
                     bids.child(ownBids.getKey()).setValue(bidToInsert);

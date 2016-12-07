@@ -2,6 +2,7 @@ package com.lyl.radian.Utilities;
 
 import android.app.Application;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.util.LruCache;
 
@@ -14,6 +15,7 @@ import com.lyl.radian.DBObjects.UserProfile;
 
 public class Account extends Application {
 
+    public UserProfile self;
     public UserProfile searchedUser;
     public Bid clickedBid;
     public LruCache<String, Bitmap> bitmapCache;
@@ -82,5 +84,13 @@ public class Account extends Application {
 
     public void setSearchedUser(UserProfile searchedUser) {
         this.searchedUser = searchedUser;
+    }
+
+    public UserProfile getSelf() {
+        return self;
+    }
+
+    public void setSelf(UserProfile self) {
+        this.self = self;
     }
 }

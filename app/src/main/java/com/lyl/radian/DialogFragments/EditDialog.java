@@ -7,6 +7,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -43,6 +44,7 @@ import com.lyl.radian.Fragments.OwnSearchItemFragment;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.DBObjects.Bid;
+import com.lyl.radian.Utilities.Constants;
 
 /**
  * Created by Ludwig on 20.11.2016.
@@ -215,8 +217,9 @@ public class EditDialog extends DialogFragment {
                             DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids").push();
                             ownBids.setValue(account.getClickedBid().getId());
 
+                            Location bidLocation = Constants.getLocationFromAddress(getActivity(), location.getText().toString());
                             Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), account.getClickedBid().getProfilePic(), bid, description.getText().toString(),
-                                    location.getText().toString(), averageRating, count, date.getText().toString(), time.getText().toString(), participants, Long.parseLong(EditDialog.this.participants.getText().toString()));
+                                    location.getText().toString(), bidLocation.getLatitude(), bidLocation.getLongitude(), averageRating, count, date.getText().toString(), time.getText().toString(), participants, Long.parseLong(EditDialog.this.participants.getText().toString()));
                             DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
                             bids.child(account.getClickedBid().getId()).setValue(bidToInsert);
                             account.setClickedBid(bidToInsert);

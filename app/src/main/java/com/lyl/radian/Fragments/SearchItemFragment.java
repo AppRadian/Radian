@@ -93,13 +93,13 @@ public class SearchItemFragment extends Fragment{
                             // Extract the needed value
                             final long participants = bid.getParticipants();
 
-                            // Get reference to this participations id to check if user already takes part
+                            // Get reference to this participations id to check if user already takes part or bid is full
                             DatabaseReference participations = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations").child(account.getClickedBid().getId());
                             participations.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     String id = dataSnapshot.getValue(String.class);
-                                    if(id == null || participants == bid.getMaxParticipants())
+                                    if(participants == bid.getMaxParticipants())
                                         return;
                                 }
 

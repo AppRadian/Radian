@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -122,23 +123,57 @@ public class SettingsActivity extends Activity {
                     String pwConfirm = passwordConfirm.getText().toString();
 
                     if (loc.length() > 0 && city.equals(location.getText().toString())) {
+                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB)
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .child("location").setValue(location.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                account.getSelf().setLocation(location.getText().toString());
+                                final Location ownLocation = Constants.getLocationFromAddress(SettingsActivity.this, location.getText().toString());
+                                account.getSelf().setLatitude(ownLocation.getLatitude());
+                                account.getSelf().setLongitude(ownLocation.getLongitude());
 
+                                FirebaseDatabase.getInstance().getReference(Constants.USER_DB)
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                        .child("latitude").setValue(ownLocation.getLatitude()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB)
+                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                .child("longitude").setValue(ownLocation.getLongitude()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                finish();
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
                     } else
                             location.setError("Select existing location");
 
                     if (lang.length() > 0) {
-
+                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB)
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .child("language").setValue(language.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                account.getSelf().setLanguage(language.getText().toString());
+                            }
+                        });
                     }
 
                     if (currentPw.length() > 0 && pw.length() > 0 && pwConfirm.length() > 0) {
                         if (pw.equals(pwConfirm)) {
-
+                            //TODO Ersetzen mit echtem Passwot
+                            FirebaseAuth.getInstance().getCurrentUser().updatePassword(Constants.DEFAULTPASSWORD);
                         } else
                                 passwordConfirm.setError("Passwords do not match");
                     }
 
                     if(city.equals(location.getText().toString()) && pw.equals(pwConfirm))
-                        finish();
+                        ;//finish();
                 }
             });
         };

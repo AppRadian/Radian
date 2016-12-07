@@ -6,11 +6,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -94,24 +96,28 @@ public class Constants {
         return BitmapFactory.decodeResource(res, resId, options);
     }
 
-    public static Double[] getLocationFromAddress(Activity callingActivity, String strAddress){
+    public static Location getLocationFromAddress(Activity callingActivity, String strAddress){
 
-        Double[] latLong = new Double[2];
+        if(strAddress == null)
+            return null;
         Geocoder coder = new Geocoder(callingActivity);
-        List<Address> address;
+        List<Address> address = null;
 
         try {
             address = coder.getFromLocationName(strAddress,1);
-            if (address==null) {
-                return null;
-            }
-            Address location=address.get(0);
-            latLong[0] = location.getLatitude();
-            latLong[1] = location.getLongitude();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return latLong;
+
+        Location location = null;
+        if(address != null) {
+            location = new Location(strAddress);
+            location.setLatitude(address.get(0).getLatitude());
+            location.setLongitude(address.get(0).getLongitude());
+            return location;
+        }
+
+        return location;
     }
 }

@@ -6,24 +6,27 @@ package com.lyl.radian.DBObjects;
 
 public class Bid {
 
-    public String id;
-    public String userId;
+    String id;
+    String userId;
     String email;
     String profilePic;
     String tag;
     String description;
     String location;
+    double latitude;
+    double longitude;
     double averageRating;
     long count;
     String date;
     String time;
     long participants;
     long maxParticipants;
+    public long distance;
 
     public Bid() {
     }
 
-    public Bid(String id, String userId, String email, String profilePic, String tag, String description, String location, double averageRating, long count, String date, String time, long participants, long maxParticipants) {
+    public Bid(String id, String userId, String email, String profilePic, String tag, String description, String location, double latitude, double longitude, double averageRating, long count, String date, String time, long participants, long maxParticipants) {
         this.id = id;
         this.userId = userId;
         this.email = email;
@@ -31,6 +34,8 @@ public class Bid {
         this.tag = tag;
         this.description = description;
         this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.averageRating = averageRating;
         this.count = count;
         this.date = date;
@@ -110,6 +115,22 @@ public class Bid {
         this.location = location;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
     public double getAverageRating() {
         return averageRating;
     }
@@ -156,5 +177,10 @@ public class Bid {
 
     public void setMaxParticipants(long maxParticipants) {
         this.maxParticipants = maxParticipants;
+    }
+
+    public Bid setDistance(long distance){
+        this.distance = distance;
+        return this;
     }
 }

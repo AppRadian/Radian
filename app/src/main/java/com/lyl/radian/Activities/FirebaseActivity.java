@@ -1,6 +1,7 @@
 package com.lyl.radian.Activities;
 
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -15,13 +17,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.DBObjects.UserProfile;
+import com.lyl.radian.Utilities.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,8 +63,22 @@ public class FirebaseActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.e(TAG, "onAuthStateChanged:sign_in:" + user.getUid());
-                    Intent i = new Intent(FirebaseActivity.this, MainAppActivity.class);
-                    startActivity(i);
+                    setContentView(R.layout.activity_splash_screen);
+                    FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(userAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            UserProfile self = dataSnapshot.getValue(UserProfile.class);
+                            account.setSelf(self);
+                            Intent i = new Intent(FirebaseActivity.this, MainAppActivity.class);
+                            startActivity(i);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 } else {
                     // User is signed out
                     Log.e(TAG, "onAuthStateChanged:signed_out");
@@ -95,7 +116,9 @@ public class FirebaseActivity extends AppCompatActivity {
                             userAuth.getCurrentUser().updateProfile(profileUpdates);
 
                             DatabaseReference thisUser = users.child(userAuth.getCurrentUser().getUid());
-                            thisUser.setValue(new UserProfile(email, null, null/*, new HashMap<String, Object>(), new HashMap<String, Object>()*/));
+                            UserProfile self = new UserProfile(email, null, null, 0, 0);
+                            account.setSelf(self);
+                            thisUser.setValue(account.getSelf());
                         }
                         else {
                             Log.e(TAG, "createUser:failed", task.getException());
@@ -110,7 +133,22 @@ public class FirebaseActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.e(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                        if(task.isSuccessful()) {
+                            Log.e(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+
+                            FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(userAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    UserProfile self = dataSnapshot.getValue(UserProfile.class);
+                                    account.setSelf(self);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
 
                         if (!task.isSuccessful()) {
                             Log.e(TAG, "signInWithEmail:failed", task.getException());
