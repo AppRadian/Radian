@@ -1,7 +1,9 @@
 package com.lyl.radian.Fragments;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -70,8 +72,17 @@ public class UpcomingFragment extends SuperProfileFragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Bid bid = dataSnapshot.getValue(Bid.class);
+                        Location bidLocation = new Location("bidLocation");
+                        bidLocation.setLatitude(bid.getLatitude());
+                        bidLocation.setLongitude(bid.getLongitude());
+
+                        Location ownLocation = new Location("ownLocation");
+                        ownLocation.setLatitude(account.getSelf().getLatitude());
+                        ownLocation.setLongitude(account.getSelf().getLongitude());
+                        long distance = Math.round(bidLocation.distanceTo(ownLocation));
+
                         if(!upcomingEvents.contains(bid))
-                            upcomingEvents.add(bid);
+                            upcomingEvents.add(bid.setDistance(distance));
                         adapter.notifyDataSetChanged();
                     }
 
@@ -96,8 +107,17 @@ public class UpcomingFragment extends SuperProfileFragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Bid bid = dataSnapshot.getValue(Bid.class);
+                        Location bidLocation = new Location("bidLocation");
+                        bidLocation.setLatitude(bid.getLatitude());
+                        bidLocation.setLongitude(bid.getLongitude());
+
+                        Location ownLocation = new Location("ownLocation");
+                        ownLocation.setLatitude(account.getSelf().getLatitude());
+                        ownLocation.setLongitude(account.getSelf().getLongitude());
+                        long distance = Math.round(bidLocation.distanceTo(ownLocation));
+
                         if(!upcomingEvents.contains(bid))
-                            upcomingEvents.add(bid);
+                            upcomingEvents.add(bid.setDistance(distance));
                         adapter.notifyDataSetChanged();
                     }
 
@@ -191,18 +211,20 @@ public class UpcomingFragment extends SuperProfileFragment {
         adapter = new CustomRecyclerViewAdapterUpcoming(getActivity(), upcomingEvents);
         bidList = (RecyclerView) view.findViewById(R.id.cardList);
         bidList.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         bidList.setLayoutManager(llm);
         bidList.setAdapter(adapter);
-        bidList.setNestedScrollingEnabled(false);
-        ((NestedScrollViewFling)view.findViewById(R.id.nestedScrollView)).setOnTopReachedListener(new NestedScrollViewFling.OnFlingEndReachedTopListener()
-        {
+        bidList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onTopReached(Boolean isBeingTouched)
-            {
-                if (!isBeingTouched)
-                    expandToolbar();
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    int firstVisiblePosition = llm.findFirstCompletelyVisibleItemPosition();
+                    if (firstVisiblePosition == 0) {
+                        ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(true, true);
+                    }
+                }
             }
         });
 

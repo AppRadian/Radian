@@ -56,16 +56,7 @@ public class ProfileFragment extends SuperProfileFragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         bidList.setLayoutManager(llm);
         bidList.setAdapter(adapter);
-        bidList.setNestedScrollingEnabled(false);
-        ((NestedScrollViewFling)view.findViewById(R.id.nestedScrollView)).setOnTopReachedListener(new NestedScrollViewFling.OnFlingEndReachedTopListener()
-        {
-            @Override
-            public void onTopReached(Boolean isBeingTouched)
-            {
-                if (!isBeingTouched)
-                    expandToolbar();
-            }
-        });
+
 
         cmp = new Comparator<String[]>() {
             @Override

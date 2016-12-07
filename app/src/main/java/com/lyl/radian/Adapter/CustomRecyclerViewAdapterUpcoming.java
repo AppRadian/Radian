@@ -68,7 +68,7 @@ public class CustomRecyclerViewAdapterUpcoming extends RecyclerView.Adapter<Recy
 
             holder.tag.setText(data.get(position).getTag());
             holder.location.setText(data.get(position).getLocation());
-            holder.distance.setText("<=" + /*data.get(position)*/ "XX" + "km");
+            holder.distance.setText("<=" + Math.round(data.get(position).distance/1000) + "km");
             holder.time.setText(data.get(position).getDate() + " - " + data.get(position).getTime()+ " Uhr");
             holder.ratingBar.setRating((float)data.get(position).getAverageRating());
             holder.count.setText(data.get(position).getCount() + " Bewertungen");

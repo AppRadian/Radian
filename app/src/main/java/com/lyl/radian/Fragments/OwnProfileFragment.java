@@ -51,7 +51,6 @@ public class OwnProfileFragment extends Fragment {
 
     View view;
     Account account;
-    FloatingActionButton settings;
     ImageView profilePic;
 
     @Nullable
@@ -62,15 +61,6 @@ public class OwnProfileFragment extends Fragment {
         account = (Account) getActivity().getApplication();
 
         profilePic = (ImageView) getActivity().findViewById(R.id.ownProfilePic);
-        settings = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        settings.setImageResource(R.drawable.ic_menu_manage);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent settingsActivity = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(settingsActivity);
-            }
-        });
 
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
         tabLayout.setVisibility(TabLayout.VISIBLE);
@@ -126,21 +116,6 @@ public class OwnProfileFragment extends Fragment {
     public void onStop() {
         super.onStop();
         setCollapsingToolbarEnabled(false);
-    }
-
-    private boolean isProfilePrevious(){
-        int index = account.fm.getBackStackEntryCount() - 1;
-        FragmentManager.BackStackEntry backEntry;
-        String tag = "";
-        if(index > 0) {
-            backEntry = account.fm.getBackStackEntryAt(index);
-            if(backEntry != null)
-                tag = backEntry.getName();
-        }
-        if(tag != null && tag.equals("profile"))
-            return true;
-
-        return false;
     }
 
     private void setCollapsingToolbarEnabled(boolean enabled){

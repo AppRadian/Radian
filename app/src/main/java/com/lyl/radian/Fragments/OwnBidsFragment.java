@@ -2,6 +2,7 @@ package com.lyl.radian.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -109,23 +110,24 @@ public class OwnBidsFragment extends SuperProfileFragment {
             }
         });
 
-
         profilePic = (ImageView) getActivity().findViewById(R.id.ownProfilePic);
         adapter = new CustomRecyclerViewAdapterOwnProfile(this, bidsList);
         bidList = (RecyclerView) view.findViewById(R.id.cardList);
         bidList.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         bidList.setLayoutManager(llm);
         bidList.setAdapter(adapter);
-        bidList.setNestedScrollingEnabled(false);
-        ((NestedScrollViewFling)view.findViewById(R.id.nestedScrollView)).setOnTopReachedListener(new NestedScrollViewFling.OnFlingEndReachedTopListener()
-        {
+        bidList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onTopReached(Boolean isBeingTouched)
-            {
-                if (!isBeingTouched)
-                    expandToolbar();
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    int firstVisiblePosition = llm.findFirstCompletelyVisibleItemPosition();
+                    if (firstVisiblePosition == 0) {
+                        ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(true, true);
+                    }
+                }
             }
         });
 
