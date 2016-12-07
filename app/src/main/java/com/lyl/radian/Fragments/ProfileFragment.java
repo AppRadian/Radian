@@ -2,6 +2,7 @@ package com.lyl.radian.Fragments;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.location.Location;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -23,11 +24,19 @@ import java.util.HashMap;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.Activities.ChatActivity;
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapter;
 import com.lyl.radian.Adapter.RecyclerItemClickListener;
+import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Widgets.NestedScrollViewFling;
@@ -40,6 +49,8 @@ public class ProfileFragment extends SuperProfileFragment {
 
     ImageView profilePic;
     FloatingActionButton sendMessage;
+    private FirebaseDatabase database;
+    private DatabaseReference bids;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,10 +63,100 @@ public class ProfileFragment extends SuperProfileFragment {
         adapter = new CustomRecyclerViewAdapter(getActivity(), bieteItems);
         bidList = (RecyclerView) view.findViewById(R.id.cardList);
         bidList.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        final LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         bidList.setLayoutManager(llm);
         bidList.setAdapter(adapter);
+        bidList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    int firstVisiblePosition = llm.findFirstCompletelyVisibleItemPosition();
+                    if (firstVisiblePosition == 0) {
+                        ((AppBarLayout)getActivity().findViewById(R.id.app_bar_layout)).setExpanded(true, true);
+                    }
+                }
+            }
+        });
+        database = FirebaseDatabase.getInstance();
+        bids = database.getReference("Users").child(account.getClickedBid().getUserId()).child("ownBids");
+
+        bids.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                String bidId = dataSnapshot.getValue(String.class);
+                DatabaseReference ownBids = database.getReference("Bids").child(bidId);
+                ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Bid bid = dataSnapshot.getValue(Bid.class);
+                        Location bidLocation = new Location("bidLocation");
+                        bidLocation.setLatitude(bid.getLatitude());
+                        bidLocation.setLongitude(bid.getLongitude());
+
+                        Location ownLocation = new Location("ownLocation");
+                        ownLocation.setLatitude(account.getSelf().getLatitude());
+                        ownLocation.setLongitude(account.getSelf().getLongitude());
+                        long distance = Math.round(bidLocation.distanceTo(ownLocation));
+                        if(!bieteItems.contains(bid))
+                            bieteItems.add(bid.setDistance(distance));
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                String bidId = dataSnapshot.getValue(String.class);
+                DatabaseReference ownBids = database.getReference("Bids").child(bidId);
+                ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Bid bid = dataSnapshot.getValue(Bid.class);
+                        Location bidLocation = new Location("bidLocation");
+                        bidLocation.setLatitude(bid.getLatitude());
+                        bidLocation.setLongitude(bid.getLongitude());
+
+                        Location ownLocation = new Location("ownLocation");
+                        ownLocation.setLatitude(account.getSelf().getLatitude());
+                        ownLocation.setLongitude(account.getSelf().getLongitude());
+                        long distance = Math.round(bidLocation.distanceTo(ownLocation));
+                        if(!bieteItems.contains(bid))
+                            bieteItems.add(bid.setDistance(distance));
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
         cmp = new Comparator<String[]>() {
@@ -81,20 +182,8 @@ public class ProfileFragment extends SuperProfileFragment {
 
                         CustomRecyclerViewAdapter adapter = (CustomRecyclerViewAdapter)ProfileFragment.this.adapter;
 
-                        String id = adapter.getItem(position)[0];
-                        String email = adapter.getItem(position)[1];
-                        String tag = adapter.getItem(position)[2];
-                        String description = adapter.getItem(position)[3];
-                        String location = adapter.getItem(position)[4];
-                        String averageRating = adapter.getItem(position)[5];
-                        String count = adapter.getItem(position)[6];
-                        String distance = adapter.getItem(position)[7];
-                        String date = adapter.getItem(position)[8];
-                        String time = adapter.getItem(position)[9];
-                        String part = adapter.getItem(position)[10];
-                        String maxPart = adapter.getItem(position)[11];
 
-                        //account.setSearchedItem(getActivity(), id, email, tag, description, location, averageRating, count, distance, date, time, part, maxPart);
+                        account.setClickedBid(adapter.getItem(position));
                         SearchItemFragment f = new SearchItemFragment();
                         getFragmentManager().beginTransaction().replace(R.id.content_frame, f, "searchItem").addToBackStack(null).commit();
                     }
@@ -123,9 +212,6 @@ public class ProfileFragment extends SuperProfileFragment {
                 .dontAnimate()
                 .into(profilePic);
 
-       // profilePic.setImageBitmap(ThumbnailUtils.extractThumbnail(account.getBitmapFromCache(account.getSearchedItem().getEmail()), profilePic.getWidth(), (int)px));
-       // ((CollapsingToolbarLayout)getActivity().findViewById(R.id.collapsing_toolbar)).setTitle(account.getSearchedItem().getEmail() + "'s Profil");
-
         return view;
     }
 
@@ -145,6 +231,7 @@ public class ProfileFragment extends SuperProfileFragment {
             params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                     | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
 
+            //((FloatingActionButton)getActivity().findViewById(R.id.fab2)).setVisibility(View.GONE);
             sendMessage.setVisibility(View.VISIBLE);
             ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
             toolbar.setTitleEnabled(true);
@@ -157,6 +244,7 @@ public class ProfileFragment extends SuperProfileFragment {
             params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                     | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
 
+            //((FloatingActionButton)getActivity().findViewById(R.id.fab2)).setVisibility(View.VISIBLE);
             sendMessage.setVisibility(View.GONE);
             toolbar.setTitleEnabled(false);
             profilePic.setMaxHeight(0);

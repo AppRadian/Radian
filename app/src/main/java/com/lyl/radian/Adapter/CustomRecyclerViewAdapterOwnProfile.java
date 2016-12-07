@@ -85,7 +85,8 @@ public class CustomRecyclerViewAdapterOwnProfile extends RecyclerView.Adapter<Re
         }
         else if (viewHolder instanceof ProfileHeaderViewHolder) {
             ProfileHeaderViewHolder holder = (ProfileHeaderViewHolder) viewHolder;
-            //TODO set location and language etc
+            holder.location.setText(account.getSelf().getLocation());
+            holder.language.setText(account.getSelf().getLanguage());
         }
     }
 

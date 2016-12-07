@@ -86,8 +86,8 @@ public class CustomRecyclerViewAdapterUpcoming extends RecyclerView.Adapter<Recy
         }
         else if (viewHolder instanceof ProfileHeaderViewHolder) {
             ProfileHeaderViewHolder holder = (ProfileHeaderViewHolder) viewHolder;
-
-
+            holder.location.setText(account.getSelf().getLocation());
+            holder.language.setText(account.getSelf().getLanguage());
         }
     }
 

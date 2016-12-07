@@ -2,7 +2,9 @@ package com.lyl.radian.Adapter;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +14,21 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.lyl.radian.DBObjects.Bid;
+import com.lyl.radian.DBObjects.UserProfile;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Constants;
 
 /**
  * Created by Yannick on 10.11.2016.
@@ -23,14 +38,14 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     Account account;
     Activity activity;
-    ArrayList<String[]> data;
+    ArrayList<Bid> data;
     ViewGroup parent;
     ProfileHeaderViewHolder headerHolder;
     ProfileInfoViewHolder infoHolder;
     private final int TYPE_HEADER = 0;
     private final int TYPE_ITEM = 1;
 
-    public CustomRecyclerViewAdapter(Activity activity, ArrayList<String[]> data) {
+    public CustomRecyclerViewAdapter(Activity activity, ArrayList<Bid> data) {
 
         this.account = (Account)activity.getApplication();
         this.activity = activity;
@@ -65,26 +80,41 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             ProfileInfoViewHolder holder = (ProfileInfoViewHolder) viewHolder;
             int position = pos - 1;
 
-            holder.tag.setText(data.get(position)[2]);
-            holder.location.setText(data.get(position)[4]);
-            holder.distance.setText("<=" + data.get(position)[7] + "km");
-            holder.time.setText(data.get(position)[8] + " - " + data.get(position)[9] + " Uhr");
-            holder.ratingBar.setRating(Float.parseFloat(data.get(position)[5]));
-            holder.count.setText(data.get(position)[6] + " Bewertungen");
-            holder.maxPart.setText(data.get(position)[10] + "/" + data.get(position)[11]);
+            holder.tag.setText(data.get(position).getTag());
+            holder.location.setText(data.get(position).getLocation());
+            holder.distance.setText("<=" + Math.round(data.get(position).distance/1000) + "km");
+            holder.time.setText(data.get(position).getDate() + " - " + data.get(position).getTime() + " Uhr");
+            holder.ratingBar.setRating((float)data.get(position).getAverageRating());
+            holder.count.setText(data.get(position).getCount() + " Bewertungen");
+            holder.maxPart.setText(data.get(position).getParticipants() + "/" + data.get(position).getMaxParticipants());
 
-            /**
-            Bitmap pic = account.getBitmapFromCache(account.getSearchedItem().getEmail());
-            if(pic != null)
-                holder.profilePic.setImageBitmap(pic);
-            else
-                new GetBitmap(activity, holder.profilePic, data.get(position)[1]).execute();
-             **/
+            String profilePic = data.get(position).getProfilePic();
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+            Glide.with(activity)
+                    .using(new FirebaseImageLoader())
+                    .load(storageRef)
+                    .placeholder(R.drawable.blank_profile_pic)
+                    .dontAnimate()
+                    .into(holder.profilePic);
 
         } else if (viewHolder instanceof ProfileHeaderViewHolder) {
-            ProfileHeaderViewHolder holder = (ProfileHeaderViewHolder) viewHolder;
+            final ProfileHeaderViewHolder holder = (ProfileHeaderViewHolder) viewHolder;
 
+            final DatabaseReference searchedUser = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(account.getClickedBid().getUserId());
+            searchedUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    UserProfile u = dataSnapshot.getValue(UserProfile.class);
+                    holder.location.setText(u.getLocation());
+                    holder.language.setText(u.getLanguage());
+                }
 
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
@@ -101,7 +131,7 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         return data.size() + 1;
     }
 
-    public String[] getItem(int position){ return data.get(position - 1); }
+    public Bid getItem(int position){ return data.get(position - 1); }
 
     public class ProfileInfoViewHolder extends RecyclerView.ViewHolder{
 

@@ -11,6 +11,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 
@@ -22,7 +23,7 @@ public class SuperProfileFragment extends Fragment {
 
     View view;
     RecyclerView bidList;
-    public ArrayList<String[]> bieteItems = new ArrayList<String[]>();
+    public ArrayList<Bid> bieteItems = new ArrayList<>();
     public RecyclerView.Adapter adapter;
     public Comparator<String[]> cmp;
     Account account;
