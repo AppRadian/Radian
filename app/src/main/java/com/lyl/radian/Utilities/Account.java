@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.util.LruCache;
 
 import com.lyl.radian.DBObjects.Bid;
+import com.lyl.radian.DBObjects.Feedback;
 import com.lyl.radian.DBObjects.UserProfile;
 
 /**
@@ -18,6 +19,7 @@ public class Account extends Application {
     public UserProfile self;
     public UserProfile searchedUser;
     public Bid clickedBid;
+    public Feedback clickedFeedback;
     public LruCache<String, Bitmap> bitmapCache;
     public FragmentManager fm;
 
@@ -71,6 +73,14 @@ public class Account extends Application {
 
     public void setClickedBid(Bid clickedBid) {
         this.clickedBid = clickedBid;
+    }
+
+    public Feedback getClickedFeedback() {
+        return clickedFeedback;
+    }
+
+    public void setClickedFeedback(Feedback clickedFeedback) {
+        this.clickedFeedback = clickedFeedback;
     }
 
     /**

@@ -47,6 +47,7 @@ import com.lyl.radian.Fragments.SearchFragment;
 import com.lyl.radian.Fragments.OwnProfileFragment;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Constants;
 import com.lyl.radian.Utilities.RequestHandler;
 
 public class MainAppActivity extends AppCompatActivity
@@ -181,6 +182,9 @@ public class MainAppActivity extends AppCompatActivity
             startActivity(i);
         }
         else if (id == R.id.nav_logout){
+            DatabaseReference regId = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("registrationId");
+            regId.setValue(null);
+
             FirebaseAuth.getInstance().signOut();
             Intent i = new Intent(this, MainActivity.class);
             finishAffinity();

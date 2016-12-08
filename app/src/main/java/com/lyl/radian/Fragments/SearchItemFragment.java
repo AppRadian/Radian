@@ -78,6 +78,22 @@ public class SearchItemFragment extends Fragment{
         ratings = (TextView) view.findViewById(R.id.rezensionen);
         join = (Button) view.findViewById(R.id.joinButton);
 
+        // Sets button text to "Nicht mehr teilnehmen" if user already takes part
+        DatabaseReference participations = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations").child(account.getClickedBid().getId());
+        participations.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String id = dataSnapshot.getValue(String.class);
+                if(id != null)
+                    join.setText("Nicht mehr teilnehmen");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,7 +140,7 @@ public class SearchItemFragment extends Fragment{
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             String registrationId = dataSnapshot.getValue(String.class);
-                                            new SendNotification(registrationId, FirebaseAuth.getInstance().getCurrentUser().getEmail() + " nimmt an deinem Angebot teil").execute();
+                                            new SendNotification(registrationId, FirebaseAuth.getInstance().getCurrentUser().getEmail() + " nimmt an " + account.getClickedBid().getTag() + " teil").execute();
                                         }
 
                                         @Override
@@ -204,22 +220,6 @@ public class SearchItemFragment extends Fragment{
         ratings.setText(account.getClickedBid().getCount() + " Rezensionen");
 
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebot von " + account.getClickedBid().getEmail());
-
-        // Sets button text to "Nicht mehr teilnehmen" if user already takes part
-        DatabaseReference participations = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations").child(account.getClickedBid().getId());
-        participations.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String id = dataSnapshot.getValue(String.class);
-                if(id != null)
-                    join.setText("Nicht mehr teilnehmen");
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
         ratingBar.setOnTouchListener(new View.OnTouchListener() {
             @Override

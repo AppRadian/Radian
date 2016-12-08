@@ -29,7 +29,9 @@
         <activity android:name="com.lyl.radian.Activities.LoginActivity" />
         <activity android:name="com.lyl.radian.Activities.FeedbackActivity" />
         <activity android:name="com.lyl.radian.Activities.SettingsActivity" />
-        <activity android:name="com.lyl.radian.Activities.ShowBidFeedbackActivity" />
+        <activity android:name="com.lyl.radian.Activities.ShowBidFeedbackActivity"
+            android:label=""
+            android:theme="@style/ownTheme"/>
         <activity android:name="com.lyl.radian.Activities.ChatActivity" />
 
         <meta-data

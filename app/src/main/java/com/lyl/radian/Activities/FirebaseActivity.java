@@ -117,9 +117,6 @@ public class FirebaseActivity extends AppCompatActivity {
                             Log.e(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
                             final String email = userAuth.getCurrentUser().getEmail();
 
-                            DatabaseReference id = users.child(userAuth.getCurrentUser().getUid()).child("registrationId");
-                            id.setValue(FirebaseInstanceId.getInstance().getToken());
-
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setPhotoUri(Uri.parse("images/" + email + System.currentTimeMillis()))
                                     .build();

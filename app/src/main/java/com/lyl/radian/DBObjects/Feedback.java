@@ -25,6 +25,28 @@ public class Feedback {
         this.toUserMail = toUserMail;
     }
 
+    // Compares 2 Bid Objects with their respective id which is unique
+    // Must be implemented so List contains() method works as intended
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        // checks if bid is the same class (because if you compare a string with a bid dann kann mans auch gleich lassen)
+        if (!Feedback.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+
+        // check if id's are equal
+        final Feedback other = (Feedback) obj;
+        if (bidId.equals(other.getBidId()))
+            if (fromUserId.equals(other.getFromUserId()))
+                return true;
+
+        return false;
+    }
+
     public String getBidId() {
         return bidId;
     }

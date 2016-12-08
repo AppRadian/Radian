@@ -62,8 +62,6 @@ public class SettingsActivity extends Activity {
     StorageReference storageRef;
     String profilePic;
     ProgressDialog barProgressDialog;
-    Handler updateBarHandler;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

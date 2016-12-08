@@ -1,6 +1,7 @@
 package com.lyl.radian.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.lyl.radian.DBObjects.Feedback;
 import com.lyl.radian.R;
 
 /**
@@ -18,10 +20,10 @@ import com.lyl.radian.R;
 
 public class CustomAdapter extends BaseAdapter {
     Context context;
-    ArrayList<String[]> data;
+    ArrayList<Feedback> data;
     private static LayoutInflater inflater = null;
 
-    public CustomAdapter(Context context, ArrayList<String[]> data) {
+    public CustomAdapter(Context context, ArrayList<Feedback> data) {
         // TODO Auto-generated constructor stub
         this.context = context;
         this.data = data;
@@ -36,7 +38,7 @@ public class CustomAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Feedback getItem(int position) {
         // TODO Auto-generated method stub (ignore this text in brackets, habe ich nur geschrieben um was comitten zu können)
         return data.get(position);
     }
@@ -57,11 +59,12 @@ public class CustomAdapter extends BaseAdapter {
         TextView profileName = (TextView) vi.findViewById(R.id.profileNameListItem);
         TextView text = (TextView) vi.findViewById(R.id.text);
 
-        profileName.setText(data.get(position)[0]);
-        text.setText(data.get(position)[1]);
+        profileName.setText(data.get(position).getFromUserMail());
+        text.setText(data.get(position).getText());
 
         RatingBar ratingBar = (RatingBar) vi.findViewById(R.id.ratingBar2);
-        ratingBar.setRating(Float.parseFloat(data.get(position)[2]));
+        ratingBar.setRating((float)data.get(position).getRating());
+        Log.e("rating", String.valueOf(ratingBar.getRating()));
         return vi;
     }
 }

@@ -61,8 +61,8 @@ public class FeedbackDialog extends DialogFragment {
                 String toUserMail = account.getClickedBid().getEmail();
                 Feedback feedbackToInsert = new Feedback(account.getClickedBid().getId(), fromUserId, fromUserMail, toUserId, toUserMail, rating, feedbackText);
 
-                DatabaseReference feedback = FirebaseDatabase.getInstance().getReference("Feedback");
-                feedback.child(account.getClickedBid().getId()).setValue(feedbackToInsert);
+                DatabaseReference feedback = FirebaseDatabase.getInstance().getReference("Feedback").child(account.getClickedBid().getId()).child(fromUserId);
+                feedback.setValue(feedbackToInsert);
 
                 // Update the Bid from the user und in the bid DB
                 // Get DB Reference of Bids
