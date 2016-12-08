@@ -64,7 +64,7 @@ public class CustomAdapter extends BaseAdapter {
 
         RatingBar ratingBar = (RatingBar) vi.findViewById(R.id.ratingBar2);
         ratingBar.setRating((float)data.get(position).getRating());
-        Log.e("rating", String.valueOf(ratingBar.getRating()));
+        
         return vi;
     }
 }

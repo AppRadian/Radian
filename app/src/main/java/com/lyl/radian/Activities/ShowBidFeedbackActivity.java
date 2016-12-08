@@ -62,7 +62,7 @@ public class ShowBidFeedbackActivity extends AppCompatActivity implements MyDial
             public void onClick(View v) {
                 FeedbackDialog add = new FeedbackDialog();
                 add.setArguments(new Bundle());
-                add.show(account.fm, "Feedback Dialog");
+                add.show(getSupportFragmentManager(), "Feedback Dialog");
             }
         });
 
