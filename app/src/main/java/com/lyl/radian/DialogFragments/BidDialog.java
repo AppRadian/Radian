@@ -110,7 +110,7 @@ public class BidDialog extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(parent.getItemAtPosition(position) != null)
-                city = parent.getItemAtPosition(position).toString();
+                    city = parent.getItemAtPosition(position).toString();
             }
         });
 

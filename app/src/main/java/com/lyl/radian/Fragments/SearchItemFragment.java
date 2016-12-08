@@ -140,7 +140,7 @@ public class SearchItemFragment extends Fragment{
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             String registrationId = dataSnapshot.getValue(String.class);
-                                            new SendNotification(registrationId, FirebaseAuth.getInstance().getCurrentUser().getEmail() + " nimmt an " + account.getClickedBid().getTag() + " teil").execute();
+                                            new SendNotification(registrationId, FirebaseAuth.getInstance().getCurrentUser().getEmail() + "|" + "Nimmt an " + account.getClickedBid().getTag() + " teil!").execute();
                                         }
 
                                         @Override

@@ -92,7 +92,7 @@ public class OwnProfileFragment extends Fragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                
+
             }
         });
         viewPager.setCurrentItem(tabLayout.getSelectedTabPosition());

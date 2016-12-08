@@ -54,7 +54,7 @@ public class FeedbackDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 double rating = ratingBar.getRating();
-                String feedbackText = feedback.getText().toString();
+                final String feedbackText = feedback.getText().toString();
                 String fromUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 String toUserId = account.getClickedBid().getUserId();
                 String fromUserMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
@@ -95,7 +95,7 @@ public class FeedbackDialog extends DialogFragment {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         String registrationId = dataSnapshot.getValue(String.class);
-                                        new SendNotification(registrationId, FirebaseAuth.getInstance().getCurrentUser().getEmail() + " hat dir Feedback hinterlassen").execute();
+                                        new SendNotification(registrationId, FirebaseAuth.getInstance().getCurrentUser().getEmail() + "|" + feedbackText).execute();
                                     }
 
                                     @Override

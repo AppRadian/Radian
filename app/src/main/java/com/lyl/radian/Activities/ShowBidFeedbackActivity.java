@@ -33,7 +33,7 @@ import com.lyl.radian.Utilities.Constants;
  * Created by Ludwig on 05.11.2016.
  */
 
-public class ShowBidFeedbackActivity extends AppCompatActivity implements MyDialogCloseListener {
+public class ShowBidFeedbackActivity extends AppCompatActivity{
 
     TextView bid;
     FloatingActionButton rateBtn;
@@ -99,15 +99,5 @@ public class ShowBidFeedbackActivity extends AppCompatActivity implements MyDial
 
             }
         });
-    }
-
-    private void refresh(){
-        feedbacks.clear();
-    }
-
-
-    @Override
-    public void handleDialogClose(DialogInterface dialog) {
-        refresh();
     }
 }
