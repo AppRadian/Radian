@@ -87,12 +87,12 @@ public class OwnProfileFragment extends Fragment {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                Log.e("hallo","unselected");
+
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                Log.e("hallo","reslected");
+                
             }
         });
         viewPager.setCurrentItem(tabLayout.getSelectedTabPosition());
