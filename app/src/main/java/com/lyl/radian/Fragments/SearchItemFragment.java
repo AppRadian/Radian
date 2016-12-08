@@ -204,25 +204,14 @@ public class SearchItemFragment extends Fragment{
             }
         });
 
-        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(account.getClickedBid().getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String profPic = dataSnapshot.getValue(String.class);
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profPic);
-                Glide.with(SearchItemFragment.this)
-                        .using(new FirebaseImageLoader())
-                        .load(storageRef)
-                        .placeholder(R.drawable.blank_profile_pic)
-                        .dontAnimate()
-                        .into(userProfile);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + account.getClickedBid().profilePic);
+        Glide.with(SearchItemFragment.this)
+                .using(new FirebaseImageLoader())
+                .load(storageRef)
+                .placeholder(R.drawable.blank_profile_pic)
+                .dontAnimate()
+                .into(userProfile);
 
         userEmail.setText(account.getClickedBid().getEmail());
         userBid.setText(account.getClickedBid().getTag());

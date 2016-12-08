@@ -28,6 +28,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -35,6 +37,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.Activities.MainAppActivity;
 import com.lyl.radian.Activities.SettingsActivity;
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapterHome;
@@ -140,31 +144,42 @@ public class HomeFragment extends Fragment {
                     return;
                 }
                 final Bid bid = dataSnapshot.getValue(Bid.class);
-                Location bidLocation = new Location("bidLocation");
+                final Location bidLocation = new Location("bidLocation");
                 bidLocation.setLatitude(bid.getLatitude());
                 bidLocation.setLongitude(bid.getLongitude());
 
-                Location ownLocation = new Location("ownLocation");
+                final Location ownLocation = new Location("ownLocation");
                 ownLocation.setLatitude(account.getSelf().getLatitude());
                 ownLocation.setLongitude(account.getSelf().getLongitude());
 
-                //Calculation down in the if clause so it has not to be calculated if any condition before is false
-                long distance;
-                if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()) && bid.getParticipants() < bid.getMaxParticipants() && (distance = Math.round(bidLocation.distanceTo(ownLocation))) <= 70000) {
-                    if(listItems.contains(bid)) {
-                        int index = listItems.indexOf(bid);
-                        listItems.remove(bid);
-                        listItems.add(index, bid.setDistance(distance));
-                    }
-                    else
-                        listItems.add(bid.setDistance(distance));
-                }
-                else if(listItems.contains(bid))
-                    listItems.remove(bid);
+                FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        bid.setProfilePic(dataSnapshot.getValue(String.class));
+                        //Calculation down in the if clause so it has not to be calculated if any condition before is false
+                        long distance;
+                        if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()) && bid.getParticipants() < bid.getMaxParticipants() && (distance = Math.round(bidLocation.distanceTo(ownLocation))) <= 70000) {
+                            if(listItems.contains(bid)) {
+                                int index = listItems.indexOf(bid);
+                                listItems.remove(bid);
+                                listItems.add(index, bid.setDistance(distance));
+                            }
+                            else
+                                listItems.add(bid.setDistance(distance));
+                        }
+                        else if(listItems.contains(bid))
+                            listItems.remove(bid);
 
-                Collections.sort(listItems, cmp);
-                adapter.notifyDataSetChanged();
-                getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                        Collections.sort(listItems, cmp);
+                        adapter.notifyDataSetChanged();
+                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override

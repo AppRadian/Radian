@@ -60,10 +60,21 @@ public class OwnBidsFragment extends SuperProfileFragment {
                 ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Bid bid = dataSnapshot.getValue(Bid.class);
-                        if(!bidsList.contains(bid))
-                            bidsList.add(bid);
-                        adapter.notifyDataSetChanged();
+                        final Bid bid = dataSnapshot.getValue(Bid.class);
+                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                bid.setProfilePic(dataSnapshot.getValue(String.class));
+                                if(!bidsList.contains(bid))
+                                    bidsList.add(bid);
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                     }
 
                     @Override
@@ -81,10 +92,21 @@ public class OwnBidsFragment extends SuperProfileFragment {
                 ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Bid bid = dataSnapshot.getValue(Bid.class);
-                        if(!bidsList.contains(bid))
-                            bidsList.add(bid);
-                        adapter.notifyDataSetChanged();
+                        final Bid bid = dataSnapshot.getValue(Bid.class);
+                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                bid.setProfilePic(dataSnapshot.getValue(String.class));
+                                if(!bidsList.contains(bid))
+                                    bidsList.add(bid);
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                     }
 
                     @Override

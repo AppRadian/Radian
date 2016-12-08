@@ -71,7 +71,7 @@ public class UpcomingFragment extends SuperProfileFragment {
                     // Handle the bid object associated wit the bid reference
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Bid bid = dataSnapshot.getValue(Bid.class);
+                        final Bid bid = dataSnapshot.getValue(Bid.class);
                         Location bidLocation = new Location("bidLocation");
                         bidLocation.setLatitude(bid.getLatitude());
                         bidLocation.setLongitude(bid.getLongitude());
@@ -79,11 +79,22 @@ public class UpcomingFragment extends SuperProfileFragment {
                         Location ownLocation = new Location("ownLocation");
                         ownLocation.setLatitude(account.getSelf().getLatitude());
                         ownLocation.setLongitude(account.getSelf().getLongitude());
-                        long distance = Math.round(bidLocation.distanceTo(ownLocation));
+                        final long distance = Math.round(bidLocation.distanceTo(ownLocation));
 
-                        if(!upcomingEvents.contains(bid))
-                            upcomingEvents.add(bid.setDistance(distance));
-                        adapter.notifyDataSetChanged();
+                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                bid.setProfilePic(dataSnapshot.getValue(String.class));
+                                if(!upcomingEvents.contains(bid))
+                                    upcomingEvents.add(bid.setDistance(distance));
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                     }
 
                     @Override
@@ -106,7 +117,7 @@ public class UpcomingFragment extends SuperProfileFragment {
                     // Handle the bid object associated wit the bid reference
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Bid bid = dataSnapshot.getValue(Bid.class);
+                        final Bid bid = dataSnapshot.getValue(Bid.class);
                         Location bidLocation = new Location("bidLocation");
                         bidLocation.setLatitude(bid.getLatitude());
                         bidLocation.setLongitude(bid.getLongitude());
@@ -114,11 +125,22 @@ public class UpcomingFragment extends SuperProfileFragment {
                         Location ownLocation = new Location("ownLocation");
                         ownLocation.setLatitude(account.getSelf().getLatitude());
                         ownLocation.setLongitude(account.getSelf().getLongitude());
-                        long distance = Math.round(bidLocation.distanceTo(ownLocation));
+                        final long distance = Math.round(bidLocation.distanceTo(ownLocation));
 
-                        if(!upcomingEvents.contains(bid))
-                            upcomingEvents.add(bid.setDistance(distance));
-                        adapter.notifyDataSetChanged();
+                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                bid.setProfilePic(dataSnapshot.getValue(String.class));
+                                if(!upcomingEvents.contains(bid))
+                                    upcomingEvents.add(bid.setDistance(distance));
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                     }
 
                     @Override

@@ -21,6 +21,7 @@ public class Bid {
     long participants;
     long maxParticipants;
     public long distance;
+    public String profilePic;
 
     public Bid() {
     }
@@ -171,6 +172,11 @@ public class Bid {
 
     public Bid setDistance(long distance){
         this.distance = distance;
+        return this;
+    }
+
+    public Bid setProfilePic(String profilePic){
+        this.profilePic = profilePic;
         return this;
     }
 }

@@ -97,7 +97,7 @@ public class ProfileFragment extends SuperProfileFragment {
                 ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Bid bid = dataSnapshot.getValue(Bid.class);
+                        final Bid bid = dataSnapshot.getValue(Bid.class);
                         Location bidLocation = new Location("bidLocation");
                         bidLocation.setLatitude(bid.getLatitude());
                         bidLocation.setLongitude(bid.getLongitude());
@@ -105,10 +105,21 @@ public class ProfileFragment extends SuperProfileFragment {
                         Location ownLocation = new Location("ownLocation");
                         ownLocation.setLatitude(account.getSelf().getLatitude());
                         ownLocation.setLongitude(account.getSelf().getLongitude());
-                        long distance = Math.round(bidLocation.distanceTo(ownLocation));
-                        if(!bieteItems.contains(bid))
-                            bieteItems.add(bid.setDistance(distance));
-                        adapter.notifyDataSetChanged();
+                        final long distance = Math.round(bidLocation.distanceTo(ownLocation));
+                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                bid.setProfilePic(dataSnapshot.getValue(String.class));
+                                if(!bieteItems.contains(bid))
+                                    bieteItems.add(bid.setDistance(distance));
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                     }
 
                     @Override
@@ -126,7 +137,7 @@ public class ProfileFragment extends SuperProfileFragment {
                 ownBids.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Bid bid = dataSnapshot.getValue(Bid.class);
+                        final Bid bid = dataSnapshot.getValue(Bid.class);
                         Location bidLocation = new Location("bidLocation");
                         bidLocation.setLatitude(bid.getLatitude());
                         bidLocation.setLongitude(bid.getLongitude());
@@ -134,10 +145,21 @@ public class ProfileFragment extends SuperProfileFragment {
                         Location ownLocation = new Location("ownLocation");
                         ownLocation.setLatitude(account.getSelf().getLatitude());
                         ownLocation.setLongitude(account.getSelf().getLongitude());
-                        long distance = Math.round(bidLocation.distanceTo(ownLocation));
-                        if(!bieteItems.contains(bid))
-                            bieteItems.add(bid.setDistance(distance));
-                        adapter.notifyDataSetChanged();
+                        final long distance = Math.round(bidLocation.distanceTo(ownLocation));
+                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                bid.setProfilePic(dataSnapshot.getValue(String.class));
+                                if(!bieteItems.contains(bid))
+                                    bieteItems.add(bid.setDistance(distance));
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                     }
 
                     @Override
@@ -207,40 +229,29 @@ public class ProfileFragment extends SuperProfileFragment {
 
 
         setCollapsingToolbarEnabled(true);
-        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(account.getClickedBid().getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String profPic = dataSnapshot.getValue(String.class);
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profPic);
-                getActivity().findViewById(R.id.loading).setVisibility(View.VISIBLE);
-                Glide.with(ProfileFragment.this)
-                        .using(new FirebaseImageLoader())
-                        .load(storageRef)
-                        .listener(new RequestListener<StorageReference, GlideDrawable>() {
-                            @Override
-                            public boolean onException(Exception e, StorageReference model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
-                                return false;
-                            }
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + account.getClickedBid().profilePic);
+        getActivity().findViewById(R.id.loading).setVisibility(View.VISIBLE);
+        Glide.with(ProfileFragment.this)
+                .using(new FirebaseImageLoader())
+                .load(storageRef)
+                .listener(new RequestListener<StorageReference, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, StorageReference model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                        return false;
+                    }
 
-                            @Override
-                            public boolean onResourceReady(GlideDrawable resource, StorageReference model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
-                                return false;
-                            }
-                        })
-                        .fitCenter()
-                        .placeholder(R.drawable.blank_profile_pic)
-                        .dontAnimate()
-                        .into(profilePic);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, StorageReference model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .fitCenter()
+                .placeholder(R.drawable.blank_profile_pic)
+                .dontAnimate()
+                .into(profilePic);
 
         return view;
     }
@@ -255,40 +266,29 @@ public class ProfileFragment extends SuperProfileFragment {
     public void onResume() {
         super.onResume();
         setCollapsingToolbarEnabled(true);
-        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(account.getClickedBid().getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String profPic = dataSnapshot.getValue(String.class);
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profPic);
-                getActivity().findViewById(R.id.loading).setVisibility(View.VISIBLE);
-                Glide.with(ProfileFragment.this)
-                        .using(new FirebaseImageLoader())
-                        .load(storageRef)
-                        .listener(new RequestListener<StorageReference, GlideDrawable>() {
-                            @Override
-                            public boolean onException(Exception e, StorageReference model, Target<GlideDrawable> target, boolean isFirstResource) {
-                                getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
-                                return false;
-                            }
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + account.getClickedBid().profilePic);
+        getActivity().findViewById(R.id.loading).setVisibility(View.VISIBLE);
+        Glide.with(ProfileFragment.this)
+                .using(new FirebaseImageLoader())
+                .load(storageRef)
+                .listener(new RequestListener<StorageReference, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, StorageReference model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                        return false;
+                    }
 
-                            @Override
-                            public boolean onResourceReady(GlideDrawable resource, StorageReference model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                                getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
-                                return false;
-                            }
-                        })
-                        .fitCenter()
-                        .placeholder(R.drawable.blank_profile_pic)
-                        .dontAnimate()
-                        .into(profilePic);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, StorageReference model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .fitCenter()
+                .placeholder(R.drawable.blank_profile_pic)
+                .dontAnimate()
+                .into(profilePic);
     }
 
     private void setCollapsingToolbarEnabled(boolean enabled){

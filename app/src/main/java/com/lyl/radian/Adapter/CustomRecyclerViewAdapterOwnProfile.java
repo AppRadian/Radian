@@ -80,25 +80,14 @@ public class CustomRecyclerViewAdapterOwnProfile extends RecyclerView.Adapter<Re
             holder.count.setText(data.get(position).getCount() + " Bewertungen");
             holder.maxPart.setText(data.get(position).getParticipants() + "/" + data.get(position).getMaxParticipants());
 
-            FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(data.get(position).getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    String profilePic = dataSnapshot.getValue(String.class);
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
-                    Glide.with(context)
-                            .using(new FirebaseImageLoader())
-                            .load(storageRef)
-                            .placeholder(R.drawable.blank_profile_pic)
-                            .dontAnimate()
-                            .into(holder.profilePic);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + data.get(position).profilePic);
+            Glide.with(context)
+                    .using(new FirebaseImageLoader())
+                    .load(storageRef)
+                    .placeholder(R.drawable.blank_profile_pic)
+                    .dontAnimate()
+                    .into(holder.profilePic);
         }
         else if (viewHolder instanceof ProfileHeaderViewHolder) {
             ProfileHeaderViewHolder holder = (ProfileHeaderViewHolder) viewHolder;
