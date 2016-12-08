@@ -218,7 +218,7 @@ public class EditDialog extends DialogFragment {
                             ownBids.setValue(account.getClickedBid().getId());
 
                             Location bidLocation = Constants.getLocationFromAddress(getActivity(), location.getText().toString());
-                            Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), account.getClickedBid().getProfilePic(), bid, description.getText().toString(),
+                            Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getEmail(), bid, description.getText().toString(),
                                     location.getText().toString(), bidLocation.getLatitude(), bidLocation.getLongitude(), averageRating, count, date.getText().toString(), time.getText().toString(), participants, Long.parseLong(EditDialog.this.participants.getText().toString()));
                             DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
                             bids.child(account.getClickedBid().getId()).setValue(bidToInsert);

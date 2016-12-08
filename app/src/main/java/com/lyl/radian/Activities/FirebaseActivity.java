@@ -117,13 +117,14 @@ public class FirebaseActivity extends AppCompatActivity {
                             Log.e(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
                             final String email = userAuth.getCurrentUser().getEmail();
 
+                            String profilePic = "images/" + email + System.currentTimeMillis();
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setPhotoUri(Uri.parse("images/" + email + System.currentTimeMillis()))
+                                    .setPhotoUri(Uri.parse(profilePic))
                                     .build();
                             userAuth.getCurrentUser().updateProfile(profileUpdates);
 
                             DatabaseReference thisUser = users.child(userAuth.getCurrentUser().getUid());
-                            UserProfile self = new UserProfile(email, null, null, 0, 0);
+                            UserProfile self = new UserProfile(email, profilePic, null, null, 0, 0);
                             account.setSelf(self);
                             thisUser.setValue(account.getSelf());
                         }

@@ -13,11 +13,16 @@ import java.util.ArrayList;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.DBObjects.Bid;
+import com.lyl.radian.Utilities.Constants;
 
 /**
  * Created by Yannick on 10.11.2016.
@@ -47,7 +52,7 @@ public class CustomRecyclerViewAdapterBiete extends RecyclerView.Adapter<CustomR
     }
 
     @Override
-    public void onBindViewHolder(ProfileInfoViewHolder holder, int position) {
+    public void onBindViewHolder(final ProfileInfoViewHolder holder, int position) {
 
         holder.tag.setText(data.get(position).getTag());
         holder.location.setText(data.get(position).getLocation());
@@ -56,14 +61,25 @@ public class CustomRecyclerViewAdapterBiete extends RecyclerView.Adapter<CustomR
         holder.count.setText(data.get(position).getCount() + " Bewertungen");
         holder.maxPart.setText(data.get(position).getParticipants() + "/" + data.get(position).getMaxParticipants());
 
-        String profilePic = data.get(position).getProfilePic();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
-        Glide.with(context)
-                .using(new FirebaseImageLoader())
-                .load(storageRef)
-                .placeholder(R.drawable.blank_profile_pic)
-                .into(holder.profilePic);
+        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(data.get(position).getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String profilePic = dataSnapshot.getValue(String.class);
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+                Glide.with(context)
+                        .using(new FirebaseImageLoader())
+                        .load(storageRef)
+                        .placeholder(R.drawable.blank_profile_pic)
+                        .into(holder.profilePic);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     @Override

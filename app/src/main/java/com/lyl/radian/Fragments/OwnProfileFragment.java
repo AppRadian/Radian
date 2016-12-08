@@ -25,8 +25,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -61,7 +64,6 @@ public class OwnProfileFragment extends Fragment {
 
         account = (Account) getActivity().getApplication();
 
-        Log.e("oncreateView", "oncreateView");
         profilePic = (ImageView) getActivity().findViewById(R.id.ownProfilePic);
 
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
@@ -80,7 +82,6 @@ public class OwnProfileFragment extends Fragment {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.e("hallo","selected");
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -99,9 +100,23 @@ public class OwnProfileFragment extends Fragment {
         setCollapsingToolbarEnabled(true);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
+        getActivity().findViewById(R.id.loading).setVisibility(View.VISIBLE);
         Glide.with(OwnProfileFragment.this)
                 .using(new FirebaseImageLoader())
                 .load(storageRef)
+                .listener(new RequestListener<StorageReference, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, StorageReference model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, StorageReference model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                        return false;
+                    }
+                })
                 .fitCenter()
                 .placeholder(R.drawable.blank_profile_pic)
                 .dontAnimate()
@@ -113,6 +128,30 @@ public class OwnProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        setCollapsingToolbarEnabled(true);
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
+        getActivity().findViewById(R.id.loading).setVisibility(View.VISIBLE);
+        Glide.with(OwnProfileFragment.this)
+                .using(new FirebaseImageLoader())
+                .load(storageRef)
+                .listener(new RequestListener<StorageReference, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, StorageReference model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, StorageReference model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .fitCenter()
+                .placeholder(R.drawable.blank_profile_pic)
+                .dontAnimate()
+                .into(profilePic);
         ((MainAppActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_own_profile);
     }
 

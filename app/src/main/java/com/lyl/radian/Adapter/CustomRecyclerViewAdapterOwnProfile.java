@@ -2,6 +2,7 @@ package com.lyl.radian.Adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,17 @@ import java.util.ArrayList;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.Constants;
 
 /**
  * Created by Yannick on 10.11.2016.
@@ -63,7 +70,7 @@ public class CustomRecyclerViewAdapterOwnProfile extends RecyclerView.Adapter<Re
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int pos) {
         if (viewHolder instanceof ProfileInfoViewHolder) {
-            ProfileInfoViewHolder holder = (ProfileInfoViewHolder) viewHolder;
+            final ProfileInfoViewHolder holder = (ProfileInfoViewHolder) viewHolder;
             int position = pos - 1;
 
             holder.tag.setText(data.get(position).getTag());
@@ -73,15 +80,25 @@ public class CustomRecyclerViewAdapterOwnProfile extends RecyclerView.Adapter<Re
             holder.count.setText(data.get(position).getCount() + " Bewertungen");
             holder.maxPart.setText(data.get(position).getParticipants() + "/" + data.get(position).getMaxParticipants());
 
-            String profilePic = data.get(position).getProfilePic();
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
-            Glide.with(context)
-                    .using(new FirebaseImageLoader())
-                    .load(storageRef)
-                    .placeholder(R.drawable.blank_profile_pic)
-                    .dontAnimate()
-                    .into(holder.profilePic);
+            FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(data.get(position).getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String profilePic = dataSnapshot.getValue(String.class);
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+                    Glide.with(context)
+                            .using(new FirebaseImageLoader())
+                            .load(storageRef)
+                            .placeholder(R.drawable.blank_profile_pic)
+                            .dontAnimate()
+                            .into(holder.profilePic);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
         else if (viewHolder instanceof ProfileHeaderViewHolder) {
             ProfileHeaderViewHolder holder = (ProfileHeaderViewHolder) viewHolder;

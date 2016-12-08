@@ -222,6 +222,7 @@ public class MainAppActivity extends AppCompatActivity
         super.onResume();
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
+        Log.e("url", FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
         StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
         Glide.with(MainAppActivity.this)
                 .using(new FirebaseImageLoader())

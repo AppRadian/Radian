@@ -22,8 +22,10 @@ import java.util.UUID;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.ChildEventListener;
@@ -190,55 +192,61 @@ public class SettingsActivity extends Activity {
 
         barProgressDialog.setTitle("Uploading Image ...");
         barProgressDialog.setProgressStyle(barProgressDialog.STYLE_HORIZONTAL);
+        barProgressDialog.setCancelable(false);
         barProgressDialog.setProgress(0);
         barProgressDialog.show();
 
         // Create the file metadata
-        StorageMetadata metadata = new StorageMetadata.Builder()
+        final StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType("image/jpeg")
                 .build();
 
-        profilePic = "images/" + FirebaseAuth.getInstance().getCurrentUser().getEmail() + System.currentTimeMillis();
-        final UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+        final String profilePic = "images/" + FirebaseAuth.getInstance().getCurrentUser().getEmail() + System.currentTimeMillis();
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setPhotoUri(Uri.parse(profilePic))
                 .build();
-        FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates);
+        FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("profilePic").setValue(profilePic);
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        final StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
-        // Upload file and metadata to the path 'images/mountains.jpg'
-        UploadTask uploadTask = storageRef.putFile(uri, metadata);
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                final StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);
+                // Upload file and metadata to the path 'images/mountains.jpg'
+                UploadTask uploadTask = storageRef.putFile(uri, metadata);
 
-        // Listen for state changes, errors, and completion of the upload.
-        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                barProgressDialog.setProgress((int)progress);
-                System.out.println("Upload is " + progress + "% done");
-            }
-        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-                System.out.println("Upload is paused");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // Handle successful uploads on complete
-                barProgressDialog.dismiss();
-                SettingsActivity.this.storageRef.delete();
-                Glide.with(SettingsActivity.this)
-                        .using(new FirebaseImageLoader())
-                        .load(storageRef)
-                        .placeholder(R.drawable.blank_profile_pic)
-                        .dontAnimate()
-                        .into(profilePicView);
+                // Listen for state changes, errors, and completion of the upload.
+                uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        barProgressDialog.setProgress((int)progress);
+                        System.out.println("Upload is " + progress + "% done");
+                    }
+                }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                        System.out.println("Upload is paused");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Handle successful uploads on complete
+                        barProgressDialog.dismiss();
+                        SettingsActivity.this.storageRef.delete();
+                        Glide.with(SettingsActivity.this)
+                                .using(new FirebaseImageLoader())
+                                .load(storageRef)
+                                .placeholder(R.drawable.blank_profile_pic)
+                                .dontAnimate()
+                                .into(profilePicView);
+                    }
+                });
             }
         });
     }

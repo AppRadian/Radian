@@ -191,9 +191,7 @@ public class BidDialog extends DialogFragment {
             public void onClick(View view) {
                 if (city != null && description.getText().toString().length() != 0 && location.getText().toString().length() != 0 &&
                  city.equals(location.getText().toString()) && time.getText().toString().length() != 0 && date.getText().toString().length() != 0 && participants.getText().toString().length() != 0) {
-                    Double[] latLong = getLocationFromAddress(autocompleteView.getText().toString());
 
-                    String profilePic = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
                     // push creates unique key wesshalb am Edne der Liste ein Wert angefügt werden kann
                     // own bids contains list with strings of bid-ids
                     DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users")
@@ -203,7 +201,7 @@ public class BidDialog extends DialogFragment {
 
                     Location bidLocation = Constants.getLocationFromAddress(getActivity(), location.getText().toString());
                     Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance()
-                            .getCurrentUser().getEmail(), profilePic, bid, description.getText().toString(),
+                            .getCurrentUser().getEmail(), bid, description.getText().toString(),
                             location.getText().toString(), bidLocation.getLatitude(), bidLocation.getLongitude(), 0, 0, date.getText().toString(),
                             time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
                     DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
