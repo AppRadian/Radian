@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,7 @@ public class OwnProfileFragment extends Fragment {
 
         account = (Account) getActivity().getApplication();
 
+        Log.e("oncreateView", "oncreateView");
         profilePic = (ImageView) getActivity().findViewById(R.id.ownProfilePic);
 
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
@@ -78,19 +80,21 @@ public class OwnProfileFragment extends Fragment {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                Log.e("hallo","selected");
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                Log.e("hallo","unselected");
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                Log.e("hallo","reslected");
             }
         });
+        viewPager.setCurrentItem(tabLayout.getSelectedTabPosition());
 
         setCollapsingToolbarEnabled(true);
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -127,6 +131,7 @@ public class OwnProfileFragment extends Fragment {
             AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
             params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                     | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
+            toolbar.setLayoutParams(params);
 
             ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
             toolbar.setTitleEnabled(true);
@@ -139,6 +144,7 @@ public class OwnProfileFragment extends Fragment {
             AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
             params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                     | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+            toolbar.setLayoutParams(params);
 
             TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
             tabLayout.setVisibility(TabLayout.GONE);

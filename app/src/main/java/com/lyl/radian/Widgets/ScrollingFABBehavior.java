@@ -16,10 +16,11 @@ import android.view.View;
  */
 
 public class ScrollingFABBehavior extends FloatingActionButton.Behavior {
+
+    public ScrollingFABBehavior(){}
     public ScrollingFABBehavior(Context context, AttributeSet attrs) {
         super();
     }
-
 
     @Override
     public boolean onStartNestedScroll(final CoordinatorLayout coordinatorLayout,

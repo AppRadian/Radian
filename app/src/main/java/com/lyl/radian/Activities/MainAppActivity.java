@@ -3,6 +3,7 @@ package com.lyl.radian.Activities;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.bumptech.glide.Glide;
@@ -31,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.Adapter.CustomAdapterSearch;
@@ -44,6 +47,7 @@ import com.lyl.radian.Fragments.SearchFragment;
 import com.lyl.radian.Fragments.OwnProfileFragment;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
+import com.lyl.radian.Utilities.RequestHandler;
 
 public class MainAppActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -116,6 +120,7 @@ public class MainAppActivity extends AppCompatActivity
         toggle.syncState();
 
         account.fm.beginTransaction().replace(R.id.content_frame, homeFragment, "home").commit();
+        Log.e("id", FirebaseInstanceId.getInstance().getToken());
     }
 
     @Override

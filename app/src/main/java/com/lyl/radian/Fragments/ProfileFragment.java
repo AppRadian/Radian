@@ -40,6 +40,7 @@ import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Widgets.NestedScrollViewFling;
+import com.lyl.radian.Widgets.ScrollingFABBehavior;
 
 /**
  * Created by len13 on 17.10.2016.
@@ -221,6 +222,11 @@ public class ProfileFragment extends SuperProfileFragment {
         setCollapsingToolbarEnabled(false);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     private void setCollapsingToolbarEnabled(boolean enabled){
         final Resources r = getResources();
         final int px = (int)(r.getDisplayMetrics().heightPixels / 2.5);
@@ -231,7 +237,10 @@ public class ProfileFragment extends SuperProfileFragment {
             params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                     | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
 
-            //((FloatingActionButton)getActivity().findViewById(R.id.fab2)).setVisibility(View.GONE);
+            ((FloatingActionButton)getActivity().findViewById(R.id.fab2)).hide();
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) getActivity().findViewById(R.id.fab2).getLayoutParams();
+            p.setBehavior(null);
+            getActivity().findViewById(R.id.fab2).setLayoutParams(p);
             sendMessage.setVisibility(View.VISIBLE);
             ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
             toolbar.setTitleEnabled(true);
@@ -244,7 +253,10 @@ public class ProfileFragment extends SuperProfileFragment {
             params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                     | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
 
-            //((FloatingActionButton)getActivity().findViewById(R.id.fab2)).setVisibility(View.VISIBLE);
+            ((FloatingActionButton)getActivity().findViewById(R.id.fab2)).show();
+            CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) getActivity().findViewById(R.id.fab2).getLayoutParams();
+            p.setBehavior(new ScrollingFABBehavior());
+            getActivity().findViewById(R.id.fab2).setLayoutParams(p);
             sendMessage.setVisibility(View.GONE);
             toolbar.setTitleEnabled(false);
             profilePic.setMaxHeight(0);

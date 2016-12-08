@@ -27,6 +27,7 @@ import java.util.HashMap;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 import com.google.firebase.storage.FirebaseStorage;
@@ -38,6 +39,7 @@ import com.lyl.radian.DBObjects.UserProfile;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Utilities.SendNotification;
 
 /**
  * Created by Yannick on 05.11.2016.
@@ -114,7 +116,24 @@ public class SearchItemFragment extends Fragment{
 
                             // Transfer update to DB
                             DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
-                            bids.child(account.getClickedBid().getId()).setValue(bid);
+                            bids.child(account.getClickedBid().getId()).setValue(bid).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(account.getClickedBid().getUserId()).child("registrationId");
+                                    user.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            String registrationId = dataSnapshot.getValue(String.class);
+                                            new SendNotification(registrationId, FirebaseAuth.getInstance().getCurrentUser().getEmail() + " nimmt an deinem Angebot teil").execute();
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+                            });
 
 
                             // Update user Object with participated events

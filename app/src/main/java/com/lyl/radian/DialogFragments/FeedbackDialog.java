@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +25,7 @@ import com.lyl.radian.DBObjects.Feedback;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Utilities.SendNotification;
 
 import java.io.Console;
 
@@ -85,7 +87,24 @@ public class FeedbackDialog extends DialogFragment {
 
                         // Transfer updates to DB
                         DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
-                        bids.child(account.getClickedBid().getId()).setValue(bid);
+                        bids.child(account.getClickedBid().getId()).setValue(bid).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(account.getClickedBid().getUserId()).child("registrationId");
+                                user.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        String registrationId = dataSnapshot.getValue(String.class);
+                                        new SendNotification(registrationId, FirebaseAuth.getInstance().getCurrentUser().getEmail() + " hat dir Feedback hinterlassen").execute();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        });
                     }
 
                     @Override

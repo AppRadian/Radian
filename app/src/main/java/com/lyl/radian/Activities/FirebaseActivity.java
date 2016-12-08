@@ -3,6 +3,7 @@ package com.lyl.radian.Activities;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
@@ -30,6 +32,7 @@ import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.DBObjects.UserProfile;
 import com.lyl.radian.Utilities.Constants;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -64,6 +67,10 @@ public class FirebaseActivity extends AppCompatActivity {
                     // User is signed in
                     Log.e(TAG, "onAuthStateChanged:sign_in:" + user.getUid());
                     setContentView(R.layout.activity_splash_screen);
+
+                    DatabaseReference id = users.child(userAuth.getCurrentUser().getUid()).child("registrationId");
+                    id.setValue(FirebaseInstanceId.getInstance().getToken());
+
                     FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(userAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -109,6 +116,9 @@ public class FirebaseActivity extends AppCompatActivity {
                         if(task.isSuccessful()) {
                             Log.e(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
                             final String email = userAuth.getCurrentUser().getEmail();
+
+                            DatabaseReference id = users.child(userAuth.getCurrentUser().getUid()).child("registrationId");
+                            id.setValue(FirebaseInstanceId.getInstance().getToken());
 
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setPhotoUri(Uri.parse("images/" + email + System.currentTimeMillis()))
