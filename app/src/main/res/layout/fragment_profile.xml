@@ -13,6 +13,14 @@
         android:scrollbars="none"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
          />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:id="@+id/loading"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
 </RelativeLayout>
 
 

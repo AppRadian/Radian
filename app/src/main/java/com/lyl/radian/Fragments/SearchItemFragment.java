@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -64,9 +67,6 @@ public class SearchItemFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search_item, container, false);
         callingActivity = getActivity();
-
-        AppBarLayout mToolbar = (AppBarLayout) getActivity().findViewById(R.id.app_bar_layout);
-        mToolbar.setTranslationY(0);
 
         account = (Account) callingActivity.getApplication();
         userProfile = (ImageView) view.findViewById(R.id.userProfile);
@@ -209,6 +209,19 @@ public class SearchItemFragment extends Fragment{
         Glide.with(SearchItemFragment.this)
                 .using(new FirebaseImageLoader())
                 .load(storageRef)
+                .listener(new RequestListener<StorageReference, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, StorageReference model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        view.findViewById(R.id.loadingPic).setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, StorageReference model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        view.findViewById(R.id.loadingPic).setVisibility(View.GONE);
+                        return false;
+                    }
+                })
                 .placeholder(R.drawable.blank_profile_pic)
                 .dontAnimate()
                 .into(userProfile);

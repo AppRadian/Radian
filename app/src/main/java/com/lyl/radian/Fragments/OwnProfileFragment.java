@@ -67,7 +67,6 @@ public class OwnProfileFragment extends Fragment {
         profilePic = (ImageView) getActivity().findViewById(R.id.ownProfilePic);
 
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
-        tabLayout.setVisibility(TabLayout.VISIBLE);
         if(tabLayout.getTabCount() != 2) {
             tabLayout.addTab(tabLayout.newTab().setText("Angebote"));
             tabLayout.addTab(tabLayout.newTab().setText("Anstehende"));
@@ -97,31 +96,6 @@ public class OwnProfileFragment extends Fragment {
         });
         viewPager.setCurrentItem(tabLayout.getSelectedTabPosition());
 
-        setCollapsingToolbarEnabled(true);
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
-        getActivity().findViewById(R.id.loading).setVisibility(View.VISIBLE);
-        Glide.with(OwnProfileFragment.this)
-                .using(new FirebaseImageLoader())
-                .load(storageRef)
-                .listener(new RequestListener<StorageReference, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, StorageReference model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, StorageReference model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
-                        return false;
-                    }
-                })
-                .fitCenter()
-                .placeholder(R.drawable.blank_profile_pic)
-                .dontAnimate()
-                .into(profilePic);
-
         return view;
     }
 
@@ -131,20 +105,20 @@ public class OwnProfileFragment extends Fragment {
         setCollapsingToolbarEnabled(true);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
-        getActivity().findViewById(R.id.loading).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.loadingPic).setVisibility(View.VISIBLE);
         Glide.with(OwnProfileFragment.this)
                 .using(new FirebaseImageLoader())
                 .load(storageRef)
                 .listener(new RequestListener<StorageReference, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, StorageReference model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                        getActivity().findViewById(R.id.loadingPic).setVisibility(View.GONE);
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, StorageReference model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                        getActivity().findViewById(R.id.loadingPic).setVisibility(View.GONE);
                         return false;
                     }
                 })
@@ -171,6 +145,9 @@ public class OwnProfileFragment extends Fragment {
             params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                     | AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED);
             toolbar.setLayoutParams(params);
+
+            TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tab_layout);
+            tabLayout.setVisibility(TabLayout.VISIBLE);
 
             ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("");
             toolbar.setTitleEnabled(true);

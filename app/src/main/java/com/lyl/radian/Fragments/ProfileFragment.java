@@ -87,6 +87,7 @@ public class ProfileFragment extends SuperProfileFragment {
         database = FirebaseDatabase.getInstance();
         bids = database.getReference("Users").child(account.getClickedBid().getUserId()).child("ownBids");
 
+        view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
         bids.addChildEventListener(new ChildEventListener() {
 
             @Override
@@ -113,6 +114,7 @@ public class ProfileFragment extends SuperProfileFragment {
                                 if(!bieteItems.contains(bid))
                                     bieteItems.add(bid.setDistance(distance));
                                 adapter.notifyDataSetChanged();
+                                view.findViewById(R.id.loading).setVisibility(View.GONE);
                             }
 
                             @Override
@@ -227,32 +229,6 @@ public class ProfileFragment extends SuperProfileFragment {
             }
         });
 
-
-        setCollapsingToolbarEnabled(true);
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + account.getClickedBid().profilePic);
-        getActivity().findViewById(R.id.loading).setVisibility(View.VISIBLE);
-        Glide.with(ProfileFragment.this)
-                .using(new FirebaseImageLoader())
-                .load(storageRef)
-                .listener(new RequestListener<StorageReference, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, StorageReference model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, StorageReference model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
-                        return false;
-                    }
-                })
-                .fitCenter()
-                .placeholder(R.drawable.blank_profile_pic)
-                .dontAnimate()
-                .into(profilePic);
-
         return view;
     }
 
@@ -268,20 +244,20 @@ public class ProfileFragment extends SuperProfileFragment {
         setCollapsingToolbarEnabled(true);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + account.getClickedBid().profilePic);
-        getActivity().findViewById(R.id.loading).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.loadingPic).setVisibility(View.VISIBLE);
         Glide.with(ProfileFragment.this)
                 .using(new FirebaseImageLoader())
                 .load(storageRef)
                 .listener(new RequestListener<StorageReference, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, StorageReference model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                        getActivity().findViewById(R.id.loadingPic).setVisibility(View.GONE);
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, StorageReference model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
+                        getActivity().findViewById(R.id.loadingPic).setVisibility(View.GONE);
                         return false;
                     }
                 })

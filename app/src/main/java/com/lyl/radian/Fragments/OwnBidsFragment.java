@@ -50,6 +50,7 @@ public class OwnBidsFragment extends SuperProfileFragment {
         database = FirebaseDatabase.getInstance();
         bids = database.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids");
 
+        view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
         bids.addChildEventListener(new ChildEventListener() {
 
             @Override
@@ -68,6 +69,7 @@ public class OwnBidsFragment extends SuperProfileFragment {
                                 if(!bidsList.contains(bid))
                                     bidsList.add(bid);
                                 adapter.notifyDataSetChanged();
+                                view.findViewById(R.id.loading).setVisibility(View.GONE);
                             }
 
                             @Override

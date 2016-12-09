@@ -1,26 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <FrameLayout
+        android:id="@+id/userProfileFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.lyl.radian.Widgets.CircleImageView
+            android:id="@+id/userProfile"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:scaleType="centerCrop"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
 
-    <com.lyl.radian.Widgets.CircleImageView
-        android:id="@+id/userProfile"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="17dp"
-        android:scaleType="centerCrop"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_marginTop="15dp"
+            android:id="@+id/loadingPic"
+            android:layout_gravity="center"/>
+    </FrameLayout>
 
     <Button
         android:text="Teilnehmen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/userProfileFrame"
         android:id="@+id/joinButton"
-        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:textColor="@android:color/holo_blue_dark" />
 
@@ -28,6 +41,7 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/joinButton"
         app:cardCornerRadius="4dp"
         app:cardElevation="5dp"
         app:cardUseCompatPadding="true"
@@ -114,5 +128,5 @@
 
     </android.support.v7.widget.CardView>
 
-</LinearLayout>
+</RelativeLayout>
 

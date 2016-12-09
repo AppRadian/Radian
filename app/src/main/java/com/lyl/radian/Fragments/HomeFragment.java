@@ -58,7 +58,6 @@ public class HomeFragment extends Fragment {
     View view;
     Activity callingActivity;
     Account account;
-    Double[] latLong;
     public RecyclerView searches;
     public ArrayList<Bid> listItems = new ArrayList<>();
     public CustomRecyclerViewAdapterHome adapter;
@@ -66,6 +65,8 @@ public class HomeFragment extends Fragment {
     public Comparator<Bid> cmp;
     private FirebaseDatabase database;
     private DatabaseReference bids;
+    ValueEventListener updateBids;
+    public SwipeRefreshLayout swipeContainer;
 
     @Nullable
     @Override
@@ -120,11 +121,78 @@ public class HomeFragment extends Fragment {
 
         searches.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
             @Override public void onItemClick(View view, int position) {
+                if(position >= adapter.getItemCount())
+                    return;
+                
                 account.setClickedBid(adapter.getItem(position));
                 SearchItemFragment f = new SearchItemFragment();
                 account.fm.beginTransaction().replace(R.id.content_frame, f, "searchItem").addToBackStack("searchItem").commit();
             }
         }));
+
+        updateBids = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                listItems.clear();
+                for(DataSnapshot data : dataSnapshot.getChildren()){
+                    if(account.getSelf().getLocation() == null) {
+                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Please set your location first", Snackbar.LENGTH_LONG)
+                                .setAction("Set location", setLocation)
+                                .setActionTextColor(Color.RED)
+                                .show();
+                        return;
+                    }
+                    final Bid bid = data.getValue(Bid.class);
+                    final Location bidLocation = new Location("bidLocation");
+                    bidLocation.setLatitude(bid.getLatitude());
+                    bidLocation.setLongitude(bid.getLongitude());
+
+                    final Location ownLocation = new Location("ownLocation");
+                    ownLocation.setLatitude(account.getSelf().getLatitude());
+                    ownLocation.setLongitude(account.getSelf().getLongitude());
+
+                    FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            bid.setProfilePic(dataSnapshot.getValue(String.class));
+                            //Calculation down in the if clause so it has not to be calculated if any condition before is false
+                            long distance;
+                            if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()) && bid.getParticipants() < bid.getMaxParticipants() && (distance = Math.round(bidLocation.distanceTo(ownLocation))) <= 70000)
+                                listItems.add(bid.setDistance(distance));
+
+                            adapter.notifyDataSetChanged();
+                            Collections.sort(listItems, cmp);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+                view.findViewById(R.id.loading).setVisibility(View.GONE);
+                swipeContainer.setRefreshing(false);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateBids();
+            }
+        });
+
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         return view;
     }
@@ -132,108 +200,13 @@ public class HomeFragment extends Fragment {
     private void refresh(){
 
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebote in der Nähe");
-        bids.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
+        updateBids();
+    }
 
-                if(account.getSelf().getLocation() == null) {
-                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Please set your location first", Snackbar.LENGTH_LONG)
-                            .setAction("Set location", setLocation)
-                            .setActionTextColor(Color.RED)
-                            .show();
-                    return;
-                }
-                final Bid bid = dataSnapshot.getValue(Bid.class);
-                final Location bidLocation = new Location("bidLocation");
-                bidLocation.setLatitude(bid.getLatitude());
-                bidLocation.setLongitude(bid.getLongitude());
-
-                final Location ownLocation = new Location("ownLocation");
-                ownLocation.setLatitude(account.getSelf().getLatitude());
-                ownLocation.setLongitude(account.getSelf().getLongitude());
-
-                FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        bid.setProfilePic(dataSnapshot.getValue(String.class));
-                        //Calculation down in the if clause so it has not to be calculated if any condition before is false
-                        long distance;
-                        if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()) && bid.getParticipants() < bid.getMaxParticipants() && (distance = Math.round(bidLocation.distanceTo(ownLocation))) <= 70000) {
-                            if(listItems.contains(bid)) {
-                                int index = listItems.indexOf(bid);
-                                listItems.remove(bid);
-                                listItems.add(index, bid.setDistance(distance));
-                            }
-                            else
-                                listItems.add(bid.setDistance(distance));
-                        }
-                        else if(listItems.contains(bid))
-                            listItems.remove(bid);
-
-                        Collections.sort(listItems, cmp);
-                        adapter.notifyDataSetChanged();
-                        getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                if(account.getSelf().getLocation() == null) {
-                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Please set your location first", Snackbar.LENGTH_LONG)
-                            .setAction("Set location", setLocation)
-                            .setActionTextColor(Color.RED)
-                            .show();
-                    return;
-                }
-                final Bid bid = dataSnapshot.getValue(Bid.class);
-                Location bidLocation = new Location("");
-                bidLocation.setLatitude(bid.getLatitude());
-                bidLocation.setLongitude(bid.getLongitude());
-
-                Location ownLocation = new Location("");
-                ownLocation.setLatitude(account.getSelf().getLatitude());
-                ownLocation.setLongitude(account.getSelf().getLongitude());
-
-                //Calculation down in the if clause so it has not to be calculated if any condition before is false
-                long distance;
-                if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()) && bid.getParticipants() < bid.getMaxParticipants() && (distance = Math.round(bidLocation.distanceTo(ownLocation))) <= 70000) {
-                    if(listItems.contains(bid)) {
-                        int index = listItems.indexOf(bid);
-                        listItems.remove(bid);
-                        listItems.add(index, bid.setDistance(distance));
-                    }
-                    else
-                        listItems.add(bid.setDistance(distance));
-                }
-                else if(listItems.contains(bid))
-                    listItems.remove(bid);
-
-                adapter.notifyDataSetChanged();
-                getActivity().findViewById(R.id.loading).setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+    private void updateBids(){
+        bids.removeEventListener(updateBids);
+        bids.addListenerForSingleValueEvent(updateBids);
     }
 
     @Override

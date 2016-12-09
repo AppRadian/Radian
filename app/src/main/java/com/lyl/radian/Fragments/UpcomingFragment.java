@@ -56,6 +56,7 @@ public class UpcomingFragment extends SuperProfileFragment {
         // Now reference from this user the "participations" child
         particpationsChild = user.child("participations");
 
+        view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
         // The participatonsChild DBRef points to the child in the DB of this user that holds all participations (respectively all bidIds that the user joins)
         // Because we want retrieve every bidId that the user joins, we use the addChildEventListener and NOT the addListenerForSingleValueEvent
         particpationsChild.addChildEventListener(new ChildEventListener() {
@@ -88,6 +89,7 @@ public class UpcomingFragment extends SuperProfileFragment {
                                 if(!upcomingEvents.contains(bid))
                                     upcomingEvents.add(bid.setDistance(distance));
                                 adapter.notifyDataSetChanged();
+                                view.findViewById(R.id.loading).setVisibility(View.GONE);
                             }
 
                             @Override
@@ -102,7 +104,6 @@ public class UpcomingFragment extends SuperProfileFragment {
 
                     }
                 });
-
             }
 
             @Override
