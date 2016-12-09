@@ -20,13 +20,13 @@ import com.lyl.radian.Utilities.Constants;
 public class RegisterActivity extends FirebaseActivity {
 
     EditText email;
+    EditText displayName;
     EditText password;
     EditText passwordConfirm;
     Button register;
     ImageView imageView;
 
     private static final String TAG = "RegisterActivity";
-    String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +39,7 @@ public class RegisterActivity extends FirebaseActivity {
         imageView.setImageBitmap(Constants.decodeBitmap(r, R.drawable.logo, (int)px, (int)px));
 
         email = (EditText) findViewById(R.id.emailTxt2);
+        displayName = (EditText) findViewById(R.id.displayName);
         password = (EditText) findViewById(R.id.passwordTxt2);
         passwordConfirm = (EditText) findViewById(R.id.passwordConfirmTxt);
         register = (Button) findViewById(R.id.register);
@@ -47,13 +48,17 @@ public class RegisterActivity extends FirebaseActivity {
             @Override
             public void onClick(View v) {
                 if(validateEmail(email.getText().toString())) {
-                    if (password.getText().toString().length() != 0 && passwordConfirm.getText().toString().length() != 0) {
-                        if (password.getText().toString().equals(passwordConfirm.getText().toString()))
-                            createUser(email.getText().toString(), Constants.DEFAULTPASSWORD);
-                        else
-                            Toast.makeText(RegisterActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-                    } else
-                        Toast.makeText(RegisterActivity.this, "Password can not be empty", Toast.LENGTH_SHORT).show();
+                    if(displayName.getText().toString().length() > 0) {
+                        if (password.getText().toString().length() > 0 && passwordConfirm.getText().toString().length() > 0) {
+                            if (password.getText().toString().equals(passwordConfirm.getText().toString()))
+                                createUser(email.getText().toString(), displayName.getText().toString(), Constants.DEFAULTPASSWORD);
+                            else
+                                passwordConfirm.setError("Password can not be empty");
+                        } else
+                            password.setError("Password can not be empty");
+                    }
+                    else
+                        displayName.setError("Displayname can not be empty");
                 }
                 else {
                     Toast.makeText(RegisterActivity.this, "E-Mail can not be empty / or incorrect form", Toast.LENGTH_SHORT).show();

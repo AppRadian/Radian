@@ -201,7 +201,7 @@ public class BidDialog extends DialogFragment {
 
                     Location bidLocation = Constants.getLocationFromAddress(getActivity(), location.getText().toString());
                     Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance()
-                            .getCurrentUser().getEmail(), bid, description.getText().toString(),
+                            .getCurrentUser().getDisplayName(), bid, description.getText().toString(),
                             location.getText().toString(), bidLocation.getLatitude(), bidLocation.getLongitude(), 0, 0, date.getText().toString(),
                             time.getText().toString(), 0, Long.parseLong(participants.getText().toString()));
                     DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");

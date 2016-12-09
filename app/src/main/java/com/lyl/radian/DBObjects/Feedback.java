@@ -7,22 +7,22 @@ package com.lyl.radian.DBObjects;
 public class Feedback {
     String bidId;
     String fromUserId;
-    String fromUserMail;
+    String fromUserDisplayName;
     String toUserId;
-    String toUserMail;
+    String toUserDisplayName;
     double rating;
     String text;
 
     public Feedback() {}
 
-    public Feedback(String bidId, String fromUserId, String fromUserMail, String toUserId, String toUserMail, double rating, String text) {
+    public Feedback(String bidId, String fromUserId, String fromUserDisplayName, String toUserId, String toUserDisplayName, double rating, String text) {
         this.bidId = bidId;
         this.fromUserId = fromUserId;
         this.toUserId = toUserId;
         this.rating = rating;
         this.text = text;
-        this.fromUserMail = fromUserMail;
-        this.toUserMail = toUserMail;
+        this.fromUserDisplayName = fromUserDisplayName;
+        this.toUserDisplayName = toUserDisplayName;
     }
 
     // Compares 2 Bid Objects with their respective id which is unique
@@ -87,19 +87,19 @@ public class Feedback {
         this.toUserId = toUserId;
     }
 
-    public String getFromUserMail() {
-        return fromUserMail;
+    public String getFromUserDisplayName() {
+        return fromUserDisplayName;
     }
 
-    public void setFromUserMail(String fromUserMail) {
-        this.fromUserMail = fromUserMail;
+    public void setFromUserDisplayName(String fromUserDisplayName) {
+        this.fromUserDisplayName = fromUserDisplayName;
     }
 
-    public String getToUserMail() {
-        return toUserMail;
+    public String getToUserDisplayName() {
+        return toUserDisplayName;
     }
 
-    public void setToUserMail(String toUserMail) {
-        this.toUserMail = toUserMail;
+    public void setToUserDisplayName(String toUserDisplayName) {
+        this.toUserDisplayName = toUserDisplayName;
     }
 }

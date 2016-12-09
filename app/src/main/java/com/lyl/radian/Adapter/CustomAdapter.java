@@ -1,7 +1,6 @@
 package com.lyl.radian.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +58,7 @@ public class CustomAdapter extends BaseAdapter {
         TextView profileName = (TextView) vi.findViewById(R.id.profileNameListItem);
         TextView text = (TextView) vi.findViewById(R.id.text);
 
-        profileName.setText(data.get(position).getFromUserMail());
+        profileName.setText(data.get(position).getFromUserDisplayName());
         text.setText(data.get(position).getText());
 
         RatingBar ratingBar = (RatingBar) vi.findViewById(R.id.ratingBar2);

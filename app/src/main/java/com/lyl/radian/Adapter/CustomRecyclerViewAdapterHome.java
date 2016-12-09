@@ -2,7 +2,6 @@ package com.lyl.radian.Adapter;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +13,11 @@ import java.util.ArrayList;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.DBObjects.Bid;
-import com.lyl.radian.Utilities.Constants;
 
 /**
  * Created by Yannick on 10.11.2016.
@@ -58,7 +52,7 @@ public class CustomRecyclerViewAdapterHome extends RecyclerView.Adapter<CustomRe
     @Override
     public void onBindViewHolder(final ProfileInfoViewHolder holder, int position) {
 
-        holder.profileName.setText(data.get(position).getEmail());
+        holder.profileName.setText(data.get(position).getDisplayname());
         holder.tag.setText(data.get(position).getTag());
         holder.location.setText(data.get(position).getLocation());
         holder.distance.setText("<=" + Math.round(data.get(position).distance/1000) + "km");

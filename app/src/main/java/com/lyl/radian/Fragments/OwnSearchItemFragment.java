@@ -2,14 +2,9 @@ package com.lyl.radian.Fragments;
 
 import android.app.Activity;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,20 +12,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.lyl.radian.Activities.MainAppActivity;
 import com.lyl.radian.DialogFragments.EditDialog;
 import com.lyl.radian.Activities.ShowBidFeedbackActivity;
 import com.lyl.radian.R;
@@ -81,7 +69,7 @@ public class OwnSearchItemFragment extends Fragment {
                     .dontAnimate()
                     .into(userProfile);
 
-            userEmail.setText(account.getClickedBid().getEmail());
+            userEmail.setText(account.getClickedBid().getDisplayname());
             userBid.setText(account.getClickedBid().getTag());
             timenDate.setText(account.getClickedBid().getDate() + " - " + account.getClickedBid().getTime() + " Uhr");
             userDescription.setText(account.getClickedBid().getDescription());

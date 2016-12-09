@@ -14,7 +14,6 @@ import android.widget.RatingBar;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,8 +25,6 @@ import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Utilities.Constants;
 import com.lyl.radian.Utilities.SendNotification;
-
-import java.io.Console;
 
 /**
  * Created by Yannick on 18.10.2016.
@@ -57,9 +54,9 @@ public class FeedbackDialog extends DialogFragment {
                 final String feedbackText = feedback.getText().toString();
                 String fromUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 String toUserId = account.getClickedBid().getUserId();
-                String fromUserMail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-                String toUserMail = account.getClickedBid().getEmail();
-                Feedback feedbackToInsert = new Feedback(account.getClickedBid().getId(), fromUserId, fromUserMail, toUserId, toUserMail, rating, feedbackText);
+                String fromUserDisplayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                String toUserDisplayName = account.getClickedBid().getDisplayname();
+                Feedback feedbackToInsert = new Feedback(account.getClickedBid().getId(), fromUserId, fromUserDisplayName, toUserId, toUserDisplayName, rating, feedbackText);
 
                 DatabaseReference feedback = FirebaseDatabase.getInstance().getReference("Feedback").child(account.getClickedBid().getId()).child(fromUserId);
                 feedback.setValue(feedbackToInsert);
@@ -95,7 +92,7 @@ public class FeedbackDialog extends DialogFragment {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         String registrationId = dataSnapshot.getValue(String.class);
-                                        new SendNotification(registrationId, FirebaseAuth.getInstance().getCurrentUser().getEmail() + "|" + feedbackText).execute();
+                                        new SendNotification(registrationId, FirebaseAuth.getInstance().getCurrentUser().getDisplayName() + "|" + feedbackText).execute();
                                     }
 
                                     @Override

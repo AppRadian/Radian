@@ -3,9 +3,7 @@ package com.lyl.radian.Fragments;
 import android.app.Activity;
 import android.graphics.Color;
 import android.location.Location;
-import android.nfc.Tag;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,35 +13,25 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.Activities.MainAppActivity;
 import com.lyl.radian.Activities.SettingsActivity;
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapterHome;
 import com.lyl.radian.Adapter.RecyclerItemClickListener;
-import com.lyl.radian.DialogFragments.BidDialog;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.DBObjects.Bid;
@@ -123,7 +111,7 @@ public class HomeFragment extends Fragment {
             @Override public void onItemClick(View view, int position) {
                 if(position >= adapter.getItemCount())
                     return;
-                
+
                 account.setClickedBid(adapter.getItem(position));
                 SearchItemFragment f = new SearchItemFragment();
                 account.fm.beginTransaction().replace(R.id.content_frame, f, "searchItem").addToBackStack("searchItem").commit();
@@ -157,7 +145,7 @@ public class HomeFragment extends Fragment {
                             bid.setProfilePic(dataSnapshot.getValue(String.class));
                             //Calculation down in the if clause so it has not to be calculated if any condition before is false
                             long distance;
-                            if(!bid.getEmail().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail()) && bid.getParticipants() < bid.getMaxParticipants() && (distance = Math.round(bidLocation.distanceTo(ownLocation))) <= 70000)
+                            if(!bid.getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()) && bid.getParticipants() < bid.getMaxParticipants() && (distance = Math.round(bidLocation.distanceTo(ownLocation))) <= 70000)
                                 listItems.add(bid.setDistance(distance));
 
                             adapter.notifyDataSetChanged();

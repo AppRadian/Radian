@@ -1,15 +1,9 @@
 package com.lyl.radian.Fragments;
 
 import android.app.Activity;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,11 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.bumptech.glide.Glide;
@@ -35,10 +27,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.lyl.radian.Activities.MainAppActivity;
 import com.lyl.radian.Activities.ShowBidFeedbackActivity;
 import com.lyl.radian.DBObjects.Bid;
-import com.lyl.radian.DBObjects.UserProfile;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Utilities.Constants;
@@ -226,14 +216,14 @@ public class SearchItemFragment extends Fragment{
                 .dontAnimate()
                 .into(userProfile);
 
-        userEmail.setText(account.getClickedBid().getEmail());
+        userEmail.setText(account.getClickedBid().getDisplayname());
         userBid.setText(account.getClickedBid().getTag());
         timenDate.setText(account.getClickedBid().getDate() + " - " + account.getClickedBid().getTime() + " Uhr");
         userDescription.setText(account.getClickedBid().getDescription());
         ratingBar.setRating((float)account.getClickedBid().getAverageRating());
         ratings.setText(account.getClickedBid().getCount() + " Rezensionen");
 
-        ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebot von " + account.getClickedBid().getEmail());
+        ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebot von " + account.getClickedBid().getDisplayname());
 
         ratingBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -265,7 +255,7 @@ public class SearchItemFragment extends Fragment{
                         String location = (String)hm.get("location");
                         String language = (String)hm.get("language");
                         HashMap<String, Object> bis = (HashMap<String, Object>)hm.get("ownBids");
-                        //UserProfile u = new UserProfile(account.getClickedBid().getEmail(), location, language, account.getClickedBid().getProfilePic(), new HashMap<String, Object>(), new HashMap<String, Object>());
+                        //UserProfile u = new UserProfile(account.getClickedBid().getDisplayname(), location, language, account.getClickedBid().getProfilePic(), new HashMap<String, Object>(), new HashMap<String, Object>());
                         ProfileFragment f = new ProfileFragment();
                         account.fm.beginTransaction().replace(R.id.content_frame, f, "profile").addToBackStack("profile").commit();
                     }

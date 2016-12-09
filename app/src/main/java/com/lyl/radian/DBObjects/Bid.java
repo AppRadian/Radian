@@ -8,7 +8,7 @@ public class Bid {
 
     String id;
     String userId;
-    String email;
+    String displayname;
     String tag;
     String description;
     String location;
@@ -26,10 +26,10 @@ public class Bid {
     public Bid() {
     }
 
-    public Bid(String id, String userId, String email, String tag, String description, String location, double latitude, double longitude, double averageRating, long count, String date, String time, long participants, long maxParticipants) {
+    public Bid(String id, String userId, String displayname, String tag, String description, String location, double latitude, double longitude, double averageRating, long count, String date, String time, long participants, long maxParticipants) {
         this.id = id;
         this.userId = userId;
-        this.email = email;
+        this.displayname = displayname;
         this.tag = tag;
         this.description = description;
         this.location = location;
@@ -74,12 +74,12 @@ public class Bid {
 
     public void setUserId(String userId) { this.userId = userId; }
 
-    public String getEmail() {
-        return email;
+    public String getDisplayname() {
+        return displayname;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setDisplayname(String displayname) {
+        this.displayname = displayname;
     }
 
     public String getTag() {

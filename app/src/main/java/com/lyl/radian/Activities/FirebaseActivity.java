@@ -108,7 +108,7 @@ public class FirebaseActivity extends AppCompatActivity {
         }
     }
 
-    public void createUser(final String email, final String password) {
+    public void createUser(final String email, final String displayname, final String password) {
         userAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -119,6 +119,7 @@ public class FirebaseActivity extends AppCompatActivity {
 
                             String profilePic = "images/" + email + System.currentTimeMillis();
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(displayname)
                                     .setPhotoUri(Uri.parse(profilePic))
                                     .build();
                             userAuth.getCurrentUser().updateProfile(profileUpdates);
