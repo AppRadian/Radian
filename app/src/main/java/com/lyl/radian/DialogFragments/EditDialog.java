@@ -170,7 +170,9 @@ public class EditDialog extends DialogFragment {
                 mTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        time.setText( hourOfDay + ":" + minute);
+                        String h = hourOfDay < 10 ? "0" + hourOfDay : String.valueOf(hourOfDay);
+                        String m = minute < 10 ? "0" + minute : String.valueOf(minute);
+                        time.setText( h + ":" + m);
                     }
                 }, hour, minute, true);
                 mTimePicker.show();
@@ -188,7 +190,9 @@ public class EditDialog extends DialogFragment {
                 mTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        time.setText( hourOfDay + ":" + minute);
+                        String h = hourOfDay < 10 ? "0" + hourOfDay : String.valueOf(hourOfDay);
+                        String m = minute < 10 ? "0" + minute : String.valueOf(minute);
+                        time.setText( h + ":" + m);
                     }
                 }, hour, minute, true);
                 mTimePicker.show();
