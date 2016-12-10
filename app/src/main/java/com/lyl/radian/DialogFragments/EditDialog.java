@@ -51,6 +51,7 @@ import com.lyl.radian.Utilities.Constants;
  */
 
 public class EditDialog extends DialogFragment {
+
     AutoCompleteTextView location;
     Account account;
     OwnSearchItemFragment callingFragment;
@@ -80,7 +81,7 @@ public class EditDialog extends DialogFragment {
         adapter.addAll(getResources().getStringArray(R.array.bid_arrays));
         adapter.add("Was wollen Sie anbieten?");
         bidTypes.setAdapter(adapter);
-        bidTypes.setSelection(adapter.getCount());
+        bidTypes.setSelection(adapter.getPosition(account.getClickedBid().getTag()));
 
         bidTypes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -105,7 +106,6 @@ public class EditDialog extends DialogFragment {
             }
         });
 
-
         location = (AutoCompleteTextView) rootView.findViewById(R.id.location);
         time = (TextView) rootView.findViewById(R.id.time);
         timeButton = (Button) rootView.findViewById(R.id.timeButton);
@@ -114,10 +114,17 @@ public class EditDialog extends DialogFragment {
         participants = (EditText) rootView.findViewById(R.id.participants);
         description = (TextView) rootView.findViewById(R.id.description);
 
-
+        bid = account.getClickedBid().getTag();
+        location.setText(account.getClickedBid().getLocation());
+        time.setText(account.getClickedBid().getTime());
+        date.setText(account.getClickedBid().getDate());
+        participants.setText(String.valueOf(account.getClickedBid().getMaxParticipants()));
+        description.setText(account.getClickedBid().getDescription());
 
         final AutoCompleteTextView autocompleteView = (AutoCompleteTextView) rootView.findViewById(R.id.location);
         autocompleteView.setAdapter(new PlacesAutoCompleteAdapter(getActivity(), R.layout.autocomplete_list_item)); // vorher getActivity() anstelle von this
+
+        city = account.getClickedBid().getLocation();
 
         autocompleteView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -218,11 +225,9 @@ public class EditDialog extends DialogFragment {
                             double averageRating = data.getAverageRating();
                             long count = data.getCount();
                             long participants = data.getParticipants();
-                            DatabaseReference ownBids = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ownBids").push();
-                            ownBids.setValue(account.getClickedBid().getId());
 
-                            Location bidLocation = Constants.getLocationFromAddress(getActivity(), location.getText().toString());
-                            Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), bid, description.getText().toString(),
+                            Location bidLocation = Constants.getLocationFromAddress(getParentFragment().getActivity(), location.getText().toString());
+                            Bid bidToInsert = new Bid(account.getClickedBid().getId(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), bid, description.getText().toString(),
                                     location.getText().toString(), bidLocation.getLatitude(), bidLocation.getLongitude(), averageRating, count, date.getText().toString(), time.getText().toString(), participants, Long.parseLong(EditDialog.this.participants.getText().toString()));
                             DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");
                             bids.child(account.getClickedBid().getId()).setValue(bidToInsert);

@@ -21,6 +21,8 @@ public class RegisterActivity extends FirebaseActivity {
 
     EditText email;
     EditText displayName;
+    EditText location;
+    EditText language;
     EditText password;
     EditText passwordConfirm;
     Button register;
@@ -40,6 +42,8 @@ public class RegisterActivity extends FirebaseActivity {
 
         email = (EditText) findViewById(R.id.emailTxt2);
         displayName = (EditText) findViewById(R.id.displayName);
+        location = (EditText) findViewById(R.id.registerLocation);
+        language = (EditText) findViewById(R.id.language);
         password = (EditText) findViewById(R.id.passwordTxt2);
         passwordConfirm = (EditText) findViewById(R.id.passwordConfirmTxt);
         register = (Button) findViewById(R.id.register);
@@ -51,7 +55,7 @@ public class RegisterActivity extends FirebaseActivity {
                     if(displayName.getText().toString().length() > 0) {
                         if (password.getText().toString().length() > 0 && passwordConfirm.getText().toString().length() > 0) {
                             if (password.getText().toString().equals(passwordConfirm.getText().toString()))
-                                createUser(email.getText().toString(), displayName.getText().toString(), Constants.DEFAULTPASSWORD);
+                                createUser(email.getText().toString(), displayName.getText().toString(), location.getText().toString(), language.getText().toString(), Constants.DEFAULTPASSWORD);
                             else
                                 passwordConfirm.setError("Password can not be empty");
                         } else

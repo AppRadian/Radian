@@ -1,16 +1,11 @@
 package com.lyl.radian.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,22 +20,16 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.storage.FirebaseStorage;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.DBObjects.UserProfile;
 import com.lyl.radian.Utilities.Constants;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Yannick on 01.12.2016.
  */
 
-public class FirebaseActivity extends AppCompatActivity {
+public class FirebaseActivity extends Activity {
 
     public Account account;
     // Befidet sich ein Nutzer in der MainAppActivity wurde er eingeloggt und wird hier
@@ -50,8 +39,9 @@ public class FirebaseActivity extends AppCompatActivity {
     private static final String TAG = "Firebase";
     private FirebaseDatabase database;
     private DatabaseReference users;
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         account = (Account) getApplication();
@@ -61,7 +51,7 @@ public class FirebaseActivity extends AppCompatActivity {
 
         userAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
@@ -108,11 +98,11 @@ public class FirebaseActivity extends AppCompatActivity {
         }
     }
 
-    public void createUser(final String email, final String displayname, final String password) {
+    public void createUser(final String email, final String displayname, final String location, final String language, final String password) {
         userAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(Task<AuthResult> task) {
                         if(task.isSuccessful()) {
                             Log.e(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
                             final String email = userAuth.getCurrentUser().getEmail();
@@ -125,7 +115,12 @@ public class FirebaseActivity extends AppCompatActivity {
                             userAuth.getCurrentUser().updateProfile(profileUpdates);
 
                             DatabaseReference thisUser = users.child(userAuth.getCurrentUser().getUid());
-                            UserProfile self = new UserProfile(email, profilePic, null, null, 0, 0);
+                            Location loc = Constants.getLocationFromAddress(FirebaseActivity.this, location);
+                            UserProfile self;
+                            if(loc != null)
+                                self = new UserProfile(email, profilePic, location, language, loc.getLatitude(), loc.getLongitude());
+                            else
+                                self = new UserProfile(email, profilePic, location, language, 0, 0);
                             account.setSelf(self);
                             thisUser.setValue(account.getSelf());
                         }
@@ -141,7 +136,7 @@ public class FirebaseActivity extends AppCompatActivity {
         userAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(Task<AuthResult> task) {
                         if(task.isSuccessful()) {
                             Log.e(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 

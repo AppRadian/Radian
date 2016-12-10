@@ -1,8 +1,6 @@
 package com.lyl.radian.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.TypedValue;

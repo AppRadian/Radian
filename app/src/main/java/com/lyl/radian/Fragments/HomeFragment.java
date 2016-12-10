@@ -188,6 +188,7 @@ public class HomeFragment extends Fragment {
     private void refresh(){
 
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Angebote in der Nähe");
+        ((TextView)getActivity().findViewById(R.id.toolbar_title)).requestFocus();
         view.findViewById(R.id.loading).setVisibility(View.VISIBLE);
         updateBids();
     }

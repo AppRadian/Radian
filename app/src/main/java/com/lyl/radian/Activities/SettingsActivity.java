@@ -78,6 +78,9 @@ public class SettingsActivity extends Activity {
         passwordConfirm = (EditText) findViewById(R.id.ConfirmPassword);
         profilePicView = (ImageView) findViewById(R.id.changeProfilePic);
 
+        location.setText(account.getSelf().getLocation());
+        language.setText(account.getSelf().getLanguage());
+
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl());
         Glide.with(SettingsActivity.this)
@@ -89,7 +92,7 @@ public class SettingsActivity extends Activity {
 
         //location.setText(account.get.getLocation());
         //language.setText(account.getSelf().getLanguage());
-        city = "";
+        city = account.getSelf().getLocation();
 
         final AutoCompleteTextView autocompleteView = (AutoCompleteTextView) findViewById(R.id.changeLocation);
         autocompleteView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.autocomplete_list_item));
