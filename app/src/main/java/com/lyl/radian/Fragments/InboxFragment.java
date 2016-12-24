@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,11 +45,7 @@ public class InboxFragment extends Fragment {
     ArrayList<String> exampleContent = new ArrayList<>();
     ArrayAdapter<String> adapter;
 
-    // Firebase instance variables
-    /*private static final String TAG = "EmailPassword";
-    private FirebaseAuth userAuth;
-    private FirebaseAuth.AuthStateListener userAuthListener;
-    String username;*/
+    private final String TAG = "InboxFragment";
 
     @Nullable
     @Override
@@ -60,11 +57,23 @@ public class InboxFragment extends Fragment {
         // Code
         chats = (ListView) view.findViewById(R.id.userChatList);
 
-        // Add example content to array
-        exampleContent.add("Chat 1");
-        exampleContent.add("Chat 2");
-        //exampleContent.add(username);
+        // Display name of persons you chat with
+        Intent i = getActivity().getIntent();
+        String chatPartner = i.getStringExtra("chatRoom"); // resolve error here : https://developer.android.com/training/basics/fragments/communicating.html
+        Log.e(TAG, chatPartner);
+        exampleContent.add("Len");
+        /*
+        Intent intentChatRoomExists = new Intent(getActivity(), ProfileFragment.class);
+        if (exampleContent == null || exampleContent.contains(chatPartner)) {
+            // send message to Profile Fragment that room exit
+            intentChatRoomExists.putExtra("bool", "true");
+        } else {
+            // send message to Profile Fragment that room doesn't  exist
+            intentChatRoomExists.putExtra("bool", "false");
+            exampleContent.add(chatPartner);
+        }*/
 
+        // set adapter
         adapter = new ArrayAdapter<String>(callingActivity, android.R.layout.simple_list_item_1, exampleContent);
         chats.setAdapter(adapter);
 

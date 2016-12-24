@@ -45,7 +45,6 @@ public class BieteFragment extends Fragment implements MyDialogCloseListener {
     ArrayList<Bid> bidsList = new ArrayList<>();
     public CustomRecyclerViewAdapterBiete adapter;
     Account account;
-    FloatingActionButton fab;
     private FirebaseDatabase database;
     private DatabaseReference bids;
 

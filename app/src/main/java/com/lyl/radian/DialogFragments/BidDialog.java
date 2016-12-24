@@ -214,7 +214,7 @@ public class BidDialog extends DialogFragment {
                     getDialog().dismiss();
                 }
                 else
-                    location.setError("Location doesn't exist");
+                    location.setError("Input not correct");
             }
         });
 

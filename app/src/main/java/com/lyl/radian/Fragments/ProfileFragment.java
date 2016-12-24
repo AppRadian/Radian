@@ -8,21 +8,26 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,6 +40,7 @@ import com.lyl.radian.Activities.ChatActivity;
 import com.lyl.radian.Adapter.CustomRecyclerViewAdapter;
 import com.lyl.radian.Adapter.RecyclerItemClickListener;
 import com.lyl.radian.DBObjects.Bid;
+import com.lyl.radian.DBObjects.Chat;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Utilities.Constants;
@@ -50,6 +56,7 @@ public class ProfileFragment extends SuperProfileFragment {
     FloatingActionButton sendMessage;
     private FirebaseDatabase database;
     private DatabaseReference bids;
+    private final String TAG = "ProfileFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -218,8 +225,44 @@ public class ProfileFragment extends SuperProfileFragment {
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), ChatActivity.class);
-                startActivity(i);
+                // Update OwnInboxFragment list with this new chat room
+                Intent intent = new Intent(getActivity(), InboxFragment.class);
+                intent.putExtra("chatRoom", account.getClickedBid().getDisplayname());
+                // Check if these user have a chatroom
+                String bool = "true";
+                Intent getResponse = getActivity().getIntent();
+                if (false /*bool.equals(getResponse.getStringExtra("bool"))*/) {
+                    // chatroom already exist
+                    // switch fragment
+                    Intent i = new Intent(getActivity(), ChatActivity.class);
+                    startActivity(i);
+                } else {
+                    // create chatroom
+
+                    // Create myChats child in the DB entry of this user
+                    DatabaseReference myChats = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .child("myChats").push();
+
+                    // Initialize the chat field with the chat id
+                    myChats.setValue(myChats.getKey());
+
+                    // Create Chat node to store all chats for transmitter
+                    Chat chatToInsert = new Chat(FirebaseAuth.getInstance().getCurrentUser().getUid(), account.getClickedBid().getUserId(), new HashMap<String, Object>());
+                    DatabaseReference transmitterChats = FirebaseDatabase.getInstance().getReference("Chats");
+                    transmitterChats.child(myChats.getKey()).setValue(chatToInsert);
+
+                    // Create Chat node to store all chats for reciever TODO enable option to recieve a message
+                    // First get receiver user AND Create myChats child in the DB entry of this user
+                    DatabaseReference receiver = FirebaseDatabase.getInstance().getReference("Users").child(account.getClickedBid().getUserId()).child("myChats").push();
+
+                    // Initialize the chat field with the chat id
+                    receiver.setValue(myChats.getKey());
+
+                    // Switch fragment
+                    Intent i = new Intent(getActivity(), ChatActivity.class);
+                    startActivity(i);
+
+                }
             }
         });
 
