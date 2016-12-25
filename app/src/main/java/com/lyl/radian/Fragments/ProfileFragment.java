@@ -226,15 +226,11 @@ public class ProfileFragment extends SuperProfileFragment {
             @Override
             public void onClick(View v) {
                 // Update OwnInboxFragment list with this new chat room
-                Intent intent = new Intent(getActivity(), InboxFragment.class);
-                intent.putExtra("chatRoom", account.getClickedBid().getDisplayname());
-                // Check if these user have a chatroom
-                String bool = "true";
-                Intent getResponse = getActivity().getIntent();
-                if (false /*bool.equals(getResponse.getStringExtra("bool"))*/) {
+                Intent i = new Intent(getActivity(), ChatActivity.class);
+                if (chatRoomExist()) {
+                    // TODO handle!
                     // chatroom already exist
                     // switch fragment
-                    Intent i = new Intent(getActivity(), ChatActivity.class);
                     startActivity(i);
                 } else {
                     // create chatroom
@@ -259,9 +255,7 @@ public class ProfileFragment extends SuperProfileFragment {
                     receiver.setValue(myChats.getKey());
 
                     // Switch fragment
-                    Intent i = new Intent(getActivity(), ChatActivity.class);
                     startActivity(i);
-
                 }
             }
         });
@@ -273,6 +267,10 @@ public class ProfileFragment extends SuperProfileFragment {
     public void onStop() {
         super.onStop();
         setCollapsingToolbarEnabled(false);
+    }
+
+    public boolean chatRoomExist() {
+        return false;
     }
 
     @Override
