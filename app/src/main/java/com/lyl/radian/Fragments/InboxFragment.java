@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lyl.radian.Activities.ChatActivity;
+import com.lyl.radian.Interfaces.OnSelectedChatRoomCallback;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 
@@ -45,8 +46,12 @@ import com.lyl.radian.Utilities.Account;
 public class InboxFragment extends Fragment {
 
     // {BEGIN: Communication instances
-    //OnChatRoomSelected mCallback;
+    OnSelectedChatRoomCallback callback;
     // END]
+
+    public void setOnSelectedChatRoomCallback(OnSelectedChatRoomCallback callback) {
+        this.callback = callback;
+    }
 
     View view;
     Activity callingActivity;
@@ -96,10 +101,13 @@ public class InboxFragment extends Fragment {
 
         Log.e(TAG, String.valueOf(exampleContent.size()));
 
+        // WICHTIG: http://stackoverflow.com/questions/16443165/two-independent-classes-that-communicate-using-an-interface
+        setOnSelectedChatRoomCallback(new ChatActivity());
+
         chats.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //sendChatRoomName(String.valueOf(chats.getItemAtPosition(position)));
+                callback.selectedChatRoom(String.valueOf(chats.getItemAtPosition(position)));
                 Intent i = new Intent(getActivity(), ChatActivity.class);
                 startActivity(i);
             }
@@ -107,6 +115,7 @@ public class InboxFragment extends Fragment {
 
         return view;
     }
+
     public void refresh(){
 
         ((TextView)getActivity().findViewById(R.id.toolbar_title)).setText("Chats");
@@ -117,31 +126,4 @@ public class InboxFragment extends Fragment {
         super.onResume();
         refresh();
     }
-/*
-    // [BEGIN: Interface for Fragment to Activity Communication
-    public interface OnChatRoomSelected {
-        public void selectedChatRoom(String chatRoomName);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-       /* try {
-            mCallback = (OnChatRoomSelected) getActivity();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().toString()
-                    + " must implement OnChatRoomSelected");
-        }
-    }
-
-    public void sendChatRoomName(String chatRoomName) {
-        mCallback.selectedChatRoom(chatRoomName);
-    }
-    // END}
-    */
 }

@@ -13,21 +13,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lyl.radian.DBObjects.Chat;
-import com.lyl.radian.Fragments.InboxFragment;
+import com.lyl.radian.Interfaces.OnSelectedChatRoomCallback;
 import com.lyl.radian.R;
 
 /**
  * Created by len13 on 19.11.2016.
  */
 
-public class ChatActivity extends Activity /*implements InboxFragment.OnChatRoomSelected*/ {
+public class ChatActivity extends Activity implements OnSelectedChatRoomCallback {
 
     Button send;
     EditText msgField;
@@ -35,8 +34,11 @@ public class ChatActivity extends Activity /*implements InboxFragment.OnChatRoom
     ArrayList<String> messages;
     ArrayAdapter<String> adapter;
 
+    String chatRoomName;
+
     private FirebaseDatabase database;
-    private DatabaseReference chats;
+    private DatabaseReference chatsToRead;
+    private DatabaseReference chatsToInsert;
 
     Map<String, Object>  chatHistory;
 
@@ -55,28 +57,17 @@ public class ChatActivity extends Activity /*implements InboxFragment.OnChatRoom
         newsExtending.setAdapter(adapter);
 
         // [BEGIN: Load messages
+        // TODO auslesen des keys und sagen wer welche Nachricht geschrieben hat
+        // TODO Chat updaten also andere Instanzvariblen
+        // TODO den richtigen Chatroom in diese Activity senden, den man ausgewählt hat
+        // TODO ChatRoom beim ChatPartner einrichten
         database = FirebaseDatabase.getInstance();
-        chats = database.getReference("Chats");
-        chats.addListenerForSingleValueEvent(new ValueEventListener() {
+        chatsToRead = database.getReference("Chats").child("-KZiHyjazb4A3za-bSme").child("messages");
+        chatsToRead.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (snapshot.getKey().equals("-KZiHyjazb4A3za-bSme")) {
-                        Chat aChat = dataSnapshot.getValue(Chat.class);
-                        chatHistory = aChat.getMessages();
-
-                        if (chatHistory == null) {
-                            // No chats yet...
-                            messages.add("No Chats yet");
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            for (Map.Entry<String, Object> entry : chatHistory.entrySet()) {
-                                messages.add(entry.getKey() + entry.getValue().toString());
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
-
-                    }
+                    messages.add((String) snapshot.getValue());
                 }
             }
 
@@ -87,13 +78,14 @@ public class ChatActivity extends Activity /*implements InboxFragment.OnChatRoom
         });
         // END]
 
+        chatsToInsert = database.getReference("Chats");
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 // Update DB
                 final String text = msgField.getText().toString();
-                chats.addListenerForSingleValueEvent(new ValueEventListener() {
+                chatsToInsert.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -120,17 +112,18 @@ public class ChatActivity extends Activity /*implements InboxFragment.OnChatRoom
                     }
                 });
                 messages.add(text);
+                Log.e(TAG, chatRoomName);
+                //messages.add(chatRoomName);
                 adapter.notifyDataSetChanged();
                 msgField.setText("");
             }
         });
 
     }
-    /*
+
     @Override
     public void selectedChatRoom(String chatRoomName) {
-        messages.add(chatRoomName);
-        adapter.notifyDataSetChanged();
+        this.chatRoomName = chatRoomName;
+        Log.e(TAG, chatRoomName);
     }
-    */
 }
