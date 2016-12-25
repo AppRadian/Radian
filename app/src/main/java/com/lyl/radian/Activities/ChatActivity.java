@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -98,9 +99,17 @@ public class ChatActivity extends Activity /*implements InboxFragment.OnChatRoom
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             if (snapshot.getKey().equals("-KZiHyjazb4A3za-bSme")) {
                                 Chat aChat = dataSnapshot.getValue(Chat.class);
-                                aChat.addMessage("today", text);
-                                DatabaseReference thisChat = FirebaseDatabase.getInstance().getReference("Chats").child("-KZiHyjazb4A3za-bSme");
-                                thisChat.child("messages").setValue(aChat.getMessages());
+                                Long tsLong = System.currentTimeMillis()/1000;
+                                Map<String, Object> hm = aChat.getMessages();
+
+                                if (hm == null) {
+                                    hm = new HashMap<String, Object>();
+                                    hm.put(tsLong.toString(), text);
+                                }
+
+                                aChat.setMessages(hm);
+                                DatabaseReference thisChat = FirebaseDatabase.getInstance().getReference("Chats").child("-KZiHyjazb4A3za-bSme").child("messages");
+                                thisChat.updateChildren(aChat.getMessages());
                             }
                         }
                     }
