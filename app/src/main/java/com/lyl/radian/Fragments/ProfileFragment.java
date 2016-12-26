@@ -266,7 +266,8 @@ public class ProfileFragment extends SuperProfileFragment {
 
                                 // There always exist ->one<- Chat Room so check
                                 // if the rUID and tUID equal me and chatPartner - if so -> return (save run time)
-                                if (tUID.equals(me) && rUID.equals(chatPartner)) {
+                                // if case the other way round aswell because if you didn't open the chat - it will return false
+                                if (tUID.equals(me) && rUID.equals(chatPartner) || tUID.equals(chatPartner) && rUID.equals(me)) {
                                     Log.e(TAG, "chat room already exist");
                                     chatRoomExist = true;
 
@@ -286,8 +287,6 @@ public class ProfileFragment extends SuperProfileFragment {
                                     Log.e(TAG, "chat room does NOT exist - checking for more");
                                 }
                             }
-                        } else {
-                            Log.e(TAG, "there are no chats at ALL");
                             if (!chatRoomExist) {
                                 // If the chat room doesn't exist handle it here with updating the DB, etc.
                                 // create chatroom
@@ -321,6 +320,8 @@ public class ProfileFragment extends SuperProfileFragment {
                             } else {
                                 Log.e(TAG, "Chat Room Exist so we don't need to create one:" + chatRoomExist);
                             }
+                        } else {
+                            Log.e(TAG, "no chat rooms at ALL!");
                         }
                     }
 

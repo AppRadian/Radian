@@ -1,29 +1,21 @@
 package com.lyl.radian.Fragments;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -83,7 +75,8 @@ public class InboxFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 exampleContent.removeAll(exampleContent);
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    exampleContent.add(snapshot.getKey());
+                    String chatID = (String) snapshot.getValue();
+                    exampleContent.add(chatID);
                 }
                 adapter = new ArrayAdapter<String>(callingActivity, android.R.layout.simple_list_item_1, exampleContent);
                 chats.setAdapter(adapter);
