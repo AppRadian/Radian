@@ -21,6 +21,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -225,38 +226,80 @@ public class ProfileFragment extends SuperProfileFragment {
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Update OwnInboxFragment list with this new chat room
-                Intent i = new Intent(getActivity(), ChatActivity.class);
-                if (chatRoomExist()) {
-                    // TODO handle!
-                    // chatroom already exist
-                    // switch fragment
-                    startActivity(i);
-                } else {
-                    // create chatroom
+                // Update OwnInboxFragment list with this new chat room (and handle DB)
+                DatabaseReference ChatsCollection = FirebaseDatabase.getInstance().getReference("Chats");
+                ChatsCollection.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get Map of Chat // Good hint: http://stackoverflow.com/questions/38965731/how-to-get-all-childs-data-in-firebase-database
+                        Map<String, Object> chatsMap = (Map<String, Object>) dataSnapshot.getValue();
+                        final String me = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        final String chatPartner = account.getClickedBid().getUserId();
+                        boolean chatRoomExist = false;
+                        Log.e(TAG, "chatRoomExist bevore any actioni:" + chatRoomExist);
+                        Log.e(TAG, chatPartner + "--EMAIL");
 
-                    // Create myChats child in the DB entry of this user
-                    DatabaseReference myChats = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .child("myChats").push();
+                        // Iterate through each chat
+                        for (Map.Entry<String, Object> entry : chatsMap.entrySet()) {
 
-                    // Initialize the chat field with the chat id
-                    myChats.setValue(myChats.getKey());
+                            // Get single chat map
+                            Map singleChat = (Map) entry.getValue();
+                            // Get transmitterUID
+                            String tUID = (String) singleChat.get("transmitterUID");
+                            // Get recieverUID
+                            String rUID = (String) singleChat.get("recieverUID");
 
-                    // Create Chat node to store all chats for transmitter
-                    Chat chatToInsert = new Chat(FirebaseAuth.getInstance().getCurrentUser().getUid(), account.getClickedBid().getUserId(), new HashMap<String, Object>());
-                    DatabaseReference transmitterChats = FirebaseDatabase.getInstance().getReference("Chats");
-                    transmitterChats.child(myChats.getKey()).setValue(chatToInsert);
+                            // There always exist one Chat Room so check
+                            // if the rUID and tUID equal me and chatPartner - if so -> return (save run time)
+                            if (tUID.equals(me) && rUID.equals(chatPartner)) {
+                                Log.e(TAG, "chat room already exist");
+                                chatRoomExist = true;
+                                // TODO handle!
+                                // chatroom already exist
+                                // switch fragment
+                                Intent i = new Intent(getActivity(), ChatActivity.class);
+                                startActivity(i);
 
-                    // Create Chat node to store all chats for reciever TODO enable option to recieve a message
-                    // First get receiver user AND Create myChats child in the DB entry of this user
-                    DatabaseReference receiver = FirebaseDatabase.getInstance().getReference("Users").child(account.getClickedBid().getUserId()).child("myChats").push();
+                                // return; // save Laufzeit
+                            } else {
+                                Log.e(TAG, "chat room does NOT exist - checking for more");
+                            }
+                        }
+                        if (!chatRoomExist) {
+                            // If the chat room doesn't exist handle it here with updating the DB, etc.
+                            // create chatroom
+                            // Create myChats child in the DB entry of this user
+                            DatabaseReference myChats = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .child("myChats").push();
 
-                    // Initialize the chat field with the chat id
-                    receiver.setValue(myChats.getKey());
+                            // Initialize the chat field with the chat id
+                            myChats.setValue(myChats.getKey());
 
-                    // Switch fragment
-                    startActivity(i);
-                }
+                            // Create Chat node to store all chats for transmitter
+                            Chat chatToInsert = new Chat(FirebaseAuth.getInstance().getCurrentUser().getUid(), account.getClickedBid().getUserId(), new HashMap<String, Object>());
+                            DatabaseReference transmitterChats = FirebaseDatabase.getInstance().getReference("Chats");
+                            transmitterChats.child(myChats.getKey()).setValue(chatToInsert);
+
+                            // Create Chat node to store all chats for reciever
+                            // First get receiver user AND Create myChats child in the DB entry of this user
+                            DatabaseReference receiver = FirebaseDatabase.getInstance().getReference("Users").child(account.getClickedBid().getUserId()).child("myChats").push();
+
+                            // Initialize the chat field with the chat id
+                            receiver.setValue(myChats.getKey());
+
+                            // Switch fragment
+                            Intent i = new Intent(getActivity(), ChatActivity.class);
+                            startActivity(i);
+                        } else {
+                            Log.e(TAG, "Chat Room Exist so we don't need to create one:" + chatRoomExist);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
 
@@ -267,10 +310,6 @@ public class ProfileFragment extends SuperProfileFragment {
     public void onStop() {
         super.onStop();
         setCollapsingToolbarEnabled(false);
-    }
-
-    public boolean chatRoomExist() {
-        return false;
     }
 
     @Override

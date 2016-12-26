@@ -35,6 +35,7 @@ public class ChatActivity extends Activity implements OnSelectedChatRoomCallback
     ArrayAdapter<String> adapter;
 
     String chatRoomName;
+    final String CHAT_ROOM_NAME = "-KZiHyjazb4A3za-bSme";
 
     private FirebaseDatabase database;
     private DatabaseReference chatsToRead;
@@ -60,9 +61,8 @@ public class ChatActivity extends Activity implements OnSelectedChatRoomCallback
         // TODO auslesen des keys und sagen wer welche Nachricht geschrieben hat
         // TODO Chat updaten also andere Instanzvariblen
         // TODO den richtigen Chatroom in diese Activity senden, den man ausgewählt hat
-        // TODO ChatRoom beim ChatPartner einrichten
         database = FirebaseDatabase.getInstance();
-        chatsToRead = database.getReference("Chats").child("-KZiHyjazb4A3za-bSme").child("messages");
+        chatsToRead = database.getReference("Chats").child(CHAT_ROOM_NAME).child("messages");
         chatsToRead.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -89,7 +89,7 @@ public class ChatActivity extends Activity implements OnSelectedChatRoomCallback
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            if (snapshot.getKey().equals("-KZiHyjazb4A3za-bSme")) {
+                            if (snapshot.getKey().equals(CHAT_ROOM_NAME)) {
                                 Chat aChat = dataSnapshot.getValue(Chat.class);
                                 Long tsLong = System.currentTimeMillis()/1000;
                                 Map<String, Object> hm = aChat.getMessages();
@@ -112,7 +112,7 @@ public class ChatActivity extends Activity implements OnSelectedChatRoomCallback
                     }
                 });
                 messages.add(text);
-                Log.e(TAG, chatRoomName);
+                //Log.e(TAG, chatRoomName);
                 //messages.add(chatRoomName);
                 adapter.notifyDataSetChanged();
                 msgField.setText("");

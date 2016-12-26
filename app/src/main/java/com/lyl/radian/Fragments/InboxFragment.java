@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.lyl.radian.Activities.ChatActivity;
+import com.lyl.radian.DBObjects.Chat;
 import com.lyl.radian.Interfaces.OnSelectedChatRoomCallback;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
@@ -94,10 +95,24 @@ public class InboxFragment extends Fragment {
             }
         });
 
+        // If you don't opened a chat display now all the chat request
+        // Therefore iterate through the Chats collection
+        DatabaseReference ChatsCollection = firebaseDb.getReference("Chats");
+        ChatsCollection.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Chat aChat = dataSnapshot.getValue(Chat.class);
+                if (aChat.getRecieverUID() == user && aChat.getMessages() != null) {
+                    exampleContent.add(aChat.getTransmitterUID());
+                }
+            }
 
-        // set adapter
-        //adapter = new ArrayAdapter<String>(callingActivity, android.R.layout.simple_list_item_1, exampleContent);
-        //chats.setAdapter(adapter);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         Log.e(TAG, String.valueOf(exampleContent.size()));
 
