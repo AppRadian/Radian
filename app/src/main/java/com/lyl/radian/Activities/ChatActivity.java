@@ -34,8 +34,7 @@ public class ChatActivity extends Activity implements OnSelectedChatRoomCallback
     ArrayList<String> messages;
     ArrayAdapter<String> adapter;
 
-    String chatRoomName;
-    final String CHAT_ROOM_NAME = "-KZiHyjazb4A3za-bSme";
+    public static String chatRoomName;
 
     private FirebaseDatabase database;
     private DatabaseReference chatsToRead;
@@ -62,7 +61,9 @@ public class ChatActivity extends Activity implements OnSelectedChatRoomCallback
         // TODO Chat updaten also andere Instanzvariblen
         // TODO den richtigen Chatroom in diese Activity senden, den man ausgewählt hat
         database = FirebaseDatabase.getInstance();
-        chatsToRead = database.getReference("Chats").child(CHAT_ROOM_NAME).child("messages");
+        chatsToRead = database.getReference("Chats").child(chatRoomName).child("messages");
+
+        Log.e(TAG, "====WORK==>" + chatRoomName);
         chatsToRead.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -89,7 +90,7 @@ public class ChatActivity extends Activity implements OnSelectedChatRoomCallback
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            if (snapshot.getKey().equals(CHAT_ROOM_NAME)) {
+                            if (snapshot.getKey().equals(chatRoomName)) {
                                 Chat aChat = dataSnapshot.getValue(Chat.class);
                                 Long tsLong = System.currentTimeMillis()/1000;
                                 Map<String, Object> hm = aChat.getMessages();
@@ -100,7 +101,7 @@ public class ChatActivity extends Activity implements OnSelectedChatRoomCallback
                                 }
 
                                 aChat.setMessages(hm);
-                                DatabaseReference thisChat = FirebaseDatabase.getInstance().getReference("Chats").child("-KZiHyjazb4A3za-bSme").child("messages");
+                                DatabaseReference thisChat = FirebaseDatabase.getInstance().getReference("Chats").child(chatRoomName).child("messages");
                                 thisChat.updateChildren(aChat.getMessages());
                             }
                         }
@@ -123,7 +124,7 @@ public class ChatActivity extends Activity implements OnSelectedChatRoomCallback
 
     @Override
     public void selectedChatRoom(String chatRoomName) {
-        this.chatRoomName = chatRoomName;
+        // ChatActivity.this.chatRoomName = chatRoomName;
         Log.e(TAG, chatRoomName);
     }
 }

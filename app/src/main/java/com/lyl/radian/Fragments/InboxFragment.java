@@ -102,8 +102,12 @@ public class InboxFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Chat aChat = dataSnapshot.getValue(Chat.class);
-                if (aChat.getRecieverUID() == user && aChat.getMessages() != null) {
-                    exampleContent.add(aChat.getTransmitterUID());
+                if (aChat != null) {
+                    if (aChat.getRecieverUID() == user && aChat.getMessages() != null) {
+                        exampleContent.add(aChat.getTransmitterUID());
+                    }
+                } else {
+                    Log.e(TAG, "there are no chats at ALL");
                 }
             }
 
@@ -123,6 +127,10 @@ public class InboxFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 callback.selectedChatRoom(String.valueOf(chats.getItemAtPosition(position)));
+
+                //TODO wieso geht das nicht über den CALLBACK?!?!? Voll hässlich gelößt...
+                ChatActivity.chatRoomName = (String) chats.getItemAtPosition(position);
+
                 Intent i = new Intent(getActivity(), ChatActivity.class);
                 startActivity(i);
             }

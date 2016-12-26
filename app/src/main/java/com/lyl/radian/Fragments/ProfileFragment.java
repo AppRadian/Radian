@@ -42,6 +42,7 @@ import com.lyl.radian.Adapter.CustomRecyclerViewAdapter;
 import com.lyl.radian.Adapter.RecyclerItemClickListener;
 import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.DBObjects.Chat;
+import com.lyl.radian.Interfaces.OnSelectedChatRoomCallback;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.Utilities.Constants;
@@ -58,6 +59,15 @@ public class ProfileFragment extends SuperProfileFragment {
     private FirebaseDatabase database;
     private DatabaseReference bids;
     private final String TAG = "ProfileFragment";
+
+    // {BEGIN: Communication instances
+    OnSelectedChatRoomCallback callback;
+    // END]
+
+    public void setOnSelectedChatRoomCallback(OnSelectedChatRoomCallback callback) {
+        this.callback = callback;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -221,6 +231,9 @@ public class ProfileFragment extends SuperProfileFragment {
                 })
         );
 
+        // Prepare Callback
+        setOnSelectedChatRoomCallback(new ChatActivity());
+        // Go ahead with the rest
         sendMessage = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         sendMessage.setImageResource(R.drawable.ic_menu_send);
         sendMessage.setOnClickListener(new View.OnClickListener() {
@@ -239,59 +252,75 @@ public class ProfileFragment extends SuperProfileFragment {
                         Log.e(TAG, "chatRoomExist bevore any actioni:" + chatRoomExist);
                         Log.e(TAG, chatPartner + "--EMAIL");
 
-                        // Iterate through each chat
-                        for (Map.Entry<String, Object> entry : chatsMap.entrySet()) {
+                        if (chatsMap != null) {
 
-                            // Get single chat map
-                            Map singleChat = (Map) entry.getValue();
-                            // Get transmitterUID
-                            String tUID = (String) singleChat.get("transmitterUID");
-                            // Get recieverUID
-                            String rUID = (String) singleChat.get("recieverUID");
+                            // Iterate through each chat
+                            for (Map.Entry<String, Object> entry : chatsMap.entrySet()) {
 
-                            // There always exist one Chat Room so check
-                            // if the rUID and tUID equal me and chatPartner - if so -> return (save run time)
-                            if (tUID.equals(me) && rUID.equals(chatPartner)) {
-                                Log.e(TAG, "chat room already exist");
-                                chatRoomExist = true;
-                                // TODO handle!
-                                // chatroom already exist
-                                // switch fragment
+                                // Get single chat map
+                                Map singleChat = (Map) entry.getValue();
+                                // Get transmitterUID
+                                String tUID = (String) singleChat.get("transmitterUID");
+                                // Get recieverUID
+                                String rUID = (String) singleChat.get("recieverUID");
+
+                                // There always exist ->one<- Chat Room so check
+                                // if the rUID and tUID equal me and chatPartner - if so -> return (save run time)
+                                if (tUID.equals(me) && rUID.equals(chatPartner)) {
+                                    Log.e(TAG, "chat room already exist");
+                                    chatRoomExist = true;
+
+                                    // Transfer ChatRoomID
+                                    callback.selectedChatRoom(entry.getKey());
+                                    //TODO wieso geht das nicht über den CALLBACK?!?!? Voll hässlich gelößt...
+                                    ChatActivity.chatRoomName = entry.getKey();
+
+                                    // TODO handle!
+                                    // chatroom already exist
+                                    // switch fragment
+                                    Intent i = new Intent(getActivity(), ChatActivity.class);
+                                    startActivity(i);
+
+                                    // return; // save Laufzeit
+                                } else {
+                                    Log.e(TAG, "chat room does NOT exist - checking for more");
+                                }
+                            }
+                        } else {
+                            Log.e(TAG, "there are no chats at ALL");
+                            if (!chatRoomExist) {
+                                // If the chat room doesn't exist handle it here with updating the DB, etc.
+                                // create chatroom
+                                // Create myChats child in the DB entry of this user
+                                DatabaseReference myChats = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                        .child("myChats").push();
+
+                                // Initialize the chat field with the chat id
+                                myChats.setValue(myChats.getKey());
+
+                                // Create Chat node to store all chats for transmitter
+                                Chat chatToInsert = new Chat(FirebaseAuth.getInstance().getCurrentUser().getUid(), account.getClickedBid().getUserId(), new HashMap<String, Object>());
+                                DatabaseReference transmitterChats = FirebaseDatabase.getInstance().getReference("Chats");
+                                transmitterChats.child(myChats.getKey()).setValue(chatToInsert);
+
+                                // Create Chat node to store all chats for reciever
+                                // First get receiver user AND Create myChats child in the DB entry of this user
+                                DatabaseReference receiver = FirebaseDatabase.getInstance().getReference("Users").child(account.getClickedBid().getUserId()).child("myChats").push();
+
+                                // Initialize the chat field with the chat id
+                                receiver.setValue(myChats.getKey());
+
+                                // Pass Chat ID to Chat Room
+                                callback.selectedChatRoom(myChats.getKey());
+                                //TODO wieso geht das nicht über den CALLBACK?!?!? Voll hässlich gelößt...
+                                ChatActivity.chatRoomName = myChats.getKey();
+
+                                // Switch fragment
                                 Intent i = new Intent(getActivity(), ChatActivity.class);
                                 startActivity(i);
-
-                                // return; // save Laufzeit
                             } else {
-                                Log.e(TAG, "chat room does NOT exist - checking for more");
+                                Log.e(TAG, "Chat Room Exist so we don't need to create one:" + chatRoomExist);
                             }
-                        }
-                        if (!chatRoomExist) {
-                            // If the chat room doesn't exist handle it here with updating the DB, etc.
-                            // create chatroom
-                            // Create myChats child in the DB entry of this user
-                            DatabaseReference myChats = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .child("myChats").push();
-
-                            // Initialize the chat field with the chat id
-                            myChats.setValue(myChats.getKey());
-
-                            // Create Chat node to store all chats for transmitter
-                            Chat chatToInsert = new Chat(FirebaseAuth.getInstance().getCurrentUser().getUid(), account.getClickedBid().getUserId(), new HashMap<String, Object>());
-                            DatabaseReference transmitterChats = FirebaseDatabase.getInstance().getReference("Chats");
-                            transmitterChats.child(myChats.getKey()).setValue(chatToInsert);
-
-                            // Create Chat node to store all chats for reciever
-                            // First get receiver user AND Create myChats child in the DB entry of this user
-                            DatabaseReference receiver = FirebaseDatabase.getInstance().getReference("Users").child(account.getClickedBid().getUserId()).child("myChats").push();
-
-                            // Initialize the chat field with the chat id
-                            receiver.setValue(myChats.getKey());
-
-                            // Switch fragment
-                            Intent i = new Intent(getActivity(), ChatActivity.class);
-                            startActivity(i);
-                        } else {
-                            Log.e(TAG, "Chat Room Exist so we don't need to create one:" + chatRoomExist);
                         }
                     }
 
