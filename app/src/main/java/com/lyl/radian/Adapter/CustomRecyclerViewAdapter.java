@@ -1,10 +1,7 @@
 package com.lyl.radian.Adapter;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.location.Location;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +13,6 @@ import java.util.ArrayList;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +24,7 @@ import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.DBObjects.UserProfile;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 
 /**
  * Created by Yannick on 10.11.2016.
@@ -100,7 +96,7 @@ public class CustomRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         } else if (viewHolder instanceof ProfileHeaderViewHolder) {
             final ProfileHeaderViewHolder holder = (ProfileHeaderViewHolder) viewHolder;
 
-            final DatabaseReference searchedUser = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(account.getClickedBid().getUserId());
+            final DatabaseReference searchedUser = FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(account.getClickedBid().getUserId());
             searchedUser.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

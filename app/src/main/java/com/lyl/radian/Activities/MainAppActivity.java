@@ -3,7 +3,6 @@ package com.lyl.radian.Activities;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,26 +16,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.lyl.radian.Adapter.CustomAdapterSearch;
 import com.lyl.radian.DialogFragments.BidDialog;
 import com.lyl.radian.Fragments.BieteFragment;
 //import comhelpingandchanging.facebook.httpswww.changetogether.Fragments.HelpingLocationsFragment;
@@ -47,8 +39,7 @@ import com.lyl.radian.Fragments.SearchFragment;
 import com.lyl.radian.Fragments.OwnProfileFragment;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Constants;
-import com.lyl.radian.Utilities.RequestHandler;
+import com.lyl.radian.Constants.Constant;
 
 public class MainAppActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -182,7 +173,7 @@ public class MainAppActivity extends AppCompatActivity
             startActivity(i);
         }
         else if (id == R.id.nav_logout){
-            DatabaseReference regId = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("registrationId");
+            DatabaseReference regId = FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("registrationId");
             regId.setValue(null);
 
             FirebaseAuth.getInstance().signOut();

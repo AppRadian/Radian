@@ -23,7 +23,7 @@ import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.DBObjects.Feedback;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 import com.lyl.radian.Utilities.SendNotification;
 
 /**
@@ -83,11 +83,11 @@ public class FeedbackDialog extends DialogFragment {
                         bid.setAverageRating(averageRating); // set new average rating in the object class
 
                         // Transfer updates to DB
-                        DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
+                        DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constant.BID_DB);
                         bids.child(account.getClickedBid().getId()).setValue(bid).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(account.getClickedBid().getUserId()).child("registrationId");
+                                DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(account.getClickedBid().getUserId()).child("registrationId");
                                 user.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {

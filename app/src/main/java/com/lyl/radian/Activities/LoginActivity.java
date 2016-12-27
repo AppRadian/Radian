@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.lyl.radian.R;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 
 public class LoginActivity extends FirebaseActivity {
     //Push
@@ -27,7 +27,7 @@ public class LoginActivity extends FirebaseActivity {
         Resources r = getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, r.getDisplayMetrics());
         imageView = ((ImageView) findViewById(R.id.imageView2));
-        imageView.setImageBitmap(Constants.decodeBitmap(r, R.drawable.logo, (int)px, (int)px));
+        imageView.setImageBitmap(Constant.decodeBitmap(r, R.drawable.logo, (int)px, (int)px));
 
         loginBtn = (Button) findViewById(R.id.login);
         email = (EditText) findViewById(R.id.emailTxt);
@@ -40,7 +40,7 @@ public class LoginActivity extends FirebaseActivity {
                 String pw = password.getText().toString();
 
                 if(validateEmail(e) == true && pw.length() > 0)
-                    signInUser(e, Constants.DEFAULTPASSWORD);
+                    signInUser(e, Constant.DEFAULTPASSWORD);
             }
         });
     }

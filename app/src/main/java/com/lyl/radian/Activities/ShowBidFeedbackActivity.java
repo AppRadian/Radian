@@ -1,20 +1,14 @@
 package com.lyl.radian.Activities;
 
-import android.app.Activity;
-import android.support.v4.app.FragmentActivity;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,10 +18,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.lyl.radian.Adapter.CustomAdapter;
 import com.lyl.radian.DBObjects.Feedback;
 import com.lyl.radian.DialogFragments.FeedbackDialog;
-import com.lyl.radian.DialogFragments.MyDialogCloseListener;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 
 /**
  * Created by Ludwig on 05.11.2016.
@@ -69,7 +62,7 @@ public class ShowBidFeedbackActivity extends AppCompatActivity{
         bid.setText(account.getClickedBid().getTag());
         ratingBar.setRating((float)account.getClickedBid().getAverageRating());
 
-        DatabaseReference feedback = FirebaseDatabase.getInstance().getReference(Constants.FEEDBACK_DB).child(account.getClickedBid().getId());
+        DatabaseReference feedback = FirebaseDatabase.getInstance().getReference(Constant.FEEDBACK_DB).child(account.getClickedBid().getId());
         feedback.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

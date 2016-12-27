@@ -22,7 +22,7 @@ import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.DBObjects.Bid;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 
 /**
  * Created by Yannick on 10.11.2016.
@@ -61,7 +61,7 @@ public class CustomRecyclerViewAdapterBiete extends RecyclerView.Adapter<CustomR
         holder.count.setText(data.get(position).getCount() + " Bewertungen");
         holder.maxPart.setText(data.get(position).getParticipants() + "/" + data.get(position).getMaxParticipants());
 
-        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(data.get(position).getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(data.get(position).getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String profilePic = dataSnapshot.getValue(String.class);

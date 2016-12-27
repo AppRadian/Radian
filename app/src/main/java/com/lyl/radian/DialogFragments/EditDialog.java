@@ -10,7 +10,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,15 +23,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.io.IOException;
-import java.nio.DoubleBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,7 +40,7 @@ import com.lyl.radian.Fragments.OwnSearchItemFragment;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.DBObjects.Bid;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 
 /**
  * Created by Ludwig on 20.11.2016.
@@ -226,7 +222,7 @@ public class EditDialog extends DialogFragment {
                             long count = data.getCount();
                             long participants = data.getParticipants();
 
-                            Location bidLocation = Constants.getLocationFromAddress(getParentFragment().getActivity(), location.getText().toString());
+                            Location bidLocation = Constant.getLocationFromAddress(getParentFragment().getActivity(), location.getText().toString());
                             Bid bidToInsert = new Bid(account.getClickedBid().getId(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), bid, description.getText().toString(),
                                     location.getText().toString(), bidLocation.getLatitude(), bidLocation.getLongitude(), averageRating, count, date.getText().toString(), time.getText().toString(), participants, Long.parseLong(EditDialog.this.participants.getText().toString()));
                             DatabaseReference bids = FirebaseDatabase.getInstance().getReference("Bids");

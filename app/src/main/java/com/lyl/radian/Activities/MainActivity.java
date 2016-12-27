@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.lyl.radian.R;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 
 
 /**
@@ -31,9 +31,9 @@ public class MainActivity extends FirebaseActivity {
 
         setContentView(R.layout.activity_main);
         imageView = ((ImageView) findViewById(R.id.imageView2));
-        imageView.setImageBitmap(Constants.decodeBitmap(r, R.drawable.logo, (int) px, (int) px));
+        imageView.setImageBitmap(Constant.decodeBitmap(r, R.drawable.logo, (int) px, (int) px));
 
-        ((ImageView) findViewById(R.id.imageView2)).setImageBitmap(Constants.decodeBitmap(r, R.drawable.logo, (int) px, (int) px));
+        ((ImageView) findViewById(R.id.imageView2)).setImageBitmap(Constant.decodeBitmap(r, R.drawable.logo, (int) px, (int) px));
 
         login = (Button) findViewById(R.id.loginBtn);
         register = (Button) findViewById(R.id.registerBtn);

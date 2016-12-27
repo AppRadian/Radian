@@ -2,6 +2,8 @@ package com.lyl.radian.Utilities;
 
 import android.util.Log;
 
+import com.lyl.radian.Constants.Constant;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +29,7 @@ public class PlaceAPI {
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
     private static final String OUT_JSON = "/json";
 
-    private static final String API_KEY = Constants.PRIVATE_GOOGLE_API_KEY;
+    private static final String API_KEY = Constant.PRIVATE_GOOGLE_API_KEY;
 
     public ArrayList<String> autocomplete (String input) {
         ArrayList<String> resultList = null;

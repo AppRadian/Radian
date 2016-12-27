@@ -31,7 +31,7 @@ import com.lyl.radian.Activities.ShowBidFeedbackActivity;
 import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 import com.lyl.radian.Utilities.SendNotification;
 
 /**
@@ -90,7 +90,7 @@ public class SearchItemFragment extends Fragment{
 
                 if(join.getText().toString().equals("Teilnehmen")) {
                     // Update the DB participants
-                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
+                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constant.BID_DB);
                     bids.child(account.getClickedBid().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -121,11 +121,11 @@ public class SearchItemFragment extends Fragment{
                             bid.setParticipants(participants + 1);
 
                             // Transfer update to DB
-                            DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
+                            DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constant.BID_DB);
                             bids.child(account.getClickedBid().getId()).setValue(bid).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(account.getClickedBid().getUserId()).child("registrationId");
+                                    DatabaseReference user = FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(account.getClickedBid().getUserId()).child("registrationId");
                                     user.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -143,7 +143,7 @@ public class SearchItemFragment extends Fragment{
 
 
                             // Update user Object with participated events
-                            DatabaseReference ownParts = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations");
+                            DatabaseReference ownParts = FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations");
                             ownParts.child(bid.getId()).setValue(bid.getId());
                             join.setText("Nicht mehr teilnehmen");
                         }
@@ -157,7 +157,7 @@ public class SearchItemFragment extends Fragment{
                 // Delete Bid from participations and decrease participators in the particular bid
                 else{
                     // Update the DB participants
-                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
+                    DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constant.BID_DB);
                     bids.child(account.getClickedBid().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -176,11 +176,11 @@ public class SearchItemFragment extends Fragment{
                             bid.setParticipants(participants);
 
                             // Transfer update to DB
-                            DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constants.BID_DB);
+                            DatabaseReference bids = FirebaseDatabase.getInstance().getReference(Constant.BID_DB);
                             bids.child(account.getClickedBid().getId()).setValue(bid);
 
                             // Deletes the participation bid
-                            DatabaseReference ownParts = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations");
+                            DatabaseReference ownParts = FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("participations");
                             ownParts.child(bid.getId()).removeValue();
                             join.setText("Teilnehmen");
                         }

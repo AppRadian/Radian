@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -25,8 +24,7 @@ import com.lyl.radian.Adapter.RecyclerItemClickListener;
 import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Constants;
-import com.lyl.radian.Widgets.NestedScrollViewFling;
+import com.lyl.radian.Constants.Constant;
 
 /**
  * Created by Yannick on 03.11.2016.
@@ -62,7 +60,7 @@ public class OwnBidsFragment extends SuperProfileFragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final Bid bid = dataSnapshot.getValue(Bid.class);
-                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                        FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 bid.setProfilePic(dataSnapshot.getValue(String.class));
@@ -95,7 +93,7 @@ public class OwnBidsFragment extends SuperProfileFragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final Bid bid = dataSnapshot.getValue(Bid.class);
-                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                        FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 bid.setProfilePic(dataSnapshot.getValue(String.class));

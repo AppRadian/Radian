@@ -1,4 +1,4 @@
-package com.lyl.radian.Utilities;
+package com.lyl.radian.Constants;
 
 import android.app.Activity;
 import android.content.res.Resources;
@@ -19,14 +19,14 @@ import java.util.List;
  * Created by Yannick on 28.10.2016.
  */
 
-public class Constants {
+public class Constant {
 
     // Database References
     public static final String BID_DB = "Bids";
     public static final String FEEDBACK_DB = "Feedback";
     public static final String USER_DB = "Users";
 
-    // Auto Fill Location Name Google API Key String Constant
+    // Auto Fill Location Name Google API Key String
     public static final String PRIVATE_GOOGLE_API_KEY = "AIzaSyCDLrf4wg0oCpzYepocnaBMoXvoYws1cpw";
     public static final String PRIVATE_GOOGLE_FIREBASE_API_KEY = "AIzaSyCpfiikIRLYxFAoP_VIEXWElB4DiW-CLLU";
     public static final String DEFAULTPASSWORD = "emptyPassword1";

@@ -3,13 +3,10 @@ package com.lyl.radian.Activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
@@ -17,10 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import java.util.UUID;
-
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.signature.StringSignature;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -28,12 +22,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnPausedListener;
 import com.google.firebase.storage.OnProgressListener;
@@ -41,10 +30,9 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.lyl.radian.Adapter.PlacesAutoCompleteAdapter;
-import com.lyl.radian.DBObjects.UserProfile;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 
 /**
  * Created by Ludwig on 29.10.2016.
@@ -126,22 +114,22 @@ public class SettingsActivity extends Activity {
                     String pwConfirm = passwordConfirm.getText().toString();
 
                     if (loc.length() > 0 && city.equals(location.getText().toString())) {
-                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB)
+                        FirebaseDatabase.getInstance().getReference(Constant.USER_DB)
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                 .child("location").setValue(location.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 account.getSelf().setLocation(location.getText().toString());
-                                final Location ownLocation = Constants.getLocationFromAddress(SettingsActivity.this, location.getText().toString());
+                                final Location ownLocation = Constant.getLocationFromAddress(SettingsActivity.this, location.getText().toString());
                                 account.getSelf().setLatitude(ownLocation.getLatitude());
                                 account.getSelf().setLongitude(ownLocation.getLongitude());
 
-                                FirebaseDatabase.getInstance().getReference(Constants.USER_DB)
+                                FirebaseDatabase.getInstance().getReference(Constant.USER_DB)
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                         .child("latitude").setValue(ownLocation.getLatitude()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB)
+                                        FirebaseDatabase.getInstance().getReference(Constant.USER_DB)
                                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                                 .child("longitude").setValue(ownLocation.getLongitude()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
@@ -157,7 +145,7 @@ public class SettingsActivity extends Activity {
                             location.setError("Select existing location");
 
                     if (lang.length() > 0) {
-                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB)
+                        FirebaseDatabase.getInstance().getReference(Constant.USER_DB)
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                 .child("language").setValue(language.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -170,7 +158,7 @@ public class SettingsActivity extends Activity {
                     if (currentPw.length() > 0 && pw.length() > 0 && pwConfirm.length() > 0) {
                         if (pw.equals(pwConfirm)) {
                             //TODO Ersetzen mit echtem Passwot
-                            FirebaseAuth.getInstance().getCurrentUser().updatePassword(Constants.DEFAULTPASSWORD);
+                            FirebaseAuth.getInstance().getCurrentUser().updatePassword(Constant.DEFAULTPASSWORD);
                         } else
                                 passwordConfirm.setError("Passwords do not match");
                     }
@@ -211,7 +199,7 @@ public class SettingsActivity extends Activity {
         FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("profilePic").setValue(profilePic);
+                FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("profilePic").setValue(profilePic);
 
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 final StorageReference storageRef = storage.getReferenceFromUrl("gs://radian-eb422.appspot.com/" + profilePic);

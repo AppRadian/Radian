@@ -8,8 +8,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,22 +26,14 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.lyl.radian.Adapter.PlacesAutoCompleteAdapter;
 import com.lyl.radian.Adapter.SpinnerAdapter;
-import com.lyl.radian.Fragments.OwnSearchItemFragment;
 import com.lyl.radian.R;
 import com.lyl.radian.DBObjects.Bid;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 
 public class BidDialog extends DialogFragment {
     AutoCompleteTextView location;
@@ -203,7 +193,7 @@ public class BidDialog extends DialogFragment {
                     // set unique key at the end of the list
                     ownBids.setValue(ownBids.getKey());
 
-                    Location bidLocation = Constants.getLocationFromAddress(getActivity(), location.getText().toString());
+                    Location bidLocation = Constant.getLocationFromAddress(getActivity(), location.getText().toString());
                     Bid bidToInsert = new Bid(ownBids.getKey(), FirebaseAuth.getInstance().getCurrentUser().getUid(), FirebaseAuth.getInstance()
                             .getCurrentUser().getDisplayName(), bid, description.getText().toString(),
                             location.getText().toString(), bidLocation.getLatitude(), bidLocation.getLongitude(), 0, 0, date.getText().toString(),

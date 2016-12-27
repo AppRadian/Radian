@@ -35,7 +35,7 @@ import com.lyl.radian.Adapter.RecyclerItemClickListener;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.DBObjects.Bid;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 
 /**
  * Created by Yannick on 03.11.2016.
@@ -139,7 +139,7 @@ public class HomeFragment extends Fragment {
                     ownLocation.setLatitude(account.getSelf().getLatitude());
                     ownLocation.setLongitude(account.getSelf().getLongitude());
 
-                    FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                    FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             bid.setProfilePic(dataSnapshot.getValue(String.class));

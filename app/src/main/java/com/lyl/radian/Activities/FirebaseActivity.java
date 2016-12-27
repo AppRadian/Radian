@@ -23,7 +23,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
 import com.lyl.radian.DBObjects.UserProfile;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 
 /**
  * Created by Yannick on 01.12.2016.
@@ -61,7 +61,7 @@ public class FirebaseActivity extends Activity {
                     DatabaseReference id = users.child(userAuth.getCurrentUser().getUid()).child("registrationId");
                     id.setValue(FirebaseInstanceId.getInstance().getToken());
 
-                    FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(userAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(userAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -115,7 +115,7 @@ public class FirebaseActivity extends Activity {
                             userAuth.getCurrentUser().updateProfile(profileUpdates);
 
                             DatabaseReference thisUser = users.child(userAuth.getCurrentUser().getUid());
-                            Location loc = Constants.getLocationFromAddress(FirebaseActivity.this, location);
+                            Location loc = Constant.getLocationFromAddress(FirebaseActivity.this, location);
                             UserProfile self;
                             if(loc != null)
                                 self = new UserProfile(email, profilePic, location, language, loc.getLatitude(), loc.getLongitude());
@@ -140,7 +140,7 @@ public class FirebaseActivity extends Activity {
                         if(task.isSuccessful()) {
                             Log.e(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
-                            FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(userAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(userAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     UserProfile self = dataSnapshot.getValue(UserProfile.class);

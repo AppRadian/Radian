@@ -8,7 +8,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +43,7 @@ import com.lyl.radian.DBObjects.Chat;
 import com.lyl.radian.Interfaces.OnSelectedChatRoomCallback;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 import com.lyl.radian.Widgets.ScrollingFABBehavior;
 
 /**
@@ -119,7 +117,7 @@ public class ProfileFragment extends SuperProfileFragment {
                         ownLocation.setLatitude(account.getSelf().getLatitude());
                         ownLocation.setLongitude(account.getSelf().getLongitude());
                         final long distance = Math.round(bidLocation.distanceTo(ownLocation));
-                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                        FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 bid.setProfilePic(dataSnapshot.getValue(String.class));
@@ -160,7 +158,7 @@ public class ProfileFragment extends SuperProfileFragment {
                         ownLocation.setLatitude(account.getSelf().getLatitude());
                         ownLocation.setLongitude(account.getSelf().getLongitude());
                         final long distance = Math.round(bidLocation.distanceTo(ownLocation));
-                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                        FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 bid.setProfilePic(dataSnapshot.getValue(String.class));

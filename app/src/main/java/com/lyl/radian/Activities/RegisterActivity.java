@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.lyl.radian.R;
-import com.lyl.radian.Utilities.Constants;
+import com.lyl.radian.Constants.Constant;
 
 /**
  * Created by Yannick on 28.10.2016.
@@ -38,7 +38,7 @@ public class RegisterActivity extends FirebaseActivity {
         Resources r = getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150, r.getDisplayMetrics());
         imageView = ((ImageView) findViewById(R.id.imageView3));
-        imageView.setImageBitmap(Constants.decodeBitmap(r, R.drawable.logo, (int)px, (int)px));
+        imageView.setImageBitmap(Constant.decodeBitmap(r, R.drawable.logo, (int)px, (int)px));
 
         email = (EditText) findViewById(R.id.emailTxt2);
         displayName = (EditText) findViewById(R.id.displayName);
@@ -55,7 +55,7 @@ public class RegisterActivity extends FirebaseActivity {
                     if(displayName.getText().toString().length() > 0) {
                         if (password.getText().toString().length() > 0 && passwordConfirm.getText().toString().length() > 0) {
                             if (password.getText().toString().equals(passwordConfirm.getText().toString()))
-                                createUser(email.getText().toString(), displayName.getText().toString(), location.getText().toString(), language.getText().toString(), Constants.DEFAULTPASSWORD);
+                                createUser(email.getText().toString(), displayName.getText().toString(), location.getText().toString(), language.getText().toString(), Constant.DEFAULTPASSWORD);
                             else
                                 passwordConfirm.setError("Password can not be empty");
                         } else

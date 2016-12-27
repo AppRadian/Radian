@@ -6,13 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
@@ -28,8 +26,7 @@ import com.lyl.radian.Adapter.RecyclerItemClickListener;
 import com.lyl.radian.DBObjects.Bid;
 import com.lyl.radian.R;
 import com.lyl.radian.Utilities.Account;
-import com.lyl.radian.Utilities.Constants;
-import com.lyl.radian.Widgets.NestedScrollViewFling;
+import com.lyl.radian.Constants.Constant;
 
 /**
  * Created by Yannick on 20.11.2016.
@@ -51,7 +48,7 @@ public class UpcomingFragment extends SuperProfileFragment {
 
 
         // Reference the right DB object -> in this case it's the user
-        user = FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        user = FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         // Now reference from this user the "participations" child
         particpationsChild = user.child("participations");
@@ -82,7 +79,7 @@ public class UpcomingFragment extends SuperProfileFragment {
                         ownLocation.setLongitude(account.getSelf().getLongitude());
                         final long distance = Math.round(bidLocation.distanceTo(ownLocation));
 
-                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                        FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 bid.setProfilePic(dataSnapshot.getValue(String.class));
@@ -128,7 +125,7 @@ public class UpcomingFragment extends SuperProfileFragment {
                         ownLocation.setLongitude(account.getSelf().getLongitude());
                         final long distance = Math.round(bidLocation.distanceTo(ownLocation));
 
-                        FirebaseDatabase.getInstance().getReference(Constants.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
+                        FirebaseDatabase.getInstance().getReference(Constant.USER_DB).child(bid.getUserId()).child("profilePic").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 bid.setProfilePic(dataSnapshot.getValue(String.class));
